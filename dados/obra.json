@@ -1,0 +1,110 @@
+{
+  "obra": {
+    "titulo": "Via interna da Vila Militar",
+    "local": "Vila Militar · Deodoro, Rio de Janeiro/RJ",
+    "om": "Organização Militar de Engenharia executora (ilustrativa)",
+    "trafego": "viaturas operacionais, ônibus e caminhões de abastecimento (N = 3 × 10⁶)",
+    "iscProjeto": 9
+  },
+  "calendario": {
+    "inicio": "2027-05-03",
+    "horaInicio": 7,
+    "horasPorDia": 10,
+    "prazoContratualDias": 34
+  },
+  "geometria": {
+    "extensao": 300,
+    "estaca": 20,
+    "cotaReferencia": 18,
+    "larguraPlataforma": 9,
+    "taludeCorte": 1,
+    "taludeAterro": 1.5,
+    "larguraSubBase": 8,
+    "larguraBase": 7.6,
+    "larguraRevestimento": 7,
+    "larguraFaixa": 3.5,
+    "espSubBase": 0.2,
+    "espBase": 0.15,
+    "espRevestimento": 0.05,
+    "espRegularizacao": 0.2,
+    "espCamadaFinal": 0.6,
+    "espCamadaCorpo": 0.3,
+    "espSubcamadaFinal": 0.2,
+    "cotaGreideInicio": 23.6,
+    "rampaGreide": -0.0075,
+    "fatorHomogeneizacao": 1.2
+  },
+  "canteiro": {
+    "estacaInicio": 0,
+    "estacaFim": 135,
+    "afastamentoInicio": -112,
+    "afastamentoFim": -40,
+    "cota": 22.6
+  },
+  "taxas": {
+    "densidadeCBUQ": 2.42,
+    "imprimacao": 1.2,
+    "pinturaDiluida": 0.9,
+    "teorLigante": 0.056,
+    "larguraLimpeza": 15
+  },
+  "usina": [
+    {
+      "nome": "Silos dosadores frios (4)",
+      "descricao": "Brita 1, brita 0, pó de pedra e areia. Cada silo tem comporta e correia dosadora de velocidade variável, calibrada por pesagem."
+    },
+    {
+      "nome": "Correia coletora e balança",
+      "descricao": "Leva a mistura de agregados úmidos ao tambor. A balança integradora informa a vazão real ao CLP."
+    },
+    {
+      "nome": "Tambor secador-misturador",
+      "descricao": "Contrafluxo: o queimador seca e aquece os agregados na zona de secagem, e o CAP é injetado na zona de mistura."
+    },
+    {
+      "nome": "Filtro de mangas e chaminé",
+      "descricao": "Retém os finos (o filer recuperado volta à mistura) e controla a emissão de material particulado."
+    },
+    {
+      "nome": "Elevador e silo de massa",
+      "descricao": "Armazena a massa quente. Os caminhões param sob a comporta e recebem a carga em três montes, para evitar segregação."
+    },
+    {
+      "nome": "Tanques de CAP aquecidos",
+      "descricao": "O CAP 50/70 fica aquecido por óleo térmico, com circulação mínima de 15 min antes da produção do dia."
+    },
+    {
+      "nome": "Cabine de comando",
+      "descricao": "Opera o CLP, registra temperaturas e vazões e emite o tíquete de cada caminhão (hora, massa e temperatura)."
+    }
+  ],
+  "contexto": [
+    {
+      "titulo": "Obra militar dentro de área sob administração militar",
+      "texto": "O canteiro, a usina e a jazida ficam dentro da área sob administração militar. O cronograma é ajustado com o comando da guarnição para não interferir em formaturas, deslocamentos de tropa e no tráfego de viaturas."
+    },
+    {
+      "titulo": "Execução em meia pista",
+      "texto": "Imprimação, pintura e CBUQ são executados uma faixa por vez. A outra faixa fica livre para as viaturas e é usada pelos próprios caminhões da usina para chegar à vibroacabadora."
+    },
+    {
+      "titulo": "Janela climática",
+      "texto": "No Rio de Janeiro, maio a setembro é o período mais seco. As especificações proíbem a execução com chuva e com temperatura abaixo de 10 °C, e o cronograma usa essa janela."
+    },
+    {
+      "titulo": "Cadeia de liberação",
+      "texto": "O laboratório ensaia, o engenheiro residente analisa e a fiscalização assina o Boletim de Liberação de Camada (BLC). Nenhuma camada é coberta sem o BLC da anterior."
+    },
+    {
+      "titulo": "Efetivo",
+      "texto": "As equipes são formadas por sargentos encarregados, cabos e soldados de engenharia, com operadores e motoristas habilitados para cada equipamento."
+    },
+    {
+      "titulo": "Usina própria",
+      "texto": "Com a usina no canteiro, a distância de transporte cai para algumas centenas de metros. A massa chega quente e 4 caminhões (3 em ciclo e 1 reserva) mantêm a vibroacabadora sem paradas."
+    }
+  ],
+  "diario": {
+    "tempoBom": "Tempo bom, sem chuva. Condição compatível com a execução de todos os serviços."
+  }
+}

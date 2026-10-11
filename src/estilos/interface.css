@@ -1,0 +1,14 @@
+/* Tela de erro quando os arquivos de dados/ não passam na validação */
+.loading.erro-dados {
+  overflow: auto;
+  text-align: left;
+  align-items: flex-start;
+  padding: 24px;
+}
+.loading.erro-dados ul {
+  margin: 12px 0 0;
+  padding-left: 18px;
+  font: 12px/1.5 var(--f-mono);
+  color: var(--bad);
+  max-width: 900px;
+}

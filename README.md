@@ -31,6 +31,14 @@ npm run preview
 
 O build vai para `dist/`. O `npm run preview` serve essa pasta localmente para conferência.
 
+## Testes
+
+```
+npm test
+```
+
+Roda os testes das regras da obra (Vitest) em `tests/`.
+
 ## Outros comandos
 
 - `npm run lint`: verificação com ESLint.
@@ -39,8 +47,15 @@ O build vai para `dist/`. O `npm run preview` serve essa pasta localmente para c
 ## Estrutura
 
 - `index.html` e `src/main.js`: ponto de entrada.
-- `src/`: módulos ES (`geo.js`, `data.js`, `scene.js`, `app.js`, `ui.js`, `game.js`) e estilos em `src/estilos/`.
+- `dados/`: dados da obra em JSON (serviços, ensaios, decisões, manual, normas, parâmetros do trecho). Editar estes arquivos muda o modelo sem tocar no código.
+- `src/dominio/`: regras da obra (cronograma, frentes, quantitativos, ensaios, liberações, nota da missão), sem Three.js nem DOM.
+- `src/motor/`: modelo 3D (Three.js).
+- `src/interface/`: painéis, abas, gráficos e diário de obra.
+- `src/jogo/`: missão do engenheiro residente.
+- `src/estado.js` e `src/controlador.js`: estado central e ligação entre as camadas.
+- `tests/`: testes do domínio.
 - `src-legado/`: código original (HTML único), mantido como referência até o fim da Fase 2.
 - `Vila_Militar_4D_Terraplenagem_Pavimentacao.html`: HTML de referência.
-- `docs/`: plano do projeto (`PLANO.md`), escopo (`ESCOPO.md`) e prompts de cada fase.
-- `dados/`: dados do local da obra.
+- `docs/`: plano (`PLANO.md`), escopo (`ESCOPO.md`), arquitetura (`ARQUITETURA.md`) e prompts de cada fase.
+
+Detalhes das camadas e de como editar os dados em `docs/ARQUITETURA.md`.

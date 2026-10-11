@@ -1,0 +1,99 @@
+{
+  "metodos": {
+    "frasco": "DNER-ME 092/94",
+    "speedy": "DNER-ME 052/94",
+    "comp": "DNER-ME 129/94",
+    "isc": "DNER-ME 049/94",
+    "granul": "DNER-ME 080/94",
+    "ll": "DNER-ME 122/94",
+    "lp": "DNER-ME 082/94",
+    "benk": "DNER-ME 024/94",
+    "marshall": "DNIT 447-ME",
+    "rt": "DNIT 136-ME",
+    "dui": "DNIT 180-ME",
+    "gmm": "DNIT 427-ME",
+    "granCB": "DNIT 412-ME",
+    "cps": "DNIT 428-ME",
+    "defl": "DNIT 133-ME",
+    "irr": "DNIT 442-ME",
+    "la": "DNIT 451-ME",
+    "ea": "DNIT 450-ME"
+  },
+  "referencias": [
+    {
+      "norma": "DNIT 104/2009-ES",
+      "titulo": "Terraplenagem: serviços preliminares",
+      "aplicacao": "Limpeza e destocamento"
+    },
+    {
+      "norma": "DNIT 106/2009-ES",
+      "titulo": "Terraplenagem: cortes",
+      "aplicacao": "Escavação e transporte"
+    },
+    {
+      "norma": "DNIT 108/2009-ES",
+      "titulo": "Terraplenagem: aterros",
+      "aplicacao": "Corpo e camada final"
+    },
+    {
+      "norma": "DNIT 137/2010-ES",
+      "titulo": "Regularização do subleito",
+      "aplicacao": "Subleito"
+    },
+    {
+      "norma": "DNIT 139/2010-ES",
+      "titulo": "Sub-base estabilizada granulometricamente",
+      "aplicacao": "Sub-base"
+    },
+    {
+      "norma": "DNIT 141/2022-ES",
+      "titulo": "Base estabilizada granulometricamente",
+      "aplicacao": "Base"
+    },
+    {
+      "norma": "DNIT 144/2014-ES",
+      "titulo": "Imprimação com ligante asfáltico",
+      "aplicacao": "Imprimação"
+    },
+    {
+      "norma": "DNIT 145/2012-ES",
+      "titulo": "Pintura de ligação com ligante asfáltico",
+      "aplicacao": "Pintura"
+    },
+    {
+      "norma": "DNIT 031/2024-ES",
+      "titulo": "Concreto asfáltico",
+      "aplicacao": "CBUQ, usina e aceitação"
+    },
+    {
+      "norma": "DNER-ME 092/94",
+      "titulo": "Massa específica in situ: frasco de areia",
+      "aplicacao": "GC das camadas"
+    },
+    {
+      "norma": "DNER-ME 129/94",
+      "titulo": "Compactação (amostras não trabalhadas)",
+      "aplicacao": "Referência de GC"
+    },
+    {
+      "norma": "DNER-ME 049/94",
+      "titulo": "Índice de Suporte Califórnia",
+      "aplicacao": "Materiais"
+    },
+    {
+      "norma": "DNIT 447-ME",
+      "titulo": "Ensaio Marshall",
+      "aplicacao": "Dosagem"
+    },
+    {
+      "norma": "DNIT 133-ME",
+      "titulo": "Deflexões com viga Benkelman",
+      "aplicacao": "Aceitação"
+    },
+    {
+      "norma": "DNER-PRO 277/97",
+      "titulo": "Plano de amostragem e controle estatístico",
+      "aplicacao": "Frequências"
+    }
+  ]
+}

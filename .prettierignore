@@ -3,3 +3,7 @@ node_modules/
 src-legado/
 package-lock.json
 *.html
+*.md
+src/estilos/base.css
+src/estilos/extra.css
+tests/referencia/

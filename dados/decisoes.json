@@ -1,0 +1,702 @@
+{
+  "opcoesBase": {
+    "failBase": 1,
+    "failCbuq": 1
+  },
+  "avaliacoes": ["Inadequada", "Aceitável", "Melhor decisão"],
+  "pontuacao": {
+    "pesos": {
+      "qualidade": 0.35,
+      "conformidade": 0.35,
+      "prazo": 0.15,
+      "custo": 0.15
+    },
+    "pontosPorDiaDeAtraso": 15,
+    "milReaisPorPonto": 1.5,
+    "retrabalhosSemPenalidade": ["rwBase", "rwCbuq"],
+    "conceitos": [
+      {
+        "minimo": 9,
+        "nome": "Excelente"
+      },
+      {
+        "minimo": 8,
+        "nome": "Muito bom"
+      },
+      {
+        "minimo": 6.5,
+        "nome": "Bom"
+      },
+      {
+        "minimo": 5,
+        "nome": "Regular"
+      },
+      {
+        "minimo": 0,
+        "nome": "Insuficiente"
+      }
+    ]
+  },
+  "decisoes": [
+    {
+      "id": "D1",
+      "servico": "S01",
+      "dia": {
+        "fixo": 0.35
+      },
+      "titulo": "Base da usina de CBUQ",
+      "contexto": "A usina contínua de 60 t/h chegou ao canteiro. O encarregado propõe assentar a usina direto sobre o pátio de brita e dispensar a bacia de contenção dos tanques de CAP, para ganhar três dias de montagem.",
+      "dados": [
+        {
+          "rotulo": "Usina",
+          "valor": "60 t/h, tambor contrafluxo"
+        },
+        {
+          "rotulo": "Tanques de CAP",
+          "valor": "2 × 30 m³ aquecidos"
+        },
+        {
+          "rotulo": "Prazo da montagem",
+          "valor": "8 dias úteis"
+        }
+      ],
+      "opcoes": [
+        {
+          "texto": "Executar base de concreto nivelada, bacia de contenção e aguardar a licença de operação.",
+          "avaliacao": 2,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Correto. A base nivelada mantém as balanças e os silos aferidos, e a bacia de contenção é exigida para armazenar ligante aquecido. A montagem cabe na janela prevista, em paralelo com a terraplenagem."
+        },
+        {
+          "texto": "Assentar sobre o pátio de brita e dispensar a bacia, para ganhar tempo.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": -10,
+            "conformidade": -25
+          },
+          "retorno": "Inadequado. Recalques diferenciais desaferem as balanças dos silos e da bomba de CAP, e um vazamento de ligante sem contenção é passivo ambiental dentro da área militar.",
+          "consequencia": {
+            "dia": 15.5,
+            "titulo": "Fiscalização ambiental",
+            "texto": "A vistoria da licença de operação encontrou os tanques sem contenção e solo contaminado sob a bomba de CAP. A usina só pode operar depois da bacia e da remoção do solo.",
+            "efeitos": {
+              "atraso": 1,
+              "custo": 24,
+              "qualidade": 0,
+              "conformidade": -10
+            }
+          }
+        },
+        {
+          "texto": "Não montar nada até sair a licença definitiva.",
+          "avaliacao": 1,
+          "efeitos": {
+            "atraso": 2,
+            "custo": 0,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Aceitável, mas conservador. A licença é necessária para operar, não para montar. Esperar para começar a montagem empurra a calibração da usina para depois da base pronta."
+        }
+      ]
+    },
+    {
+      "id": "D2",
+      "servico": "S03",
+      "dia": {
+        "fixo": 3.6
+      },
+      "titulo": "Material da camada final do aterro",
+      "contexto": "O projeto pede ISC ≥ 9 % e expansão ≤ 2 % nos últimos 60 cm do aterro. O laboratório entregou três opções de material.",
+      "dados": [
+        {
+          "rotulo": "Solo do corte (argila arenosa)",
+          "valor": "ISC 9 % · exp. 1,2 %"
+        },
+        {
+          "rotulo": "Jazida de empréstimo, a 1,3 km",
+          "valor": "ISC 14 % · exp. 0,8 %"
+        },
+        {
+          "rotulo": "Argila siltosa cinza da est. 11",
+          "valor": "ISC 7 % · exp. 2,6 %"
+        }
+      ],
+      "opcoes": [
+        {
+          "texto": "Usar a jazida de empréstimo na camada final e o solo do corte no corpo do aterro.",
+          "avaliacao": 2,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Correto. A jazida dá margem sobre o ISC de projeto e o solo do corte é bem aproveitado no corpo, onde a exigência é menor (ISC ≥ 2 %, expansão ≤ 4 %)."
+        },
+        {
+          "texto": "Usar o solo do corte também na camada final, porque atinge exatamente o ISC de projeto.",
+          "avaliacao": 1,
+          "efeitos": {
+            "atraso": 0,
+            "custo": -18,
+            "qualidade": -10,
+            "conformidade": -5
+          },
+          "retorno": "Aceitável no papel, arriscado na prática. Sem margem, qualquer variação do material reprova a camada. Exigiria ensaios de ISC mais frequentes."
+        },
+        {
+          "texto": "Usar a argila siltosa da est. 11, que está mais perto.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": -25,
+            "qualidade": -20,
+            "conformidade": -25
+          },
+          "retorno": "Inadequado. A expansão de 2,6 % passa do limite de 2 % da DNIT 108/2009-ES e o ISC está abaixo do projeto.",
+          "consequencia": {
+            "dia": 16.3,
+            "titulo": "Bombeamento na regularização",
+            "texto": "Na regularização, o subleito entre as est. 10 e 13 bombeou sob o rolo depois de uma garoa. O material expansivo precisou ser removido e substituído.",
+            "efeitos": {
+              "atraso": 2,
+              "custo": 45,
+              "qualidade": -5,
+              "conformidade": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "D3",
+      "servico": "S07",
+      "dia": {
+        "falhaDeEnsaio": "^GC corpo do aterro, camada 4$"
+      },
+      "titulo": "GC reprovado no corpo do aterro",
+      "contexto": "O frasco de areia na camada 4 deu GC = 97,6 %. A umidade de campo está em 21,6 %, para ótima de 18,2 %. Os outros quatro pontos da camada passaram com média de 101,3 %.",
+      "dados": [
+        {
+          "rotulo": "GC medido",
+          "valor": "97,6 % (mín. 100 %)"
+        },
+        {
+          "rotulo": "Umidade",
+          "valor": "21,6 % (hót + 3,4 %)"
+        },
+        {
+          "rotulo": "Média da camada",
+          "valor": "101,3 %"
+        }
+      ],
+      "opcoes": [
+        {
+          "texto": "Aceitar, porque a média da camada passa de 100 %.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": -15,
+            "conformidade": -20
+          },
+          "retorno": "Inadequado. O ponto também está fora da faixa de umidade (hót ± 3 %), e a causa é conhecida. A média não protege o local fraco, que é onde o recalque vai aparecer.",
+          "consequencia": {
+            "dia": 31.2,
+            "titulo": "Recalque no aterro",
+            "texto": "O levantamento final mostrou um afundamento de 2 cm na est. 10+10, justamente sobre o ponto aceito. A fiscalização exigiu monitoramento e reparo localizado do revestimento.",
+            "efeitos": {
+              "atraso": 1,
+              "custo": 30,
+              "qualidade": -10,
+              "conformidade": 0
+            }
+          }
+        },
+        {
+          "texto": "Aerar com a grade de discos, recompactar e reensaiar o ponto.",
+          "avaliacao": 2,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 2.5,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Correto. Com a umidade de volta à faixa, a recompactação resolve. O reensaio deu 100,9 % e a camada seguinte foi liberada no mesmo dia."
+        },
+        {
+          "texto": "Lançar a próxima camada com 40 cm, para \"compensar\" com mais energia.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": -20,
+            "conformidade": -25
+          },
+          "retorno": "Inadequado. A DNIT 108/2009-ES limita o corpo do aterro a 30 cm compactados. Uma camada mais espessa compacta pior, sem corrigir a de baixo."
+        },
+        {
+          "texto": "Parar a frente e esperar o solo secar sozinho.",
+          "avaliacao": 1,
+          "efeitos": {
+            "atraso": 1.5,
+            "custo": 0,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Aceitável, mas lento. A aeração mecânica com grade resolve em horas o que o sol leva dias para fazer."
+        }
+      ]
+    },
+    {
+      "id": "D4",
+      "servico": "S07",
+      "dia": {
+        "fixo": 10.2
+      },
+      "titulo": "Frente fria no fim da tarde",
+      "contexto": "A meteorologia indica chuva forte à noite, com 35 mm previstos. Há uma camada de aterro recém-espalhada e ainda não compactada entre as est. 9 e 12.",
+      "tempoNoDiario": "Manhã e tarde com tempo bom; frente fria com chuva forte prevista para a noite.",
+      "dados": [
+        {
+          "rotulo": "Chuva prevista",
+          "valor": "35 mm entre 20 h e 4 h"
+        },
+        {
+          "rotulo": "Camada exposta",
+          "valor": "≈ 60 m, solta"
+        },
+        {
+          "rotulo": "Horário",
+          "valor": "15 h 30"
+        }
+      ],
+      "opcoes": [
+        {
+          "texto": "Compactar e selar a camada com rolo liso, dar caimento transversal e abrir saídas para a água.",
+          "avaliacao": 2,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 1.5,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Correto. Superfície selada e com caimento escoa a chuva em vez de absorvê-la. No dia seguinte basta escarificar levemente e continuar."
+        },
+        {
+          "texto": "Continuar lançando material até o fim do expediente.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 1,
+            "custo": 18,
+            "qualidade": -10,
+            "conformidade": -10
+          },
+          "retorno": "Inadequado. O material solto absorve a chuva e fica muito acima da umidade ótima. Precisou ser removido ou aerado por um dia inteiro."
+        },
+        {
+          "texto": "Suspender a frente por dois dias por precaução.",
+          "avaliacao": 1,
+          "efeitos": {
+            "atraso": 2,
+            "custo": 0,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Aceitável, mas caro em prazo. A camada solta sem selagem continuaria exposta à chuva do mesmo jeito."
+        }
+      ]
+    },
+    {
+      "id": "D5",
+      "servico": "S08",
+      "dia": {
+        "fixo": 12.25
+      },
+      "titulo": "Espessura da camada final",
+      "contexto": "O encarregado propõe lançar a camada final em uma única subcamada de 40 cm, em vez de 20 cm, para ganhar um dia.",
+      "dados": [
+        {
+          "rotulo": "Camada final",
+          "valor": "60 cm (3 × 20 cm no projeto)"
+        },
+        {
+          "rotulo": "Limite da especificação",
+          "valor": "0,20 m por camada"
+        },
+        {
+          "rotulo": "Rolo disponível",
+          "valor": "Pé-de-carneiro 11 t"
+        }
+      ],
+      "opcoes": [
+        {
+          "texto": "Aceitar a camada de 40 cm.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": -15,
+            "conformidade": -20
+          },
+          "retorno": "Inadequado. A DNIT 108/2009-ES limita a camada final a 0,20 m. O rolo não transmite energia ao fundo de 40 cm, e o frasco de areia só mede os 15 cm de cima."
+        },
+        {
+          "texto": "Manter as subcamadas de 20 cm, com ensaio em cada uma.",
+          "avaliacao": 2,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Correto. Cada subcamada recebe energia uniforme e é controlada antes de ser coberta."
+        },
+        {
+          "texto": "Aceitar 40 cm, mas com ensaio de GC dobrado no topo.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 1,
+            "qualidade": -12,
+            "conformidade": -15
+          },
+          "retorno": "Inadequado. Mais ensaios no topo não medem o fundo da camada, onde está o problema."
+        }
+      ]
+    },
+    {
+      "id": "D6",
+      "servico": "S09",
+      "dia": {
+        "servico": "S09",
+        "em": "fim",
+        "mais": -0.15
+      },
+      "titulo": "Pressão para liberar o subleito",
+      "contexto": "Quatro dos cinco pontos de GC da regularização estão conformes. O último, na est. 13+10, ainda está no laboratório (cerca de 2 h). O comando pede que a sub-base comece hoje.",
+      "dados": [
+        {
+          "rotulo": "Pontos conformes",
+          "valor": "4 de 5"
+        },
+        {
+          "rotulo": "Cotas",
+          "valor": "−1,8 a +2,4 cm (tol. ± 3 cm)"
+        },
+        {
+          "rotulo": "Resultado pendente",
+          "valor": "est. 13+10"
+        }
+      ],
+      "opcoes": [
+        {
+          "texto": "Emitir o BLC-1 agora, para todo o trecho.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": -5,
+            "conformidade": -20
+          },
+          "retorno": "Inadequado. Liberar sem o último ensaio quebra a cadeia de liberação. Se o ponto reprovar, a sub-base terá de ser removida."
+        },
+        {
+          "texto": "Liberar só as est. 0 a 10, já ensaiadas, e o restante quando sair o último resultado.",
+          "avaliacao": 2,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Correto. A liberação parcial por segmento é registrada no BLC, a frente não para e nenhuma camada é coberta sem ensaio."
+        },
+        {
+          "texto": "Aguardar o último resultado e liberar tudo de uma vez.",
+          "avaliacao": 2,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Correto. O atraso é de poucas horas e o BLC sai completo."
+        }
+      ]
+    },
+    {
+      "id": "D7",
+      "servico": "S12",
+      "dia": {
+        "falhaDeEnsaio": "^GC base$"
+      },
+      "titulo": "GC da base reprovado",
+      "contexto": "Na est. 9+00, bordo esquerdo, o frasco de areia deu GC = 98,1 %. A umidade de campo está 1,6 % abaixo da ótima. As deflexões da base ainda não foram medidas nesse segmento.",
+      "dados": [
+        {
+          "rotulo": "GC medido",
+          "valor": "98,1 % (mín. 100 %)"
+        },
+        {
+          "rotulo": "Umidade",
+          "valor": "4,2 % (hót 5,8 % ± 1 %)"
+        },
+        {
+          "rotulo": "Próximo serviço",
+          "valor": "Imprimação"
+        }
+      ],
+      "opcoes": [
+        {
+          "texto": "Aceitar e confiar que a deflexão vai passar.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": -15,
+            "conformidade": -20
+          },
+          "retorno": "Inadequado. A deflexão não substitui o grau de compactação: são critérios independentes da DNIT 141/2022-ES.",
+          "consequencia": {
+            "dia": 30.6,
+            "titulo": "Deflexão alta e trilha de roda",
+            "texto": "No controle final, a est. 9+00 BE deu deflexão de 61 × 0,01 mm (acima do projeto) e marca de trilha de roda. O CBUQ e a base do segmento foram refeitos.",
+            "efeitos": {
+              "atraso": 2,
+              "custo": 62,
+              "qualidade": -10,
+              "conformidade": 0
+            }
+          }
+        },
+        {
+          "texto": "Escarificar o segmento, umedecer, recompactar e reensaiar antes de imprimar.",
+          "avaliacao": 2,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 4,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Correto. O retrabalho de 20 m custa um dia útil, e o reensaio deu 100,8 %. A imprimação e o CBUQ passam para o dia seguinte.",
+          "opcoes": {
+            "rwBase": 1
+          }
+        },
+        {
+          "texto": "Compensar aumentando o CBUQ para 6 cm nesse trecho.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 8,
+            "qualidade": -10,
+            "conformidade": -15
+          },
+          "retorno": "Inadequado. Alterar a espessura do revestimento muda o projeto sem corrigir a base, e cria degrau na superfície."
+        }
+      ]
+    },
+    {
+      "id": "D8",
+      "servico": "S13",
+      "dia": {
+        "servico": "S13",
+        "em": "curaInicio",
+        "mais": 0.6
+      },
+      "titulo": "Tráfego sobre a imprimação",
+      "contexto": "A imprimação está em cura. O comando da guarnição pede a via liberada amanhã cedo para o deslocamento de uma coluna de viaturas até a área de formatura.",
+      "dados": [
+        {
+          "rotulo": "Cura mínima",
+          "valor": "≈ 72 h"
+        },
+        {
+          "rotulo": "Tempo decorrido",
+          "valor": "≈ 14 h"
+        },
+        {
+          "rotulo": "Rota alternativa",
+          "valor": "Avenida existente, +900 m"
+        }
+      ],
+      "opcoes": [
+        {
+          "texto": "Liberar a via, porque o ligante já penetrou.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 6,
+            "qualidade": -10,
+            "conformidade": -10
+          },
+          "retorno": "Inadequado. Antes da cura, os pneus arrancam a película e levam ligante para a via. A imprimação teve de ser reaplicada nos trechos danificados."
+        },
+        {
+          "texto": "Manter a interdição e sinalizar o desvio pela avenida existente.",
+          "avaliacao": 2,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0.5,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Correto. A cura é preservada e o deslocamento das viaturas acontece pelo desvio sinalizado, combinado com o comando."
+        },
+        {
+          "texto": "Espalhar pó de pedra e liberar só viaturas leves, em baixa velocidade.",
+          "avaliacao": 1,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 2,
+            "qualidade": -3,
+            "conformidade": 0
+          },
+          "retorno": "Aceitável em emergência. O pó de pedra protege a película, mas o excesso precisa ser varrido antes da pintura de ligação."
+        }
+      ]
+    },
+    {
+      "id": "D9",
+      "servico": "S15",
+      "dia": {
+        "falhaDeEnsaio": "Rotarex\\), 1ª amostra"
+      },
+      "titulo": "Teor de ligante fora da tolerância",
+      "contexto": "A primeira amostra da produção deu 6,05 % de ligante (Rotarex). O projeto é 5,6 % ± 0,3 %. Um caminhão (≈ 28 m da faixa direita) já foi espalhado e compactado.",
+      "dados": [
+        {
+          "rotulo": "Teor medido",
+          "valor": "6,05 %"
+        },
+        {
+          "rotulo": "Faixa aceita",
+          "valor": "5,3 a 5,9 %"
+        },
+        {
+          "rotulo": "Massa já aplicada",
+          "valor": "≈ 12 t"
+        }
+      ],
+      "opcoes": [
+        {
+          "texto": "Seguir produzindo e corrigir a bomba de CAP nos próximos caminhões.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": -20,
+            "conformidade": -20
+          },
+          "retorno": "Inadequado. A massa já aplicada fica com vazios baixos e tende a exsudar. A produção sem correção comprovada também mantém o risco.",
+          "consequencia": {
+            "dia": 31,
+            "titulo": "Exsudação na faixa direita",
+            "texto": "No controle final, o segmento 0+00 a 1+10 BD apresentou exsudação e Vv abaixo de 3 % nos corpos de prova. O trecho foi fresado e refeito.",
+            "efeitos": {
+              "atraso": 1.5,
+              "custo": 35,
+              "qualidade": -10,
+              "conformidade": 0
+            }
+          }
+        },
+        {
+          "texto": "Parar a usina, recalibrar a bomba de CAP e fresar o trecho já aplicado.",
+          "avaliacao": 2,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 12,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Correto. A produção só volta com novo ensaio conforme. A faixa direita passa para o dia seguinte e o segmento fresado é refeito.",
+          "opcoes": {
+            "rwCbuq": 1
+          }
+        },
+        {
+          "texto": "Seguir produzindo e reduzir as passadas do rolo, para não fechar os vazios.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": -25,
+            "conformidade": -25
+          },
+          "retorno": "Inadequado. Compactar menos não corrige o excesso de ligante e reprova o grau de compactação, que precisa ficar entre 97 % e 100 %."
+        }
+      ]
+    },
+    {
+      "id": "D10",
+      "servico": "S15",
+      "dia": {
+        "servico": "S15",
+        "faixa": "BD",
+        "em": "fim",
+        "mais": 0.03
+      },
+      "titulo": "Abertura da faixa ao tráfego",
+      "contexto": "A faixa direita acabou de ser compactada. O comando quer passar as viaturas blindadas por ela agora, para liberar a outra faixa à pavimentação de amanhã.",
+      "dados": [
+        {
+          "rotulo": "Temperatura da massa",
+          "valor": "≈ 95 °C"
+        },
+        {
+          "rotulo": "Ponto de amolecimento do CAP",
+          "valor": "49,5 °C"
+        },
+        {
+          "rotulo": "Viaturas",
+          "valor": "Blindadas sobre rodas"
+        }
+      ],
+      "opcoes": [
+        {
+          "texto": "Liberar imediatamente após a última passada do rolo.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 14,
+            "qualidade": -15,
+            "conformidade": -10
+          },
+          "retorno": "Inadequado. A massa quente deforma sob carga pesada e fica marcada. A DNIT 031/2024-ES só admite tráfego com a massa abaixo do ponto de amolecimento do ligante."
+        },
+        {
+          "texto": "Liberar quando a temperatura medida cair abaixo do ponto de amolecimento.",
+          "avaliacao": 2,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Correto. Em poucas horas a massa esfria, a temperatura é conferida com termômetro e a faixa é liberada com segurança."
+        },
+        {
+          "texto": "Manter a faixa fechada por 7 dias.",
+          "avaliacao": 1,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 5,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Aceitável, mas desnecessário. O desvio prolongado atrapalha a rotina da guarnição sem ganho para o pavimento."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,725 @@
+{
+  "grupos": {
+    "apoio": {
+      "nome": "Apoio e mobilização",
+      "cor": "#728078"
+    },
+    "terra": {
+      "nome": "Terraplenagem",
+      "cor": "#a3591c"
+    },
+    "pav": {
+      "nome": "Pavimentação",
+      "cor": "#3b4650"
+    },
+    "usina": {
+      "nome": "Usina de CBUQ",
+      "cor": "#c7851a"
+    },
+    "lab": {
+      "nome": "Controle tecnológico",
+      "cor": "#0f5a4b"
+    }
+  },
+  "servicos": [
+    {
+      "id": "S01",
+      "grupo": "apoio",
+      "nome": "Mobilização e canteiro de obras",
+      "curto": "Mobilização e canteiro",
+      "norma": "NR-18 · Plano de canteiro",
+      "janelas": [[0, 3]],
+      "efetivo": "1 Sgt encarregado, 1 Cb, 8 Sd",
+      "equipamentos": [
+        {
+          "nome": "Caminhão guindauto (munck)",
+          "qtd": 1
+        },
+        {
+          "nome": "Pá carregadeira",
+          "qtd": 1
+        }
+      ],
+      "quantidade": "Escritório, laboratório, almoxarifado, refeitório, sanitários, pátio de agregados",
+      "liberacao": "Laboratório de campo montado e aferido antes do primeiro ensaio."
+    },
+    {
+      "id": "S02",
+      "grupo": "apoio",
+      "nome": "Locação topográfica e nota de serviço",
+      "curto": "Locação topográfica",
+      "norma": "NBR 13133",
+      "janelas": [[2, 3.5]],
+      "efetivo": "1 topógrafo, 2 auxiliares",
+      "equipamentos": [
+        {
+          "nome": "Estação total",
+          "qtd": 1
+        },
+        {
+          "nome": "Nível digital",
+          "qtd": 1
+        }
+      ],
+      "quantidade": "Eixo estaqueado de 20 em 20 m (est. 0 a 15), offsets e referências de nível",
+      "liberacao": "Nota de serviço de terraplenagem aprovada pela fiscalização."
+    },
+    {
+      "id": "S03",
+      "grupo": "lab",
+      "nome": "Ensaios prévios: subleito, jazidas, agregados e CAP",
+      "curto": "Ensaios prévios",
+      "norma": "DNER-ME 080, 082, 122, 129 e 049",
+      "janelas": [[2, 6]],
+      "efetivo": "1 laboratorista, 2 auxiliares",
+      "equipamentos": [
+        {
+          "nome": "Sonda a trado",
+          "qtd": 1
+        },
+        {
+          "nome": "Prensa CBR",
+          "qtd": 1
+        }
+      ],
+      "quantidade": "5 furos de sondagem; caracterização, compactação e ISC dos materiais",
+      "liberacao": "Materiais aprovados antes de qualquer lançamento na pista."
+    },
+    {
+      "id": "S04",
+      "grupo": "terra",
+      "nome": "Limpeza, desmatamento e destocamento",
+      "curto": "Limpeza e destocamento",
+      "norma": "DNIT 104/2009-ES",
+      "janelas": [[3.5, 5]],
+      "efetivo": "1 Sgt, 4 Sd, 2 operadores",
+      "equipamentos": [
+        {
+          "nome": "Trator de esteiras",
+          "qtd": 1
+        },
+        {
+          "nome": "Caminhão basculante",
+          "qtd": 2
+        }
+      ],
+      "liberacao": "Faixa limpa e expurgo removido antes do corte e do aterro.",
+      "frente": {
+        "chave": "limp",
+        "tipo": "extensao"
+      },
+      "diario": {
+        "quantitativo": "Alimp",
+        "unidade": "m²",
+        "texto": "limpeza"
+      }
+    },
+    {
+      "id": "S05",
+      "grupo": "usina",
+      "nome": "Montagem da usina de CBUQ",
+      "curto": "Montagem da usina",
+      "norma": "Manual do fabricante · NR-12",
+      "janelas": [[3, 11]],
+      "efetivo": "1 Sgt mecânico, 1 eletricista, 4 Sd",
+      "equipamentos": [
+        {
+          "nome": "Caminhão guindauto (munck)",
+          "qtd": 1
+        },
+        {
+          "nome": "Pá carregadeira",
+          "qtd": 1
+        }
+      ],
+      "quantidade": "Usina contínua (tambor secador-misturador) de 60 t/h, 4 silos dosadores, filtro de mangas, silo de massa e tanques de CAP",
+      "liberacao": "Licença ambiental de operação, base nivelada e balanças aferidas."
+    },
+    {
+      "id": "S06",
+      "grupo": "terra",
+      "nome": "Escavação de corte, carga e transporte",
+      "curto": "Corte e transporte",
+      "norma": "DNIT 106/2009-ES",
+      "janelas": [[5, 11]],
+      "efetivo": "1 Sgt, 2 Sd, 5 operadores/motoristas",
+      "equipamentos": [
+        {
+          "nome": "Escavadeira hidráulica 20 t",
+          "qtd": 1
+        },
+        {
+          "nome": "Caminhão basculante 10 m³",
+          "qtd": 4
+        },
+        {
+          "nome": "Trator de esteiras",
+          "qtd": 1
+        }
+      ],
+      "liberacao": "Cotas do fundo do corte conferidas (± 3 cm) antes da regularização.",
+      "frente": {
+        "chave": "pc",
+        "tipo": "fracao",
+        "ate": 1
+      },
+      "diario": {
+        "quantitativo": "Vc",
+        "unidade": "m³",
+        "texto": "escavação"
+      }
+    },
+    {
+      "id": "S07",
+      "grupo": "terra",
+      "nome": "Aterro: corpo (camadas de até 30 cm)",
+      "curto": "Aterro: corpo",
+      "norma": "DNIT 108/2009-ES",
+      "janelas": [[5.5, 12]],
+      "efetivo": "1 Sgt, 4 operadores, 2 Sd",
+      "equipamentos": [
+        {
+          "nome": "Motoniveladora",
+          "qtd": 1
+        },
+        {
+          "nome": "Rolo pé-de-carneiro vibratório",
+          "qtd": 1
+        },
+        {
+          "nome": "Caminhão-pipa 10 000 L",
+          "qtd": 1
+        },
+        {
+          "nome": "Grade de discos + trator",
+          "qtd": 1
+        }
+      ],
+      "liberacao": "Cada camada só recebe a seguinte com GC ≥ 100 % (Proctor normal) e umidade dentro de ± 3 %.",
+      "frente": {
+        "chave": "ck",
+        "tipo": "camadas"
+      },
+      "diario": {
+        "quantitativo": "Vcorpo",
+        "unidade": "m³",
+        "texto": "aterro compactado"
+      }
+    },
+    {
+      "id": "S08",
+      "grupo": "terra",
+      "nome": "Aterro: camada final (3 × 20 cm)",
+      "curto": "Aterro: camada final",
+      "norma": "DNIT 108/2009-ES",
+      "janelas": [[12, 15]],
+      "efetivo": "1 Sgt, 4 operadores, 2 Sd",
+      "equipamentos": [
+        {
+          "nome": "Motoniveladora",
+          "qtd": 1
+        },
+        {
+          "nome": "Rolo pé-de-carneiro vibratório",
+          "qtd": 1
+        },
+        {
+          "nome": "Rolo liso vibratório",
+          "qtd": 1
+        },
+        {
+          "nome": "Caminhão-pipa 10 000 L",
+          "qtd": 1
+        },
+        {
+          "nome": "Caminhão basculante 10 m³",
+          "qtd": 3
+        }
+      ],
+      "liberacao": "GC ≥ 100 % (energia intermediária), ISC ≥ projeto e expansão ≤ 2 %.",
+      "frente": {
+        "chave": "cf",
+        "tipo": "fracao",
+        "ate": 3
+      },
+      "diario": {
+        "quantitativo": "Vcf",
+        "unidade": "m³",
+        "texto": "aterro compactado"
+      }
+    },
+    {
+      "id": "S09",
+      "grupo": "terra",
+      "nome": "Regularização do subleito",
+      "curto": "Regularização do subleito",
+      "norma": "DNIT 137/2010-ES",
+      "janelas": [[15, 17]],
+      "efetivo": "1 Sgt, 3 operadores, 2 Sd",
+      "equipamentos": [
+        {
+          "nome": "Motoniveladora",
+          "qtd": 1
+        },
+        {
+          "nome": "Rolo pé-de-carneiro vibratório",
+          "qtd": 1
+        },
+        {
+          "nome": "Rolo liso vibratório",
+          "qtd": 1
+        },
+        {
+          "nome": "Caminhão-pipa 10 000 L",
+          "qtd": 1
+        }
+      ],
+      "liberacao": "BLC-1: GC ≥ 100 %, umidade ± 2 %, cotas ± 3 cm.",
+      "frente": {
+        "chave": "reg",
+        "tipo": "extensao"
+      },
+      "diario": {
+        "quantitativo": "Areg",
+        "unidade": "m²",
+        "texto": "regularização"
+      }
+    },
+    {
+      "id": "S10",
+      "grupo": "usina",
+      "nome": "Dosagem Marshall e calibração da usina",
+      "curto": "Dosagem e calibração",
+      "norma": "DNIT 031/2024-ES · DNIT 447-ME",
+      "janelas": [[9, 16]],
+      "efetivo": "1 laboratorista, 1 operador de usina",
+      "equipamentos": [
+        {
+          "nome": "Compactador Marshall",
+          "qtd": 1
+        },
+        {
+          "nome": "Pá carregadeira",
+          "qtd": 1
+        }
+      ],
+      "quantidade": "Projeto de mistura faixa C-12,5 e calibração de silos, balanças e bomba de CAP",
+      "liberacao": "Teor de projeto aprovado e curva de calibração dos silos registrada."
+    },
+    {
+      "id": "S11",
+      "grupo": "pav",
+      "nome": "Sub-base de solo-brita (20 cm)",
+      "curto": "Sub-base solo-brita",
+      "norma": "DNIT 139/2010-ES",
+      "janelas": [[17, 20]],
+      "efetivo": "1 Sgt, 4 operadores, 2 Sd",
+      "equipamentos": [
+        {
+          "nome": "Motoniveladora",
+          "qtd": 1
+        },
+        {
+          "nome": "Rolo liso vibratório",
+          "qtd": 1
+        },
+        {
+          "nome": "Rolo de pneus",
+          "qtd": 1
+        },
+        {
+          "nome": "Caminhão-pipa 10 000 L",
+          "qtd": 1
+        },
+        {
+          "nome": "Caminhão basculante 10 m³",
+          "qtd": 3
+        }
+      ],
+      "liberacao": "BLC-2: GC ≥ 100 %, umidade −2/+1 % na compactação, espessura ± 10 %.",
+      "frente": {
+        "chave": "sb",
+        "tipo": "extensao"
+      },
+      "diario": {
+        "quantitativo": "Vsb",
+        "unidade": "m³",
+        "texto": "sub-base compactada"
+      }
+    },
+    {
+      "id": "S12",
+      "grupo": "pav",
+      "nome": "Base de brita graduada (15 cm)",
+      "curto": "Base brita graduada",
+      "norma": "DNIT 141/2022-ES",
+      "janelas": [[20, 23.5]],
+      "efetivo": "1 Sgt, 4 operadores, 2 Sd",
+      "equipamentos": [
+        {
+          "nome": "Motoniveladora",
+          "qtd": 1
+        },
+        {
+          "nome": "Rolo liso vibratório",
+          "qtd": 1
+        },
+        {
+          "nome": "Rolo de pneus",
+          "qtd": 1
+        },
+        {
+          "nome": "Caminhão-pipa 10 000 L",
+          "qtd": 1
+        },
+        {
+          "nome": "Caminhão basculante 10 m³",
+          "qtd": 3
+        },
+        {
+          "nome": "Viga Benkelman",
+          "qtd": 1
+        }
+      ],
+      "liberacao": "BLC-3: GC ≥ 100 %, umidade ± 1 %, deflexão característica ≤ admissível.",
+      "frente": {
+        "chave": "ba",
+        "tipo": "extensao",
+        "fimAntecipado": 0.5
+      },
+      "diario": {
+        "quantitativo": "Vba",
+        "unidade": "m³",
+        "texto": "base compactada"
+      }
+    },
+    {
+      "id": "S13",
+      "grupo": "pav",
+      "nome": "Imprimação com CM-30",
+      "curto": "Imprimação",
+      "norma": "DNIT 144/2014-ES",
+      "faixas": {
+        "BD": [23.5, 24],
+        "BE": [24, 24.5]
+      },
+      "cura": [24.5, 27.5],
+      "efetivo": "1 Cb, 1 motorista, 2 Sd",
+      "equipamentos": [
+        {
+          "nome": "Vassoura mecânica",
+          "qtd": 1
+        },
+        {
+          "nome": "Caminhão espargidor",
+          "qtd": 1
+        }
+      ],
+      "liberacao": "Taxa dentro de ± 0,2 L/m² e cura efetiva antes da pintura de ligação.",
+      "frente": {
+        "chave": "imp",
+        "tipo": "faixas"
+      },
+      "diario": {
+        "quantitativo": "Aimp",
+        "unidade": "m²",
+        "texto": "imprimação"
+      }
+    },
+    {
+      "id": "S14",
+      "grupo": "pav",
+      "nome": "Pintura de ligação com RR-1C",
+      "curto": "Pintura de ligação",
+      "norma": "DNIT 145/2012-ES",
+      "faixas": {
+        "BD": [28, 28.2],
+        "BE": [29, 29.2]
+      },
+      "efetivo": "1 Cb, 1 motorista, 2 Sd",
+      "equipamentos": [
+        {
+          "nome": "Vassoura mecânica",
+          "qtd": 1
+        },
+        {
+          "nome": "Caminhão espargidor",
+          "qtd": 1
+        }
+      ],
+      "liberacao": "Emulsão rompida (sem água livre) antes do lançamento do CBUQ.",
+      "frente": {
+        "chave": "pin",
+        "tipo": "faixas"
+      },
+      "diario": {
+        "quantitativo": "Apint",
+        "unidade": "m²",
+        "texto": "pintura"
+      }
+    },
+    {
+      "id": "S15",
+      "grupo": "pav",
+      "nome": "CBUQ: produção, transporte, espalhamento e compactação",
+      "curto": "CBUQ",
+      "norma": "DNIT 031/2024-ES",
+      "faixas": {
+        "BD": [28.3, 28.62],
+        "BE": [29.3, 29.62]
+      },
+      "efetivo": "1 Sgt, 1 operador de usina, 6 operadores/motoristas, 4 Sd",
+      "equipamentos": [
+        {
+          "nome": "Usina contínua 60 t/h",
+          "qtd": 1
+        },
+        {
+          "nome": "Caminhão basculante 12 t (com lona)",
+          "qtd": 4
+        },
+        {
+          "nome": "Vibroacabadora",
+          "qtd": 1
+        },
+        {
+          "nome": "Rolo de pneus",
+          "qtd": 1
+        },
+        {
+          "nome": "Rolo tandem vibratório",
+          "qtd": 1
+        }
+      ],
+      "liberacao": "BLC-5: GC entre 97 % e 100 %, espessura ± 5 %; tráfego só com a massa abaixo do ponto de amolecimento.",
+      "frente": {
+        "chave": "rv",
+        "tipo": "faixas"
+      },
+      "diario": {
+        "quantitativo": "Trv",
+        "unidade": "t",
+        "texto": "CBUQ aplicado"
+      }
+    },
+    {
+      "id": "S16",
+      "grupo": "lab",
+      "nome": "Controle final e aceitação do pavimento",
+      "curto": "Controle final",
+      "norma": "DNIT 031/2024-ES · DNIT 133-ME",
+      "janelas": [[30, 32]],
+      "efetivo": "1 laboratorista, 1 topógrafo, 2 auxiliares",
+      "equipamentos": [
+        {
+          "nome": "Viga Benkelman + caminhão 8,2 t",
+          "qtd": 1
+        },
+        {
+          "nome": "Perfilômetro / régua de 3 m",
+          "qtd": 1
+        },
+        {
+          "nome": "Pêndulo britânico",
+          "qtd": 1
+        }
+      ],
+      "quantidade": "Deflexões, irregularidade, regularidade, macrotextura e atrito",
+      "liberacao": "Termo de aceitação com todos os ensaios conformes."
+    },
+    {
+      "id": "S17",
+      "grupo": "apoio",
+      "nome": "Desmobilização e entrega à OM",
+      "curto": "Desmobilização e entrega",
+      "norma": "Termo de Recebimento Provisório",
+      "janelas": [[32, 34]],
+      "efetivo": "1 Sgt, 6 Sd",
+      "equipamentos": [
+        {
+          "nome": "Caminhão guindauto (munck)",
+          "qtd": 1
+        },
+        {
+          "nome": "Pá carregadeira",
+          "qtd": 1
+        }
+      ],
+      "quantidade": "Retirada do canteiro e da usina, limpeza e recomposição da área",
+      "liberacao": "Área do canteiro recomposta e as-built entregue.",
+      "frente": {
+        "chave": "hydro",
+        "tipo": "suave"
+      }
+    }
+  ],
+  "retrabalhos": [
+    {
+      "opcao": "rwBase",
+      "deslocar": {
+        "servicos": ["S13", "S14", "S15", "S16", "S17"],
+        "dias": 1
+      },
+      "inserir": {
+        "antesDe": "S13",
+        "servico": {
+          "id": "R1",
+          "grupo": "pav",
+          "retrabalho": true,
+          "nome": "Retrabalho: escarificação e recompactação da base (est. 8+10 a 9+10, BE)",
+          "curto": "Retrabalho na base",
+          "norma": "DNIT 141/2022-ES",
+          "janelas": [[23.5, 24.5]],
+          "efetivo": "1 Sgt, 3 operadores",
+          "equipamentos": [
+            {
+              "nome": "Motoniveladora",
+              "qtd": 1
+            },
+            {
+              "nome": "Caminhão-pipa 10 000 L",
+              "qtd": 1
+            },
+            {
+              "nome": "Rolo liso vibratório",
+              "qtd": 1
+            }
+          ],
+          "quantidade": "20 m × 3,8 m × 0,15 m",
+          "liberacao": "Reensaio de GC no mesmo ponto antes da imprimação.",
+          "diario": {
+            "valor": 11.4,
+            "unidade": "m³",
+            "texto": "base retrabalhada"
+          }
+        }
+      }
+    },
+    {
+      "opcao": "rwCbuq",
+      "referencia": {
+        "servico": "S15",
+        "faixa": "BD",
+        "em": "inicio"
+      },
+      "faixas": [
+        {
+          "servico": "S14",
+          "faixa": "BE",
+          "janela": [1.7, 1.9]
+        },
+        {
+          "servico": "S15",
+          "faixa": "BD",
+          "janela": [1, 1.32]
+        },
+        {
+          "servico": "S15",
+          "faixa": "BE",
+          "janela": [2, 2.32]
+        }
+      ],
+      "falha": {
+        "servico": "S15",
+        "inicio": 0,
+        "fim": 0.06,
+        "extensao": 28.6,
+        "remocao": [0.2, 0.9]
+      },
+      "deslocar": {
+        "servicos": ["S16", "S17"],
+        "dias": 1
+      },
+      "inserir": {
+        "antesDe": "S16",
+        "servico": {
+          "id": "R2",
+          "grupo": "usina",
+          "retrabalho": true,
+          "nome": "Usina parada: recalibração e fresagem do segmento 0+00 a 1+08,6 (BD)",
+          "curto": "Usina parada e fresagem",
+          "norma": "DNIT 031/2024-ES",
+          "janelasRelativas": [[0.1, 0.95]],
+          "efetivo": "1 operador de usina, 1 Sgt, 3 Sd",
+          "equipamentos": [
+            {
+              "nome": "Fresadora",
+              "qtd": 1
+            },
+            {
+              "nome": "Caminhão basculante 12 t (com lona)",
+              "qtd": 1
+            }
+          ],
+          "quantidade": "28,6 m × 3,5 m × 0,05 m ≈ 12 t",
+          "liberacao": "Novo ensaio de teor de ligante conforme antes de retomar a produção.",
+          "diario": {
+            "valor": 12,
+            "unidade": "t",
+            "texto": "CBUQ fresado e refeito"
+          }
+        }
+      }
+    }
+  ],
+  "cenarios": {
+    "nenhum": {
+      "nome": "Sem não conformidade",
+      "descricao": "Todos os ensaios conformes, exceto a reprovação real no corpo do aterro (camada 4, com recompactação).",
+      "opcoes": {}
+    },
+    "base": {
+      "nome": "GC da base reprovado (est. 9+00)",
+      "descricao": "Um ponto de grau de compactação da base dá 98,1 % (mínimo 100 %). A base é escarificada nesse segmento, a umidade é corrigida, a camada é recompactada e o ponto é reensaiado. Imprimação, pintura, CBUQ e entrega atrasam 1 dia útil.",
+      "opcoes": {
+        "failBase": 1,
+        "rwBase": 1
+      }
+    },
+    "cbuq": {
+      "nome": "Teor de ligante fora da tolerância",
+      "descricao": "A primeira amostra da usina (Rotarex) dá 6,05 % de ligante, para projeto de 5,6 % ± 0,3 %. A usina é parada e recalibrada, e os 28 m já lançados na faixa direita são fresados e refeitos. A pavimentação e a entrega atrasam 1 dia útil.",
+      "opcoes": {
+        "failCbuq": 1,
+        "rwCbuq": 1
+      }
+    }
+  },
+  "liberacoes": [
+    {
+      "id": "BLC-A",
+      "nome": "Aterro concluído",
+      "servicos": ["S07", "S08"]
+    },
+    {
+      "id": "BLC-1",
+      "nome": "Subleito regularizado",
+      "servicos": ["S09"]
+    },
+    {
+      "id": "BLC-2",
+      "nome": "Sub-base",
+      "servicos": ["S11"]
+    },
+    {
+      "id": "BLC-3",
+      "nome": "Base",
+      "servicos": ["S12", "R1"]
+    },
+    {
+      "id": "BLC-4",
+      "nome": "Imprimação curada",
+      "servicos": ["S13"]
+    },
+    {
+      "id": "BLC-5",
+      "nome": "Revestimento",
+      "servicos": ["S14", "S15", "R2"]
+    },
+    {
+      "id": "ACEITE",
+      "nome": "Aceitação final",
+      "servicos": ["S16"]
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-// Ponto de entrada: fontes, estilos e módulos da aplicação.
+// Ponto de entrada: fontes, estilos, carga e validação dos dados e início da aplicação.
 import '@fontsource/instrument-serif/400.css';
 import '@fontsource/instrument-serif/400-italic.css';
 import '@fontsource/hanken-grotesk/400.css';
@@ -9,6 +9,28 @@ import '@fontsource/jetbrains-mono/500.css';
 import './estilos/base.css';
 import './estilos/extra.css';
 import './estilos/correcoes.css';
-// ui.js registra o boot no DOMContentLoaded; app.js vem antes para fixar a ordem de avaliação dos módulos
-import './app.js';
-import './ui.js';
+import './estilos/interface.css';
+import { carregarDados, ErroDeDados } from './dados.js';
+import { iniciar } from './controlador.js';
+import { esc } from './interface/dom.js';
+
+function mostrarErro(e) {
+  console.error(e);
+  const el = document.getElementById('loading');
+  el.hidden = false;
+  if (e instanceof ErroDeDados) {
+    el.classList.add('erro-dados');
+    el.innerHTML = `Os arquivos de dados têm problemas<small>${esc(e.message)} Corrija os itens abaixo em dados/ e recarregue a página.</small><ul>${e.erros
+      .slice(0, 30)
+      .map(x => `<li>${esc(x)}</li>`)
+      .join('')}${e.erros.length > 30 ? `<li>e mais ${e.erros.length - 30}.</li>` : ''}</ul>`;
+  } else el.innerHTML = 'Não foi possível montar o modelo<small>' + esc(e.message) + '</small>';
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  try {
+    iniciar(carregarDados());
+  } catch (e) {
+    mostrarErro(e);
+  }
+});
