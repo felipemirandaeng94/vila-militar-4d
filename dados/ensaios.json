@@ -2,130 +2,179 @@
   "semente": 20270503,
   "plano": [
     {
-      "servico": "S07",
-      "controle": "Massa específica in situ (GC)",
-      "metodo": "Frasco de areia, DNER-ME 092/94",
-      "frequencia": "≥ 5 por camada (plano estatístico, n de 5 a 21)",
-      "criterio": "GC ≥ 100 % do Proctor normal; h = hót ± 3 %"
-    },
-    {
-      "servico": "S07",
-      "controle": "Compactação do material",
-      "metodo": "DNER-ME 129/94, Método A",
-      "frequencia": "1 a cada 1 000 m³",
-      "criterio": "Referência para o GC"
-    },
-    {
-      "servico": "S08",
-      "controle": "Massa específica in situ (GC)",
-      "metodo": "Frasco de areia, DNER-ME 092/94",
-      "frequencia": "≥ 5 por subcamada (até 800 m³)",
-      "criterio": "GC ≥ 100 % (Método B)"
-    },
-    {
-      "servico": "S08",
-      "controle": "Compactação · ISC",
-      "metodo": "DNER-ME 129/94 · DNER-ME 049/94",
-      "frequencia": "1 a cada 200 m³ · ISC a cada 4 compactações",
-      "criterio": "ISC ≥ 6 % · expansão ≤ 2 %"
-    },
-    {
       "servico": "S09",
+      "controle": "Espessura fresada · textura",
+      "metodo": "Trena e régua · inspeção visual",
+      "frequencia": "Espessura a cada 100 m, mín. 3 por frente · textura por frente (ilustrativo)",
+      "criterio": "Espessura de projeto ± 0,5 cm · superfície uniforme, sem degraus"
+    },
+    {
+      "servico": "S10",
+      "controle": "Teor de ligante e granulometria do fresado",
+      "metodo": "Extração de ligante · granulometria (DNIT 033/2021-ES)",
+      "frequencia": "1 por frente (lote de fresado) (ilustrativo)",
+      "criterio": "Caracterização para a dosagem do reciclado"
+    },
+    {
+      "servico": "S11",
+      "controle": "Recebimento de tubos de concreto",
+      "metodo": "Inspeção visual e dimensional · compressão diametral (ABNT NBR 8890)",
+      "frequencia": "Por lote: inspeção do lote e amostra para compressão diametral",
+      "criterio": "Lote sem trincas e com a carga mínima da classe; lote reprovado é rejeitado e não é assentado"
+    },
+    {
+      "servico": "S11",
+      "controle": "GC do reaterro da vala",
+      "metodo": "Frasco de areia, DNER-ME 092/94",
+      "frequencia": "1 a cada 50 m de vala, alternando as camadas (ilustrativo)",
+      "criterio": "GC ≥ 100 % (Proctor normal) · camadas ≤ 20 cm (projeto, ilustrativo)"
+    },
+    {
+      "servico": "S12",
+      "controle": "Resistência do concreto das bocas de lobo",
+      "metodo": "Corpos de prova, ABNT NBR 5739",
+      "frequencia": "1 série por frente (ilustrativo)",
+      "criterio": "fc,7 ≥ 15 MPa (projeto, ilustrativo)"
+    },
+    {
+      "servico": "S13",
+      "controle": "Resistência do concreto dos poços de visita",
+      "metodo": "Corpos de prova, ABNT NBR 5739",
+      "frequencia": "1 série por frente (ilustrativo)",
+      "criterio": "fc,7 ≥ 15 MPa (projeto, ilustrativo)"
+    },
+    {
+      "servico": "S15",
+      "controle": "ISC do subleito exposto",
+      "metodo": "DNER-ME 049/94",
+      "frequencia": "1 a cada 50 m por frente (ilustrativo)",
+      "criterio": "ISC ≥ 9 % (projeto); abaixo disso, substituição de solo (S16)"
+    },
+    {
+      "servico": "S16",
+      "controle": "GC da substituição de solo",
+      "metodo": "Frasco de areia, DNER-ME 092/94",
+      "frequencia": "1 a cada 20 m no trecho substituído (ilustrativo)",
+      "criterio": "GC ≥ 100 % (energia intermediária) · camadas ≤ 20 cm"
+    },
+    {
+      "servico": "S17",
       "controle": "Umidade · GC",
       "metodo": "Speedy DNER-ME 052/94 · frasco de areia",
       "frequencia": "Umidade a cada 100 m · GC mín. 5 determinações",
       "criterio": "GC ≥ 100 % · h = hót ± 2 %"
     },
     {
-      "servico": "S09",
+      "servico": "S17",
       "controle": "Controle geométrico",
       "metodo": "Nivelamento",
       "frequencia": "Eixo e bordos a cada 20 m",
       "criterio": "Cotas ± 3 cm · largura ± 10 cm"
     },
     {
-      "servico": "S11",
+      "servico": "S18",
+      "controle": "Alinhamento e nivelamento do meio-fio",
+      "metodo": "Linha e nível",
+      "frequencia": "1 verificação por frente (ilustrativo)",
+      "criterio": "Conforme a nota de serviço"
+    },
+    {
+      "servico": "S19",
+      "controle": "Caimento da sarjeta · resistência do concreto",
+      "metodo": "Nivelamento · ABNT NBR 5739",
+      "frequencia": "Caimento a cada 100 m · 1 série de corpos de prova por frente (ilustrativo)",
+      "criterio": "Caimento ≥ 0,30 % sem pontos baixos · fc,7 ≥ 15 MPa (projeto, ilustrativo)"
+    },
+    {
+      "servico": "S20",
       "controle": "Caracterização · compactação · ISC",
       "metodo": "DNER-ME 080, 082, 122, 129 e 049",
       "frequencia": "A cada 200 m (ISC a cada 400 m); mín. 5 em pistas até 4 000 m²",
       "criterio": "ISC ≥ 20 % · exp. ≤ 1 % · IG = 0"
     },
     {
-      "servico": "S11",
+      "servico": "S20",
       "controle": "Umidade · GC",
       "metodo": "Speedy · frasco de areia",
       "frequencia": "1 por camada a cada 100 m (mín. 5)",
       "criterio": "GC ≥ 100 % · espessura ± 10 %"
     },
     {
-      "servico": "S12",
+      "servico": "S21",
       "controle": "Umidade · compactação · ISC",
       "metodo": "DNER-ME 052 · DNIT 164-ME · DNIT 172-ME",
       "frequencia": "Umidade a cada 100 m · ISC a cada 200 m ou por jornada",
       "criterio": "ISC ≥ 60 % · exp. ≤ 0,5 % · LL ≤ 25 % · IP ≤ 6 %"
     },
     {
-      "servico": "S12",
+      "servico": "S21",
       "controle": "GC · deflexão",
       "metodo": "Frasco de areia · viga Benkelman DNER-ME 024/94",
       "frequencia": "GC conforme plano de amostragem · deflexão a cada 20 m em faixas alternadas (mín. 15)",
       "criterio": "GC ≥ 100 % · Dc = D̄ + k·S ≤ projeto"
     },
     {
-      "servico": "S13",
+      "servico": "S22",
       "controle": "Taxa de aplicação",
       "metodo": "Bandejas de massa e área conhecidas",
       "frequencia": "Mín. 5 determinações (até 4 000 m²)",
       "criterio": "1,20 ± 0,20 L/m² · T ≥ 10 °C · sem chuva"
     },
     {
-      "servico": "S14",
+      "servico": "S23",
       "controle": "Taxa de aplicação",
       "metodo": "Bandejas",
       "frequencia": "Mín. 5 determinações",
       "criterio": "0,90 ± 0,20 L/m² (diluída 1:1)"
     },
     {
-      "servico": "S15",
+      "servico": "S24",
       "controle": "Temperaturas",
       "metodo": "Termômetro e pirômetro",
       "frequencia": "Agregados e CAP a cada 4 h · massa em cada caminhão",
       "criterio": "CAP 107 a 177 °C · espalhamento ≥ 145 °C"
     },
     {
-      "servico": "S15",
+      "servico": "S24",
       "controle": "Teor de ligante · granulometria · Gmm",
       "metodo": "Rotarex · DNIT 412-ME · DNIT 427-ME",
       "frequencia": "A cada 4 h de produção",
       "criterio": "Teor ± 0,3 % · Tabela 3 de tolerâncias"
     },
     {
-      "servico": "S15",
+      "servico": "S24",
       "controle": "Resistência à tração · dano por umidade",
       "metodo": "DNIT 136-ME · DNIT 180-ME",
       "frequencia": "RT diária · RRT a cada 5 dias",
       "criterio": "RT ≥ 0,65 MPa · RRT ≥ 0,70"
     },
     {
-      "servico": "S15",
+      "servico": "S24",
       "controle": "GC · espessura",
       "metodo": "Corpos de prova extraídos, DNIT 428-ME",
       "frequencia": "1 a cada 100 m",
       "criterio": "97 % ≤ GC ≤ 100 % · espessura ± 5 %"
     },
     {
-      "servico": "S16",
+      "servico": "S25",
       "controle": "Deflexão · irregularidade · regularidade",
       "metodo": "DNIT 133-ME · DNIT 442-ME · régua de 3 m",
       "frequencia": "Deflexão a cada 20 m · IRI e régua a cada 200 m",
       "criterio": "IRI ≤ 2,0 m/km · régua ≤ 0,5 cm"
     },
     {
-      "servico": "S16",
+      "servico": "S25",
       "controle": "Atrito · macrotextura",
       "metodo": "Pêndulo britânico · mancha de areia",
       "frequencia": "A cada 300 m",
       "criterio": "VDR ≥ 47 · macrotextura conforme projeto"
+    },
+    {
+      "servico": "S26",
+      "controle": "Retrorrefletância inicial",
+      "metodo": "Retrorrefletômetro",
+      "frequencia": "1 por frente (ilustrativo)",
+      "criterio": "Mínimo do projeto (DNIT 100/2018-ES)"
     }
   ],
   "dosagem": {
@@ -191,31 +240,45 @@
       "tipo": "serie",
       "servico": "S03",
       "categoria": "campo",
-      "camada": "nat",
-      "nome": "Sondagem a trado do subleito",
+      "camada": "ex",
+      "nome": "Sondagem do pavimento existente e do subleito",
       "norma": "DNER-PRO 381/98",
-      "estacas": [0, 80, 160, 220, 300],
+      "estacas": [0, 200, 400, 600, 800, 1000, 1200, 1400, 1600],
       "z": [0],
       "dia": {
         "servico": "S03",
         "em": "inicio",
         "mais": 0.5,
-        "passo": 0.3
+        "passo": 0.25
       },
       "ate": {
         "servico": "S04",
-        "em": "inicio",
-        "maisPorEstaca": 1.5
+        "em": "fim",
+        "mais": 3
       },
-      "valores": ["Argila arenosa vermelha", "Argila arenosa vermelha", "Argila siltosa cinza", "Argila siltosa cinza", "Argila arenosa vermelha"],
+      "valores": [
+        "Rev. 5 cm · base 15 cm · sub-base 20 cm · argila arenosa vermelha",
+        "Rev. 5 cm · base 15 cm · sub-base 20 cm · argila arenosa vermelha",
+        "Rev. 6 cm · base 15 cm · sub-base 19 cm · argila arenosa vermelha",
+        "Rev. 5 cm · base 14 cm · sub-base 21 cm · argila siltosa cinza, muito úmida",
+        "Rev. 5 cm · base 15 cm · sub-base 20 cm · argila arenosa vermelha",
+        "Rev. 4 cm · base 16 cm · sub-base 20 cm · argila arenosa vermelha",
+        "Rev. 5 cm · base 15 cm · sub-base 20 cm · argila siltosa cinza",
+        "Rev. 5 cm · base 15 cm · sub-base 20 cm · argila arenosa vermelha",
+        "Rev. 5 cm · base 15 cm · sub-base 20 cm · argila arenosa vermelha"
+      ],
       "unidade": "",
-      "criterio": "Identificação do material e do NA",
+      "criterio": "Espessuras do pavimento existente, material do subleito e nível d’água",
       "obsPorPonto": [
-        "NA não atingido até 1,00 m",
-        "NA não atingido até 1,00 m",
-        "NA não atingido até 1,00 m",
         "NA não atingido até 1,50 m",
-        "NA não atingido até 1,00 m"
+        "NA não atingido até 1,50 m",
+        "NA não atingido até 1,50 m",
+        "NA a 1,10 m; solo mole entre as est. 28 e 32",
+        "NA não atingido até 1,50 m",
+        "NA não atingido até 1,50 m",
+        "NA não atingido até 1,50 m",
+        "NA não atingido até 1,50 m",
+        "NA não atingido até 1,50 m"
       ]
     },
     {
@@ -226,7 +289,7 @@
         "servico": "S03",
         "em": "inicio",
         "mais": 1.2,
-        "passo": 0.25
+        "passo": 0.22
       },
       "itens": [
         {
@@ -234,551 +297,106 @@
           "norma": "@granul · @ll",
           "v": "IG = 7",
           "unidade": "",
-          "criterio": "Classificação TRB A-6"
+          "criterio": "Classificação TRB A-6",
+          "ok": true
         },
         {
           "nome": "Subleito: compactação Proctor normal",
           "norma": "@comp",
           "v": "1,725",
           "unidade": "g/cm³",
-          "criterio": "hót = 18,2 %"
+          "criterio": "hót = 18,2 %",
+          "ok": true
         },
         {
-          "nome": "Subleito: ISC e expansão",
+          "nome": "Subleito: ISC e expansão (trecho típico)",
           "norma": "@isc",
-          "v": "9",
+          "v": "12",
           "unidade": "%",
-          "criterio": "ISC ≥ 6 % · exp. 1,2 % ≤ 2 %"
+          "criterio": "ISC ≥ 9 % (projeto) · exp. 1,0 % ≤ 2 %",
+          "ok": true
         },
         {
-          "nome": "Jazida de empréstimo (camada final): ISC",
+          "nome": "Subleito entre as est. 28 e 32: ISC e expansão",
+          "norma": "@isc",
+          "v": "4",
+          "unidade": "%",
+          "criterio": "ISC ≥ 9 % (projeto) · exp. ≤ 2 %",
+          "ok": false,
+          "obs": "Solo mole: trecho previsto para substituição de solo (S16), a confirmar após a remoção da base."
+        },
+        {
+          "nome": "Jazida de empréstimo (substituição de solo): ISC",
           "norma": "@isc",
           "v": "14",
           "unidade": "%",
-          "criterio": "ISC ≥ 6 % · exp. 0,8 % ≤ 2 %"
+          "criterio": "ISC ≥ 9 % · exp. 0,8 % ≤ 2 %",
+          "ok": true
         },
         {
           "nome": "Solo-brita (60 % solo + 40 % brita 1): ISC",
           "norma": "@isc",
           "v": "38",
           "unidade": "%",
-          "criterio": "ISC ≥ 20 % · exp. 0,3 % ≤ 1 % · IG = 0"
+          "criterio": "ISC ≥ 20 % · exp. 0,3 % ≤ 1 % · IG = 0",
+          "ok": true
         },
         {
           "nome": "Brita graduada: ISC e expansão",
           "norma": "@isc",
           "v": "92",
           "unidade": "%",
-          "criterio": "ISC ≥ 60 % (N ≤ 5×10⁶) · exp. 0,1 % ≤ 0,5 %"
+          "criterio": "ISC ≥ 60 % (N ≤ 5×10⁶) · exp. 0,1 % ≤ 0,5 %",
+          "ok": true
         },
         {
           "nome": "Brita graduada: LL / IP",
           "norma": "@ll",
           "v": "NL / NP",
           "unidade": "",
-          "criterio": "LL ≤ 25 % · IP ≤ 6 %"
+          "criterio": "LL ≤ 25 % · IP ≤ 6 %",
+          "ok": true
         },
         {
           "nome": "Brita graduada: abrasão Los Angeles",
           "norma": "@la",
           "v": "31",
           "unidade": "%",
-          "criterio": "≤ 55 %"
+          "criterio": "≤ 55 %",
+          "ok": true
         },
         {
           "nome": "Agregado graúdo do CBUQ: abrasão Los Angeles",
           "norma": "@la",
           "v": "28",
           "unidade": "%",
-          "criterio": "≤ 50 %"
+          "criterio": "≤ 50 %",
+          "ok": true
         },
         {
           "nome": "Agregado miúdo do CBUQ: equivalente de areia",
           "norma": "@ea",
           "v": "68",
           "unidade": "%",
-          "criterio": "≥ 55 %"
+          "criterio": "≥ 55 %",
+          "ok": true
         },
         {
           "nome": "CAP 50/70: penetração e ponto de amolecimento",
           "norma": "Resolução ANP 897/2022",
           "v": "58 / 49,5",
           "unidade": "0,1 mm / °C",
-          "criterio": "Conforme especificação do ligante"
-        }
-      ]
-    },
-    {
-      "tipo": "camadas",
-      "servico": "S07",
-      "camadas": "corpoDoAterro",
-      "itens": [
-        {
-          "tipo": "lista",
-          "categoria": "lab",
-          "dia": {
-            "camada": true,
-            "mais": -0.25
-          },
-          "itens": [
-            {
-              "nome": "Corpo do aterro, camada {k}: Proctor normal do material do corte",
-              "norma": "@comp",
-              "valor": {
-                "media": 1.718,
-                "uniforme": 0.02,
-                "casas": 3
-              },
-              "unidade": "g/cm³",
-              "criterio": "Referência para o GC da camada"
-            }
-          ]
-        },
-        {
-          "tipo": "serie",
-          "categoria": "campo",
-          "camada": "corpo",
-          "nome": "GC corpo do aterro, camada {k}",
-          "norma": "@frasco",
-          "estacas": {
-            "distribuir": "camadaDoCorpo",
-            "n": 5
-          },
-          "z": [-2.4, 0, 2.4],
-          "dia": {
-            "camada": true,
-            "mais": -0.15,
-            "passo": 0.02
-          },
-          "ate": {
-            "camada": true,
-            "fracao": 1.02
-          },
-          "valor": {
-            "media": 101.3,
-            "desvio": 0.7,
-            "piso": [100.2, 0.5],
-            "casas": 1
-          },
-          "umidade": {
-            "media": 18.2,
-            "desvio": 1.1
-          },
-          "unidade": "%",
-          "criterio": "GC ≥ 100 % (Proctor normal)",
-          "falhas": [
-            {
-              "camada": 4,
-              "ponto": 3,
-              "v": "97,6",
-              "w": "21,6",
-              "obs": "Umidade 21,6 % (acima de hót + 3 %). Camada aerada com grade de discos e recompactada.",
-              "reensaio": {
-                "dia": {
-                  "relativo": true,
-                  "mais": 0.08
-                },
-                "v": "100,9",
-                "w": "18,9",
-                "obs": "Reensaio após aeração e recompactação."
-              }
-            }
-          ]
+          "criterio": "Conforme especificação do ligante",
+          "ok": true
         }
       ]
     },
     {
       "tipo": "lista",
-      "servico": "S08",
+      "servico": "S06",
       "categoria": "lab",
       "dia": {
-        "servico": "S08",
-        "em": "inicio",
-        "mais": -0.3
-      },
-      "itens": [
-        {
-          "nome": "Camada final: compactação e ISC do empréstimo (energia intermediária)",
-          "norma": "@comp · @isc",
-          "v": "14",
-          "unidade": "%",
-          "criterio": "ISC ≥ 6 % · exp. ≤ 2 %"
-        }
-      ]
-    },
-    {
-      "tipo": "camadas",
-      "servico": "S08",
-      "camadas": 3,
-      "itens": [
-        {
-          "tipo": "serie",
-          "categoria": "campo",
-          "camada": "cf",
-          "nome": "GC camada final, subcamada {k}",
-          "norma": "@frasco",
-          "estacas": {
-            "distribuir": "aterro",
-            "margem": 4,
-            "n": 5
-          },
-          "z": [-2.4, 0, 2.4],
-          "zDesloc": "camada",
-          "dia": {
-            "camada": true,
-            "mais": -0.2,
-            "passo": 0.03
-          },
-          "ate": {
-            "camada": true,
-            "mais": 0.02,
-            "ultima": {
-              "servico": "S11",
-              "em": "inicio"
-            }
-          },
-          "valor": {
-            "media": 101,
-            "desvio": 0.6,
-            "min": 100.3,
-            "casas": 1
-          },
-          "umidade": {
-            "media": 16.4,
-            "desvio": 0.8
-          },
-          "unidade": "%",
-          "criterio": "GC ≥ 100 % (Método B)"
-        }
-      ]
-    },
-    {
-      "tipo": "serie",
-      "servico": "S09",
-      "categoria": "campo",
-      "camada": "reg",
-      "nome": "GC regularização do subleito",
-      "norma": "@frasco",
-      "estacas": {
-        "inicio": 30,
-        "passo": 60,
-        "n": 5
-      },
-      "z": [-2.4, 0, 2.4],
-      "dia": {
-        "frente": "reg",
-        "mais": 0.1
-      },
-      "ate": {
-        "servico": "S11",
-        "em": "inicio",
-        "maisPorEstaca": 3
-      },
-      "valor": {
-        "media": 101.1,
-        "desvio": 0.5,
-        "min": 100.2,
-        "casas": 1
-      },
-      "umidade": {
-        "media": 17.9,
-        "desvio": 0.9
-      },
-      "unidade": "%",
-      "criterio": "GC ≥ 100 % · umidade ± 2 %"
-    },
-    {
-      "tipo": "lista",
-      "servico": "S09",
-      "categoria": "campo",
-      "dia": {
-        "servico": "S09",
-        "em": "fim",
-        "mais": -0.1
-      },
-      "itens": [
-        {
-          "nome": "Controle geométrico: cotas da regularização",
-          "norma": "Nota de serviço",
-          "camada": "reg",
-          "s": 150,
-          "z": 4.5,
-          "ate": {
-            "servico": "S11",
-            "em": "inicio",
-            "mais": 1.5
-          },
-          "v": "−1,8 a +2,4",
-          "unidade": "cm",
-          "criterio": "± 3 cm em relação ao greide"
-        }
-      ]
-    },
-    {
-      "tipo": "lista",
-      "servico": "S11",
-      "categoria": "lab",
-      "dia": {
-        "servico": "S11",
-        "em": "inicio",
-        "mais": 0.3
-      },
-      "itens": [
-        {
-          "nome": "Sub-base: compactação (Método B) e ISC do solo-brita",
-          "norma": "@comp · @isc",
-          "v": "2,086",
-          "unidade": "g/cm³",
-          "criterio": "hót = 9,6 % · ISC 38 % ≥ 20 %"
-        }
-      ]
-    },
-    {
-      "tipo": "serie",
-      "servico": "S11",
-      "categoria": "campo",
-      "camada": "sb",
-      "nome": "GC sub-base",
-      "norma": "@frasco",
-      "estacas": {
-        "inicio": 20,
-        "passo": 62,
-        "n": 5
-      },
-      "z": [-2.4, 0, 2.4],
-      "zDesloc": 1,
-      "dia": {
-        "frente": "sb",
-        "mais": 0.12
-      },
-      "ate": {
-        "servico": "S12",
-        "em": "inicio",
-        "maisPorEstaca": 3
-      },
-      "valor": {
-        "media": 101.4,
-        "desvio": 0.6,
-        "min": 100.3,
-        "casas": 1
-      },
-      "umidade": {
-        "media": 9.1,
-        "desvio": 0.5
-      },
-      "unidade": "%",
-      "criterio": "GC ≥ 100 %"
-    },
-    {
-      "tipo": "lista",
-      "servico": "S12",
-      "categoria": "lab",
-      "dia": {
-        "servico": "S12",
-        "em": "inicio",
-        "mais": 0.3
-      },
-      "itens": [
-        {
-          "nome": "Base: compactação e ISC da brita graduada",
-          "norma": "DNIT 164-ME · DNIT 172-ME",
-          "v": "2,312",
-          "unidade": "g/cm³",
-          "criterio": "hót = 5,8 % · ISC 92 % ≥ 60 % · exp. 0,1 %"
-        }
-      ]
-    },
-    {
-      "tipo": "serie",
-      "servico": "S12",
-      "categoria": "campo",
-      "camada": "ba",
-      "nome": "GC base",
-      "norma": "@frasco",
-      "estacas": {
-        "inicio": 15,
-        "passo": 64,
-        "n": 5
-      },
-      "z": [-2.4, 0, 2.4],
-      "zDesloc": 2,
-      "dia": {
-        "frente": "ba",
-        "mais": 0.12
-      },
-      "ate": {
-        "servico": "S13",
-        "faixa": "BD",
-        "em": "inicio",
-        "mais": 0.3
-      },
-      "valor": {
-        "media": 101.2,
-        "desvio": 0.5,
-        "min": 100.2,
-        "casas": 1
-      },
-      "umidade": {
-        "media": 5.7,
-        "desvio": 0.3
-      },
-      "unidade": "%",
-      "criterio": "GC ≥ 100 % · umidade ± 1 %",
-      "falhas": [
-        {
-          "ponto": 3,
-          "condicao": ["failBase"],
-          "s": 180,
-          "z": -2.4,
-          "v": "98,1",
-          "w": "4,2",
-          "obs": {
-            "se": ["rwBase"],
-            "sim": "Umidade 1,6 % abaixo da ótima. Segmento escarificado, umedecido e recompactado.",
-            "nao": "Umidade 1,6 % abaixo da ótima. Ponto aceito sem retrabalho: não conformidade aberta."
-          },
-          "reensaio": {
-            "condicao": ["rwBase"],
-            "dia": {
-              "servico": "R1",
-              "em": "fim",
-              "mais": -0.15
-            },
-            "v": "100,8",
-            "w": "5,9",
-            "obs": "Reensaio após retrabalho."
-          }
-        }
-      ]
-    },
-    {
-      "tipo": "serie",
-      "servico": "S12",
-      "categoria": "campo",
-      "camada": "ba",
-      "grupo": "deflBase",
-      "nome": "Deflexão na base (viga Benkelman)",
-      "norma": "@benk",
-      "estacas": {
-        "inicio": 10,
-        "passo": 20,
-        "n": 15
-      },
-      "z": [1.75, -1.75],
-      "dia": {
-        "servico": "S12",
-        "em": "fim",
-        "mais": -0.45,
-        "passo": 0.025
-      },
-      "ate": {
-        "servico": "S13",
-        "faixa": "BD",
-        "em": "inicio",
-        "mais": 0.3
-      },
-      "valor": {
-        "media": 52,
-        "desvio": 6,
-        "formato": "inteiro"
-      },
-      "coletar": "dBase",
-      "unidade": "× 0,01 mm",
-      "criterio": "Dc ≤ 70 × 0,01 mm (projeto)"
-    },
-    {
-      "tipo": "faixas",
-      "faixas": ["BD", "BE"],
-      "itens": [
-        {
-          "tipo": "serie",
-          "servico": "S13",
-          "categoria": "campo",
-          "camada": "imp",
-          "nome": "Taxa de imprimação (bandeja)",
-          "norma": "DNIT 144/2014-ES",
-          "estacas": {
-            "inicio": 40,
-            "passo": 100,
-            "porFaixa": 50,
-            "n": {
-              "BD": 3,
-              "BE": 2
-            }
-          },
-          "z": {
-            "BD": 1.9,
-            "BE": -1.9
-          },
-          "dia": {
-            "frente": "imp{faixa}",
-            "mais": 0.02
-          },
-          "ate": {
-            "servico": "S14",
-            "faixa": "{faixa}",
-            "em": "inicio"
-          },
-          "valor": {
-            "media": 1.2,
-            "desvio": 0.06,
-            "casas": 2
-          },
-          "unidade": "L/m²",
-          "criterio": "Projeto 1,20 ± 0,20 L/m²"
-        }
-      ]
-    },
-    {
-      "tipo": "faixas",
-      "faixas": ["BD", "BE"],
-      "itens": [
-        {
-          "tipo": "serie",
-          "servico": "S14",
-          "categoria": "campo",
-          "camada": "pin",
-          "nome": "Taxa de pintura de ligação (bandeja)",
-          "norma": "DNIT 145/2012-ES",
-          "estacas": {
-            "inicio": 60,
-            "passo": 90,
-            "porFaixa": 40,
-            "n": {
-              "BD": 3,
-              "BE": 2
-            }
-          },
-          "z": {
-            "BD": 1.6,
-            "BE": -1.6
-          },
-          "dia": {
-            "frente": "pin{faixa}",
-            "mais": 0.02
-          },
-          "ate": {
-            "servico": "S15",
-            "faixa": "{faixa}",
-            "em": "inicio",
-            "maisPorEstaca": 0.55
-          },
-          "valor": {
-            "media": 0.9,
-            "desvio": 0.05,
-            "casas": 2
-          },
-          "unidade": "L/m²",
-          "criterio": "Emulsão diluída 1:1 · 0,90 ± 0,20 L/m²"
-        }
-      ]
-    },
-    {
-      "tipo": "lista",
-      "servico": "S10",
-      "categoria": "lab",
-      "dia": {
-        "servico": "S10",
+        "servico": "S06",
         "em": "inicio",
         "mais": 1,
         "passo": 0.6
@@ -830,10 +448,10 @@
     },
     {
       "tipo": "lista",
-      "servico": "S10",
+      "servico": "S06",
       "categoria": "usina",
       "dia": {
-        "servico": "S10",
+        "servico": "S06",
         "em": "fim",
         "mais": -1.2
       },
@@ -848,97 +466,272 @@
       ]
     },
     {
-      "tipo": "faixas",
-      "faixas": ["BD", "BE"],
+      "tipo": "lista",
+      "servico": "S06",
+      "categoria": "lab",
+      "condicao": ["fresadoPct"],
+      "dia": {
+        "servico": "S06",
+        "em": "fim",
+        "mais": -0.8
+      },
       "itens": [
         {
+          "nome": "Dosagem do reciclado: {opt.fresadoPct} % de fresado na mistura",
+          "norma": "DNIT 033/2021-ES",
+          "v": "Vv 4,1 % · RT 1,02 MPa",
+          "unidade": "",
+          "criterio": "Mesmos critérios volumétricos e mecânicos da mistura de projeto"
+        }
+      ]
+    },
+    {
+      "tipo": "frentes",
+      "itens": [
+        {
+          "tipo": "serie",
+          "servico": "S09",
+          "categoria": "campo",
+          "camada": "fre",
+          "nome": "Espessura fresada",
+          "norma": "DNIT 159/2011-ES",
+          "estacas": {
+            "porFrente": {
+              "passo": 100,
+              "minimo": 3
+            }
+          },
+          "z": [1.75, -1.75],
+          "dia": {
+            "frente": "S09",
+            "mais": 0.05
+          },
+          "ate": {
+            "servico": "S15",
+            "em": "inicio"
+          },
+          "valor": {
+            "media": 5,
+            "desvio": 0.15,
+            "casas": 1
+          },
+          "unidade": "cm",
+          "criterio": "Espessura de projeto 5,0 cm ± 0,5 cm"
+        },
+        {
           "tipo": "lista",
-          "servico": "S15",
-          "categoria": "usina",
+          "servico": "S09",
+          "categoria": "campo",
+          "camada": "fre",
+          "dia": {
+            "servico": "S09",
+            "em": "fim",
+            "mais": -0.05
+          },
           "itens": [
             {
-              "condicao": ["failCbuq", "faixa:BD"],
-              "nome": "Teor de ligante da mistura (Rotarex), 1ª amostra",
-              "norma": "DNER-ME 053/94",
-              "dia": {
+              "nome": "Textura da superfície fresada (inspeção visual)",
+              "norma": "DNIT 159/2011-ES",
+              "meioDaFrente": true,
+              "z": 0,
+              "ate": {
                 "servico": "S15",
-                "faixa": "{faixa}",
-                "em": "falhaOuInicio",
-                "mais": 0.07
+                "em": "inicio"
               },
-              "v": "6,05",
-              "unidade": "%",
-              "criterio": "5,6 ± 0,3 %",
-              "ok": false,
-              "obs": {
-                "se": ["rwCbuq"],
-                "sim": "Usina parada. Recalibração da bomba de CAP e fresagem dos 28,6 m lançados.",
-                "nao": "Produção mantida sem correção: não conformidade aberta."
-              }
-            },
+              "v": "uniforme, sem degraus",
+              "unidade": "",
+              "criterio": "Superfície uniforme, sem degraus nem placas soltas"
+            }
+          ]
+        },
+        {
+          "tipo": "lista",
+          "servico": "S10",
+          "categoria": "lab",
+          "dia": {
+            "servico": "S10",
+            "em": "fim",
+            "mais": -0.1,
+            "passo": 0.05
+          },
+          "itens": [
             {
-              "nome": "Temperatura CAP / agregados ({faixa})",
-              "norma": "DNIT 031/2024-ES",
-              "dia": {
-                "servico": "S15",
-                "faixa": "{faixa}",
-                "em": "inicio",
-                "mais": -0.05
-              },
-              "v": "155 / 167",
-              "unidade": "°C",
-              "criterio": "CAP 107 a 177 °C · agregados +10 a +15 °C"
-            },
-            {
-              "nome": {
-                "se": ["failCbuq", "rwCbuq", "faixa:BD"],
-                "sim": "Teor de ligante da mistura (Rotarex, {faixa}) após recalibração",
-                "nao": "Teor de ligante da mistura (Rotarex, {faixa})"
-              },
-              "norma": "DNER-ME 053/94",
-              "dia": {
-                "servico": "S15",
-                "faixa": "{faixa}",
-                "em": "inicio",
-                "mais": 0.15
-              },
+              "nome": "Fresado da frente {frente}: teor de ligante (extração)",
+              "norma": "DNIT 033/2021-ES",
               "valor": {
-                "media": 5.6,
-                "desvio": 0.08,
+                "media": 5.3,
+                "desvio": 0.15,
                 "casas": 2
               },
               "unidade": "%",
-              "criterio": "5,6 ± 0,3 %"
+              "criterio": "Caracterização para a dosagem do reciclado"
             },
             {
-              "nome": "Granulometria da mistura ({faixa})",
-              "norma": "@granCB",
-              "dia": {
-                "servico": "S15",
-                "faixa": "{faixa}",
-                "em": "inicio",
-                "mais": 0.2
-              },
-              "v": "na faixa",
+              "nome": "Fresado da frente {frente}: granulometria do agregado recuperado",
+              "norma": "DNIT 033/2021-ES",
+              "v": "contínua, Dmáx 19 mm",
               "unidade": "",
-              "criterio": "Projeto ± tolerâncias da Tabela 3",
-              "granulometria": true
+              "criterio": "Caracterização para a dosagem do reciclado"
+            }
+          ]
+        },
+        {
+          "tipo": "lista",
+          "servico": "S11",
+          "categoria": "lab",
+          "itens": [
+            {
+              "nome": "Recebimento do lote de tubos da frente {frente}: inspeção visual e dimensional",
+              "norma": "@nbr8890",
+              "dia": {
+                "servico": "R3",
+                "em": "inicio",
+                "mais": -0.1,
+                "senao": {
+                  "servico": "S11",
+                  "em": "inicio",
+                  "mais": -0.3
+                }
+              },
+              "v": "sem trincas, dimensões conformes",
+              "unidade": "",
+              "criterio": "Lote sem trincas nem defeitos (NBR 8890)",
+              "falha": {
+                "condicao": ["failTubo", "frente:3"],
+                "v": "3 tubos com trinca",
+                "obs": {
+                  "se": ["rwTubo"],
+                  "sim": "Lote rejeitado e devolvido. A drenagem da frente 3 aguarda o novo lote (R3).",
+                  "nao": "Lote aceito com tubos trincados: não conformidade aberta."
+                },
+                "reensaio": {
+                  "condicao": ["rwTubo"],
+                  "dia": {
+                    "servico": "R3",
+                    "em": "fim",
+                    "mais": -0.2
+                  },
+                  "v": "novo lote sem trincas",
+                  "obs": "Novo lote inspecionado e aprovado antes do assentamento."
+                }
+              }
             },
             {
-              "nome": "Gmm e resistência à tração ({faixa})",
-              "norma": "@gmm · @rt",
+              "nome": "Compressão diametral (amostra do lote da frente {frente})",
+              "norma": "@nbr8890",
               "dia": {
-                "servico": "S15",
-                "faixa": "{faixa}",
+                "servico": "R3",
                 "em": "inicio",
-                "mais": 0.3
+                "mais": -0.05,
+                "senao": {
+                  "servico": "S11",
+                  "em": "inicio",
+                  "mais": -0.25
+                }
               },
-              "v": {
-                "BD": "2,461 / 1,06",
-                "BE": "2,458 / 1,02"
+              "v": "acima da carga mínima da classe",
+              "unidade": "",
+              "criterio": "Carga mínima da classe especificada (NBR 8890)"
+            }
+          ]
+        },
+        {
+          "tipo": "serie",
+          "servico": "S11",
+          "categoria": "campo",
+          "camada": "vala",
+          "nome": "GC do reaterro da vala",
+          "norma": "@frasco",
+          "camadaCiclo": 4,
+          "estacas": {
+            "porFrente": {
+              "inicio": 25,
+              "passo": 50
+            }
+          },
+          "z": [2],
+          "dia": {
+            "frente": "S11",
+            "mais": 0.6
+          },
+          "ate": {
+            "servico": "S15",
+            "em": "inicio"
+          },
+          "valor": {
+            "media": 101.2,
+            "desvio": 0.7,
+            "piso": [100.1, 0.5],
+            "casas": 1
+          },
+          "umidade": {
+            "media": 17.5,
+            "desvio": 1
+          },
+          "unidade": "%",
+          "criterio": "GC ≥ 100 % (Proctor normal) · camadas ≤ 20 cm (projeto, ilustrativo)",
+          "falhas": [
+            {
+              "frente": 2,
+              "ponto": 4,
+              "v": "97,8",
+              "w": "20,9",
+              "obs": "Umidade 20,9 % (acima de hót + 2 %). Camada aerada, recompactada e reensaiada.",
+              "reensaio": {
+                "dia": {
+                  "relativo": true,
+                  "mais": 0.1
+                },
+                "v": "100,6",
+                "w": "17,9",
+                "obs": "Reensaio após aeração e recompactação."
+              }
+            }
+          ]
+        },
+        {
+          "tipo": "lista",
+          "servico": "S12",
+          "categoria": "lab",
+          "dia": {
+            "servico": "S12",
+            "em": "fim",
+            "mais": 1
+          },
+          "itens": [
+            {
+              "nome": "Resistência do concreto das bocas de lobo, frente {frente} (7 dias)",
+              "norma": "@nbr5739",
+              "valor": {
+                "media": 18.2,
+                "desvio": 1,
+                "casas": 1
               },
-              "unidade": "g/cm³ / MPa",
-              "criterio": "RT ≥ 0,65 MPa"
+              "unidade": "MPa",
+              "criterio": "fc,7 ≥ 15 MPa (projeto, ilustrativo)"
+            }
+          ]
+        },
+        {
+          "tipo": "lista",
+          "servico": "S13",
+          "categoria": "lab",
+          "dia": {
+            "servico": "S13",
+            "em": "fim",
+            "mais": 1.1
+          },
+          "itens": [
+            {
+              "nome": "Resistência do concreto dos poços de visita, frente {frente} (7 dias)",
+              "norma": "@nbr5739",
+              "valor": {
+                "media": 18.6,
+                "desvio": 1,
+                "casas": 1
+              },
+              "unidade": "MPa",
+              "criterio": "fc,7 ≥ 15 MPa (projeto, ilustrativo)"
             }
           ]
         },
@@ -946,153 +739,793 @@
           "tipo": "serie",
           "servico": "S15",
           "categoria": "campo",
-          "camada": "rv",
+          "camada": "sl",
+          "nome": "ISC do subleito exposto",
+          "norma": "@isc",
           "estacas": {
-            "inicio": 50,
-            "passo": 100,
-            "n": 3
+            "porFrente": {
+              "passo": 50,
+              "minimo": 8
+            }
           },
-          "z": {
-            "BD": 1.75,
-            "BE": -1.75
-          },
+          "z": [0],
           "dia": {
-            "frente": "rv{faixa}",
-            "ultimoTrecho": true
+            "frente": "S15",
+            "mais": 4
           },
-          "ensaios": [
+          "ate": {
+            "servico": "S20",
+            "em": "inicio"
+          },
+          "valor": {
+            "media": 12.5,
+            "desvio": 1.2,
+            "min": 10,
+            "casas": 0,
+            "trechos": "soloRuim",
+            "aprovacao": {
+              "minimo": 9
+            }
+          },
+          "unidade": "%",
+          "criterio": "ISC ≥ 9 % (projeto); abaixo disso, substituição de solo (S16)",
+          "obsReprovado": "Solo mole: substituição de 60 cm por material de jazida (S16)."
+        },
+        {
+          "tipo": "serie",
+          "servico": "S16",
+          "categoria": "campo",
+          "camada": "subst",
+          "nome": "GC da substituição de solo",
+          "norma": "@frasco",
+          "estacas": {
+            "trecho": "soloRuim",
+            "passo": 20
+          },
+          "z": [-2.4, 0, 2.4],
+          "dia": {
+            "frente": "S16",
+            "mais": 0.1
+          },
+          "ate": {
+            "servico": "S17",
+            "em": "fim"
+          },
+          "valor": {
+            "media": 101,
+            "desvio": 0.6,
+            "min": 100.3,
+            "casas": 1
+          },
+          "umidade": {
+            "media": 16.4,
+            "desvio": 0.8
+          },
+          "unidade": "%",
+          "criterio": "GC ≥ 100 % (energia intermediária) · camadas ≤ 20 cm"
+        },
+        {
+          "tipo": "serie",
+          "servico": "S17",
+          "categoria": "campo",
+          "camada": "reg",
+          "nome": "GC regularização do subleito",
+          "norma": "@frasco",
+          "estacas": {
+            "porFrente": {
+              "passo": 100,
+              "minimo": 5
+            }
+          },
+          "z": [-2.4, 0, 2.4],
+          "dia": {
+            "frente": "S17",
+            "mais": 0.1
+          },
+          "ate": {
+            "servico": "S20",
+            "em": "inicio",
+            "mais": 0.5
+          },
+          "valor": {
+            "media": 101.1,
+            "desvio": 0.5,
+            "min": 100.2,
+            "casas": 1
+          },
+          "umidade": {
+            "media": 17.9,
+            "desvio": 0.9
+          },
+          "unidade": "%",
+          "criterio": "GC ≥ 100 % · umidade ± 2 %"
+        },
+        {
+          "tipo": "lista",
+          "servico": "S17",
+          "categoria": "campo",
+          "camada": "reg",
+          "dia": {
+            "servico": "S17",
+            "em": "fim",
+            "mais": -0.1
+          },
+          "itens": [
             {
-              "nome": "Temperatura de espalhamento ({faixa})",
-              "norma": "DNIT 031/2024-ES",
-              "deslocamento": -20,
+              "nome": "Controle geométrico: cotas da regularização",
+              "norma": "Nota de serviço",
+              "meioDaFrente": true,
+              "z": 3,
               "ate": {
-                "relativo": true,
-                "mais": 0.3
+                "servico": "S20",
+                "em": "inicio",
+                "mais": 0.5
               },
-              "valor": {
-                "media": 151,
-                "desvio": 2,
-                "formato": "inteiro"
-              },
-              "unidade": "°C",
-              "criterio": "≥ 145 °C"
-            },
+              "v": "−1,8 a +2,4",
+              "unidade": "cm",
+              "criterio": "± 3 cm em relação ao greide"
+            }
+          ]
+        },
+        {
+          "tipo": "lista",
+          "servico": "S18",
+          "categoria": "campo",
+          "camada": "mf",
+          "dia": {
+            "servico": "S18",
+            "em": "fim",
+            "mais": -0.1
+          },
+          "itens": [
             {
-              "nome": "GC do CBUQ, corpo de prova extraído ({faixa})",
-              "norma": "@cps",
-              "grupo": "gcCB",
-              "diaMais": 0.9,
+              "nome": "Meio-fio: alinhamento e nivelamento",
+              "norma": "DNIT 020/2023-ES",
+              "meioDaFrente": true,
+              "z": 3.98,
+              "ate": {
+                "servico": "S20",
+                "em": "fim"
+              },
+              "v": "dentro de ± 0,5 cm",
+              "unidade": "",
+              "criterio": "Alinhamento e cotas conforme a nota de serviço"
+            }
+          ]
+        },
+        {
+          "tipo": "serie",
+          "servico": "S19",
+          "categoria": "campo",
+          "camada": "sar",
+          "nome": "Caimento longitudinal da sarjeta",
+          "norma": "DNIT 018/2023-ES",
+          "estacas": {
+            "porFrente": {
+              "passo": 100,
+              "minimo": 4
+            }
+          },
+          "z": [3.7, -3.7],
+          "dia": {
+            "frente": "S19",
+            "mais": 0.2
+          },
+          "ate": {
+            "servico": "S20",
+            "em": "fim"
+          },
+          "valor": {
+            "media": 0.4,
+            "desvio": 0.03,
+            "min": 0.32,
+            "casas": 2
+          },
+          "unidade": "%",
+          "criterio": "Caimento ≥ 0,30 % sem pontos baixos (projeto, ilustrativo)"
+        },
+        {
+          "tipo": "lista",
+          "servico": "S19",
+          "categoria": "lab",
+          "dia": {
+            "servico": "S19",
+            "em": "fim",
+            "mais": 0.5
+          },
+          "itens": [
+            {
+              "nome": "Resistência do concreto da sarjeta, frente {frente} (7 dias)",
+              "norma": "@nbr5739",
               "valor": {
-                "media": 98.6,
-                "desvio": 0.6,
-                "min": 97.3,
-                "max": 99.8,
+                "media": 17.8,
+                "desvio": 1,
                 "casas": 1
               },
-              "unidade": "%",
-              "criterio": "97 % ≤ GC ≤ 100 %",
-              "extras": [
+              "unidade": "MPa",
+              "criterio": "fc,7 ≥ 15 MPa (projeto, ilustrativo)"
+            }
+          ]
+        },
+        {
+          "tipo": "lista",
+          "servico": "S20",
+          "categoria": "lab",
+          "condicao": ["frente:1"],
+          "dia": {
+            "servico": "S20",
+            "em": "inicio",
+            "mais": 0.3
+          },
+          "itens": [
+            {
+              "nome": "Sub-base: compactação (Método B) e ISC do solo-brita",
+              "norma": "@comp · @isc",
+              "v": "2,086",
+              "unidade": "g/cm³",
+              "criterio": "hót = 9,6 % · ISC 38 % ≥ 20 %"
+            }
+          ]
+        },
+        {
+          "tipo": "serie",
+          "servico": "S20",
+          "categoria": "campo",
+          "camada": "sb",
+          "nome": "GC sub-base",
+          "norma": "@frasco",
+          "estacas": {
+            "porFrente": {
+              "passo": 100,
+              "minimo": 5
+            }
+          },
+          "z": [-2.4, 0, 2.4],
+          "zDesloc": 1,
+          "dia": {
+            "frente": "S20",
+            "mais": 0.12
+          },
+          "ate": {
+            "servico": "S21",
+            "em": "inicio",
+            "mais": 0.5
+          },
+          "valor": {
+            "media": 101.4,
+            "desvio": 0.6,
+            "min": 100.3,
+            "casas": 1
+          },
+          "umidade": {
+            "media": 9.1,
+            "desvio": 0.5
+          },
+          "unidade": "%",
+          "criterio": "GC ≥ 100 %"
+        },
+        {
+          "tipo": "lista",
+          "servico": "S21",
+          "categoria": "lab",
+          "condicao": ["frente:1"],
+          "dia": {
+            "servico": "S21",
+            "em": "inicio",
+            "mais": 0.3
+          },
+          "itens": [
+            {
+              "nome": "Base: compactação e ISC da brita graduada",
+              "norma": "DNIT 164-ME · DNIT 172-ME",
+              "v": "2,312",
+              "unidade": "g/cm³",
+              "criterio": "hót = 5,8 % · ISC 92 % ≥ 60 % · exp. 0,1 %"
+            }
+          ]
+        },
+        {
+          "tipo": "serie",
+          "servico": "S21",
+          "categoria": "campo",
+          "camada": "ba",
+          "nome": "GC base",
+          "norma": "@frasco",
+          "estacas": {
+            "porFrente": {
+              "passo": 100,
+              "minimo": 5
+            }
+          },
+          "z": [-2.4, 0, 2.4],
+          "zDesloc": 2,
+          "dia": {
+            "frente": "S21",
+            "mais": 0.12
+          },
+          "ate": {
+            "servico": "S22",
+            "faixa": "BD",
+            "em": "inicio",
+            "mais": 0.3
+          },
+          "valor": {
+            "media": 101.2,
+            "desvio": 0.5,
+            "min": 100.2,
+            "casas": 1
+          },
+          "umidade": {
+            "media": 5.7,
+            "desvio": 0.3
+          },
+          "unidade": "%",
+          "criterio": "GC ≥ 100 % · umidade ± 1 %",
+          "falhas": [
+            {
+              "frente": 2,
+              "ponto": 3,
+              "condicao": ["failBase"],
+              "s": 620,
+              "z": -2.4,
+              "v": "98,1",
+              "w": "4,2",
+              "obs": {
+                "se": ["rwBase"],
+                "sim": "Umidade 1,6 % abaixo da ótima. Segmento escarificado, umedecido e recompactado.",
+                "nao": "Umidade 1,6 % abaixo da ótima. Ponto aceito sem retrabalho: não conformidade aberta."
+              },
+              "reensaio": {
+                "condicao": ["rwBase"],
+                "dia": {
+                  "servico": "R1",
+                  "em": "fim",
+                  "mais": -0.15
+                },
+                "v": "100,8",
+                "w": "5,9",
+                "obs": "Reensaio após retrabalho."
+              }
+            }
+          ]
+        },
+        {
+          "tipo": "serie",
+          "servico": "S21",
+          "categoria": "campo",
+          "camada": "ba",
+          "grupo": "deflBase",
+          "nome": "Deflexão na base (viga Benkelman)",
+          "norma": "@benk",
+          "estacas": {
+            "porFrente": {
+              "inicio": 10,
+              "passo": 20
+            }
+          },
+          "z": [1.75, -1.75],
+          "dia": {
+            "servico": "S21",
+            "em": "fim",
+            "mais": -0.45,
+            "passo": 0.02
+          },
+          "ate": {
+            "servico": "S22",
+            "faixa": "BD",
+            "em": "inicio",
+            "mais": 0.3
+          },
+          "valor": {
+            "media": 52,
+            "desvio": 6,
+            "formato": "inteiro"
+          },
+          "coletar": "dBase",
+          "unidade": "× 0,01 mm",
+          "criterio": "Dc ≤ 70 × 0,01 mm (projeto)"
+        },
+        {
+          "tipo": "faixas",
+          "faixas": ["BD", "BE"],
+          "itens": [
+            {
+              "tipo": "serie",
+              "servico": "S22",
+              "categoria": "campo",
+              "camada": "imp",
+              "nome": "Taxa de imprimação (bandeja)",
+              "norma": "DNIT 144/2014-ES",
+              "estacas": {
+                "inicio": 40,
+                "passo": 100,
+                "porFaixa": 50,
+                "n": {
+                  "BD": 3,
+                  "BE": 2
+                }
+              },
+              "z": {
+                "BD": 1.9,
+                "BE": -1.9
+              },
+              "dia": {
+                "frente": "S22",
+                "mais": 0.02
+              },
+              "ate": {
+                "servico": "S23",
+                "em": "inicio"
+              },
+              "valor": {
+                "media": 1.2,
+                "desvio": 0.06,
+                "casas": 2
+              },
+              "unidade": "L/m²",
+              "criterio": "Projeto 1,20 ± 0,20 L/m²"
+            }
+          ]
+        },
+        {
+          "tipo": "faixas",
+          "faixas": ["BD", "BE"],
+          "itens": [
+            {
+              "tipo": "serie",
+              "servico": "S23",
+              "categoria": "campo",
+              "camada": "pin",
+              "nome": "Taxa de pintura de ligação (bandeja)",
+              "norma": "DNIT 145/2012-ES",
+              "estacas": {
+                "inicio": 60,
+                "passo": 90,
+                "porFaixa": 40,
+                "n": {
+                  "BD": 3,
+                  "BE": 2
+                }
+              },
+              "z": {
+                "BD": 1.6,
+                "BE": -1.6
+              },
+              "dia": {
+                "frente": "S23",
+                "mais": 0.02
+              },
+              "ate": {
+                "servico": "S24",
+                "em": "inicio",
+                "maisPorEstaca": 0.55
+              },
+              "valor": {
+                "media": 0.9,
+                "desvio": 0.05,
+                "casas": 2
+              },
+              "unidade": "L/m²",
+              "criterio": "Emulsão diluída 1:1 · 0,90 ± 0,20 L/m²"
+            }
+          ]
+        },
+        {
+          "tipo": "faixas",
+          "faixas": ["BD", "BE"],
+          "itens": [
+            {
+              "tipo": "lista",
+              "servico": "S24",
+              "categoria": "usina",
+              "itens": [
                 {
-                  "campo": "esp",
-                  "media": 5,
-                  "desvio": 0.08,
-                  "min": 4.8,
-                  "max": 5.2,
-                  "casas": 2
+                  "condicao": ["failCbuq", "faixa:BD", "frente:1"],
+                  "nome": "Teor de ligante da mistura (Rotarex), 1ª amostra",
+                  "norma": "DNER-ME 053/94",
+                  "dia": {
+                    "servico": "S24",
+                    "em": "falhaOuInicio",
+                    "mais": 0.07
+                  },
+                  "v": "6,05",
+                  "unidade": "%",
+                  "criterio": "5,6 ± 0,3 %",
+                  "ok": false,
+                  "obs": {
+                    "se": ["rwCbuq"],
+                    "sim": "Usina parada. Recalibração da bomba de CAP e fresagem dos 28,6 m lançados.",
+                    "nao": "Produção mantida sem correção: não conformidade aberta."
+                  }
+                },
+                {
+                  "nome": "Temperatura CAP / agregados (F{frente} {faixa})",
+                  "norma": "DNIT 031/2024-ES",
+                  "dia": {
+                    "servico": "S24",
+                    "em": "inicio",
+                    "mais": -0.05
+                  },
+                  "v": "155 / 167",
+                  "unidade": "°C",
+                  "criterio": "CAP 107 a 177 °C · agregados +10 a +15 °C"
+                },
+                {
+                  "nome": {
+                    "se": ["failCbuq", "rwCbuq", "faixa:BD", "frente:1"],
+                    "sim": "Teor de ligante da mistura (Rotarex, F{frente} {faixa}) após recalibração",
+                    "nao": "Teor de ligante da mistura (Rotarex, F{frente} {faixa})"
+                  },
+                  "norma": "DNER-ME 053/94",
+                  "dia": {
+                    "servico": "S24",
+                    "em": "inicio",
+                    "mais": 0.15
+                  },
+                  "valor": {
+                    "media": 5.6,
+                    "desvio": 0.08,
+                    "casas": 2
+                  },
+                  "unidade": "%",
+                  "criterio": "5,6 ± 0,3 %"
+                },
+                {
+                  "nome": "Granulometria da mistura (F{frente} {faixa})",
+                  "norma": "@granCB",
+                  "dia": {
+                    "servico": "S24",
+                    "em": "inicio",
+                    "mais": 0.2
+                  },
+                  "v": "na faixa",
+                  "unidade": "",
+                  "criterio": "Projeto ± tolerâncias da Tabela 3",
+                  "granulometria": true
+                },
+                {
+                  "nome": "Gmm e resistência à tração (F{frente} {faixa})",
+                  "norma": "@gmm · @rt",
+                  "dia": {
+                    "servico": "S24",
+                    "em": "inicio",
+                    "mais": 0.3
+                  },
+                  "v": {
+                    "BD": "2,461 / 1,06",
+                    "BE": "2,458 / 1,02"
+                  },
+                  "unidade": "g/cm³ / MPa",
+                  "criterio": "RT ≥ 0,65 MPa"
+                }
+              ]
+            },
+            {
+              "tipo": "serie",
+              "servico": "S24",
+              "categoria": "campo",
+              "camada": "rv",
+              "estacas": {
+                "porFrente": {
+                  "inicio": 50,
+                  "passo": 100
+                }
+              },
+              "z": {
+                "BD": 1.75,
+                "BE": -1.75
+              },
+              "dia": {
+                "frente": "S24"
+              },
+              "ensaios": [
+                {
+                  "nome": "Temperatura de espalhamento (F{frente} {faixa})",
+                  "norma": "DNIT 031/2024-ES",
+                  "deslocamento": -20,
+                  "ate": {
+                    "relativo": true,
+                    "mais": 0.3
+                  },
+                  "valor": {
+                    "media": 151,
+                    "desvio": 2,
+                    "formato": "inteiro"
+                  },
+                  "unidade": "°C",
+                  "criterio": "≥ 145 °C"
+                },
+                {
+                  "nome": "GC do CBUQ, corpo de prova extraído (F{frente} {faixa})",
+                  "norma": "@cps",
+                  "grupo": "gcCB",
+                  "diaMais": 0.9,
+                  "valor": {
+                    "media": 98.6,
+                    "desvio": 0.6,
+                    "min": 97.3,
+                    "max": 99.8,
+                    "casas": 1
+                  },
+                  "unidade": "%",
+                  "criterio": "97 % ≤ GC ≤ 100 %",
+                  "extras": [
+                    {
+                      "campo": "esp",
+                      "media": 5,
+                      "desvio": 0.08,
+                      "min": 4.8,
+                      "max": 5.2,
+                      "casas": 2
+                    }
+                  ]
                 }
               ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "tipo": "serie",
-      "servico": "S16",
-      "categoria": "campo",
-      "camada": "rv",
-      "grupo": "deflFin",
-      "nome": "Deflexão no revestimento (viga Benkelman)",
-      "norma": "@defl",
-      "estacas": {
-        "inicio": 10,
-        "passo": 20,
-        "n": 15
-      },
-      "z": [-1.75, 1.75],
-      "dia": {
-        "servico": "S16",
-        "em": "inicio",
-        "mais": 0.1,
-        "passo": 0.03
-      },
-      "valor": {
-        "media": 36,
-        "desvio": 4.5,
-        "formato": "inteiro"
-      },
-      "coletar": "dFin",
-      "unidade": "× 0,01 mm",
-      "criterio": "Dc ≤ 50 × 0,01 mm (projeto)"
-    },
-    {
-      "tipo": "lista",
-      "servico": "S16",
-      "categoria": "campo",
-      "camada": "rv",
-      "dia": {
-        "servico": "S16",
-        "em": "inicio",
-        "mais": 1,
-        "passo": 0.15
-      },
-      "itens": [
-        {
-          "nome": "Irregularidade longitudinal, est. 0 a 10",
-          "norma": "@irr",
-          "v": "1,7",
-          "unidade": "m/km",
-          "criterio": "IRI ≤ 2,0 m/km",
-          "s": 100,
-          "z": -1.75
         },
         {
-          "nome": "Irregularidade longitudinal, est. 10 a 15",
-          "norma": "@irr",
-          "v": "1,9",
-          "unidade": "m/km",
-          "criterio": "IRI ≤ 2,0 m/km",
-          "s": 250,
-          "z": 1.75
+          "tipo": "serie",
+          "servico": "S25",
+          "categoria": "campo",
+          "camada": "rv",
+          "grupo": "deflFin",
+          "nome": "Deflexão no revestimento (viga Benkelman)",
+          "norma": "@defl",
+          "estacas": {
+            "porFrente": {
+              "inicio": 10,
+              "passo": 20
+            }
+          },
+          "z": [-1.75, 1.75],
+          "dia": {
+            "servico": "S25",
+            "em": "inicio",
+            "mais": 0.05,
+            "passo": 0.02
+          },
+          "valor": {
+            "media": 36,
+            "desvio": 4.5,
+            "formato": "inteiro"
+          },
+          "coletar": "dFin",
+          "unidade": "× 0,01 mm",
+          "criterio": "Dc ≤ 50 × 0,01 mm (projeto)"
         },
         {
+          "tipo": "serie",
+          "servico": "S25",
+          "categoria": "campo",
+          "camada": "rv",
+          "nome": "Irregularidade longitudinal (segmento de 200 m)",
+          "norma": "@irr",
+          "estacas": {
+            "porFrente": {
+              "inicio": 100,
+              "passo": 200
+            }
+          },
+          "z": [0],
+          "dia": {
+            "servico": "S25",
+            "em": "inicio",
+            "mais": 0.6,
+            "passo": 0.05
+          },
+          "valor": {
+            "media": 1.75,
+            "desvio": 0.1,
+            "max": 1.95,
+            "casas": 1
+          },
+          "unidade": "m/km",
+          "criterio": "IRI ≤ 2,0 m/km"
+        },
+        {
+          "tipo": "serie",
+          "servico": "S25",
+          "categoria": "campo",
+          "camada": "rv",
           "nome": "Régua de 3 m (regularidade)",
           "norma": "DNIT 031/2024-ES",
-          "v": "0,3",
+          "estacas": {
+            "porFrente": {
+              "inicio": 50,
+              "passo": 200
+            }
+          },
+          "z": [1.75, -1.75],
+          "dia": {
+            "servico": "S25",
+            "em": "inicio",
+            "mais": 0.75,
+            "passo": 0.05
+          },
+          "valor": {
+            "media": 0.3,
+            "desvio": 0.05,
+            "min": 0.1,
+            "max": 0.45,
+            "casas": 1
+          },
           "unidade": "cm",
-          "criterio": "≤ 0,5 cm",
-          "s": 120,
-          "z": -1.75
+          "criterio": "≤ 0,5 cm"
         },
         {
-          "nome": "Atrito: pêndulo britânico (VDR)",
-          "norma": "DNIT 031/2024-ES",
-          "v": "56",
-          "unidade": "",
-          "criterio": "VDR ≥ 47",
-          "s": 200,
-          "z": 1.75
+          "tipo": "serie",
+          "servico": "S25",
+          "categoria": "campo",
+          "camada": "rv",
+          "estacas": {
+            "global": {
+              "inicio": 150,
+              "passo": 300
+            }
+          },
+          "z": [1.75],
+          "dia": {
+            "servico": "S25",
+            "em": "inicio",
+            "mais": 0.85
+          },
+          "ensaios": [
+            {
+              "nome": "Atrito: pêndulo britânico (VDR)",
+              "norma": "DNIT 031/2024-ES",
+              "valor": {
+                "media": 56,
+                "desvio": 2,
+                "min": 50,
+                "formato": "inteiro"
+              },
+              "unidade": "",
+              "criterio": "VDR ≥ 47"
+            },
+            {
+              "nome": "Macrotextura: mancha de areia",
+              "norma": "DNIT 031/2024-ES",
+              "diaMais": 0.05,
+              "valor": {
+                "media": 0.66,
+                "desvio": 0.04,
+                "min": 0.6,
+                "casas": 2
+              },
+              "unidade": "mm",
+              "criterio": "Conforme projeto (0,6 a 1,2 mm)"
+            }
+          ]
         },
         {
-          "nome": "Macrotextura: mancha de areia",
-          "norma": "DNIT 031/2024-ES",
-          "v": "0,62",
-          "unidade": "mm",
-          "criterio": "Conforme projeto (0,6 a 1,2 mm)",
-          "s": 210,
-          "z": -1.75
+          "tipo": "lista",
+          "servico": "S26",
+          "categoria": "campo",
+          "camada": "rv",
+          "dia": {
+            "servico": "S26",
+            "em": "fim",
+            "mais": -0.05
+          },
+          "itens": [
+            {
+              "nome": "Retrorrefletância inicial da faixa central",
+              "norma": "DNIT 100/2018-ES",
+              "meioDaFrente": true,
+              "z": 0,
+              "valor": {
+                "media": 260,
+                "desvio": 12,
+                "formato": "inteiro"
+              },
+              "unidade": "mcd/lx/m²",
+              "criterio": "Mínimo do projeto (DNIT 100/2018-ES)"
+            }
+          ]
         }
       ]
     }
-  ]
+  ],
+  "notaPlano": "Cada frente tem menos de 4 000 m² por camada (400 m × 7,0 m), por isso vale o mínimo de 5 determinações por camada e por frente previsto nas especificações. Frequências marcadas como ilustrativas são valores de projeto deste modelo e precisam ser validadas."
 }

@@ -1,7 +1,8 @@
 {
   "opcoesBase": {
     "failBase": 1,
-    "failCbuq": 1
+    "failCbuq": 1,
+    "failTubo": 1
   },
   "avaliacoes": ["Inadequada", "Aceitável", "Melhor decisão"],
   "pontuacao": {
@@ -13,7 +14,6 @@
     },
     "pontosPorDiaDeAtraso": 15,
     "milReaisPorPonto": 1.5,
-    "retrabalhosSemPenalidade": ["rwBase", "rwCbuq"],
     "conceitos": [
       {
         "minimo": 9,
@@ -35,7 +35,8 @@
         "minimo": 0,
         "nome": "Insuficiente"
       }
-    ]
+    ],
+    "retrabalhosSemPenalidade": ["rwBase", "rwCbuq", "rwTubo", "rwRede"]
   },
   "decisoes": [
     {
@@ -83,7 +84,11 @@
           },
           "retorno": "Inadequado. Recalques diferenciais desaferem as balanças dos silos e da bomba de CAP, e um vazamento de ligante sem contenção é passivo ambiental dentro da área militar.",
           "consequencia": {
-            "dia": 15.5,
+            "dia": {
+              "servico": "S06",
+              "em": "fim",
+              "mais": -0.5
+            },
             "titulo": "Fiscalização ambiental",
             "texto": "A vistoria da licença de operação encontrou os tanques sem contenção e solo contaminado sob a bomba de CAP. A usina só pode operar depois da bacia e da remoção do solo.",
             "efeitos": {
@@ -109,29 +114,29 @@
     },
     {
       "id": "D2",
-      "servico": "S03",
+      "servico": "S16",
       "dia": {
-        "fixo": 3.6
+        "falhaDeEnsaio": "^ISC do subleito exposto"
       },
-      "titulo": "Material da camada final do aterro",
-      "contexto": "O projeto pede ISC ≥ 9 % e expansão ≤ 2 % nos últimos 60 cm do aterro. O laboratório entregou três opções de material.",
+      "titulo": "Material para a substituição de solo",
+      "contexto": "Depois da remoção da base na frente 2, o ISC do subleito entre as est. 28 e 32 deu 4 %, para 9 % de projeto. Vão ser substituídos 60 cm de solo nesse trecho. O laboratório entregou três opções de material.",
       "dados": [
-        {
-          "rotulo": "Solo do corte (argila arenosa)",
-          "valor": "ISC 9 % · exp. 1,2 %"
-        },
         {
           "rotulo": "Jazida de empréstimo, a 1,3 km",
           "valor": "ISC 14 % · exp. 0,8 %"
         },
         {
-          "rotulo": "Argila siltosa cinza da est. 11",
+          "rotulo": "Base e sub-base removidas da própria via",
+          "valor": "ISC 25 % · contaminadas com fresado e argila"
+        },
+        {
+          "rotulo": "Argila siltosa da área ao lado do canteiro",
           "valor": "ISC 7 % · exp. 2,6 %"
         }
       ],
       "opcoes": [
         {
-          "texto": "Usar a jazida de empréstimo na camada final e o solo do corte no corpo do aterro.",
+          "texto": "Usar o solo da jazida de empréstimo, compactado em camadas de 20 cm.",
           "avaliacao": 2,
           "efeitos": {
             "atraso": 0,
@@ -139,33 +144,38 @@
             "qualidade": 0,
             "conformidade": 0
           },
-          "retorno": "Correto. A jazida dá margem sobre o ISC de projeto e o solo do corte é bem aproveitado no corpo, onde a exigência é menor (ISC ≥ 2 %, expansão ≤ 4 %)."
+          "retorno": "Correto. A jazida dá margem sobre o ISC de projeto, tem expansão baixa e foi caracterizada nos ensaios prévios."
         },
         {
-          "texto": "Usar o solo do corte também na camada final, porque atinge exatamente o ISC de projeto.",
+          "texto": "Reaproveitar a base e a sub-base removidas, porque o ISC é alto.",
           "avaliacao": 1,
           "efeitos": {
             "atraso": 0,
-            "custo": -18,
-            "qualidade": -10,
+            "custo": -12,
+            "qualidade": -8,
             "conformidade": -5
           },
-          "retorno": "Aceitável no papel, arriscado na prática. Sem margem, qualquer variação do material reprova a camada. Exigiria ensaios de ISC mais frequentes."
+          "retorno": "Aceitável com ressalvas. O material é bom em média, mas a contaminação com fresado e argila deixa o resultado variável. Exigiria triagem e ensaios mais frequentes."
         },
         {
-          "texto": "Usar a argila siltosa da est. 11, que está mais perto.",
+          "texto": "Usar a argila siltosa ao lado do canteiro, que está mais perto.",
           "avaliacao": 0,
           "efeitos": {
             "atraso": 0,
-            "custo": -25,
+            "custo": -20,
             "qualidade": -20,
             "conformidade": -25
           },
-          "retorno": "Inadequado. A expansão de 2,6 % passa do limite de 2 % da DNIT 108/2009-ES e o ISC está abaixo do projeto.",
+          "retorno": "Inadequado. O ISC fica abaixo do projeto e a expansão de 2,6 % passa do limite de 2 %. A troca de solo não resolveria o problema.",
           "consequencia": {
-            "dia": 16.3,
-            "titulo": "Bombeamento na regularização",
-            "texto": "Na regularização, o subleito entre as est. 10 e 13 bombeou sob o rolo depois de uma garoa. O material expansivo precisou ser removido e substituído.",
+            "dia": {
+              "servico": "S17",
+              "frente": 2,
+              "em": "inicio",
+              "mais": 0.3
+            },
+            "titulo": "Bombeamento no subleito",
+            "texto": "Na regularização da frente 2, o subleito substituído bombeou sob o rolo depois de uma garoa. O material expansivo foi removido e trocado de novo.",
             "efeitos": {
               "atraso": 2,
               "custo": 45,
@@ -178,29 +188,29 @@
     },
     {
       "id": "D3",
-      "servico": "S07",
+      "servico": "S11",
       "dia": {
-        "falhaDeEnsaio": "^GC corpo do aterro, camada 4$"
+        "falhaDeEnsaio": "^GC do reaterro da vala"
       },
-      "titulo": "GC reprovado no corpo do aterro",
-      "contexto": "O frasco de areia na camada 4 deu GC = 97,6 %. A umidade de campo está em 21,6 %, para ótima de 18,2 %. Os outros quatro pontos da camada passaram com média de 101,3 %.",
+      "titulo": "GC reprovado no reaterro da vala",
+      "contexto": "O frasco de areia na camada 4 do reaterro da frente 2 deu GC = 97,8 %. A umidade de campo está em 20,9 %, para ótima de 17,5 %. Os outros pontos da vala passaram com média de 101,2 %.",
       "dados": [
         {
           "rotulo": "GC medido",
-          "valor": "97,6 % (mín. 100 %)"
+          "valor": "97,8 % (mín. 100 %)"
         },
         {
           "rotulo": "Umidade",
-          "valor": "21,6 % (hót + 3,4 %)"
+          "valor": "20,9 % (hót + 3,4 %)"
         },
         {
-          "rotulo": "Média da camada",
-          "valor": "101,3 %"
+          "rotulo": "Média dos outros pontos",
+          "valor": "101,2 %"
         }
       ],
       "opcoes": [
         {
-          "texto": "Aceitar, porque a média da camada passa de 100 %.",
+          "texto": "Aceitar, porque a média do reaterro passa de 100 %.",
           "avaliacao": 0,
           "efeitos": {
             "atraso": 0,
@@ -208,11 +218,16 @@
             "qualidade": -15,
             "conformidade": -20
           },
-          "retorno": "Inadequado. O ponto também está fora da faixa de umidade (hót ± 3 %), e a causa é conhecida. A média não protege o local fraco, que é onde o recalque vai aparecer.",
+          "retorno": "Inadequado. O ponto também está fora da faixa de umidade, e a causa é conhecida. O reaterro mal compactado recalca sob o pavimento novo, bem em cima do tubo.",
           "consequencia": {
-            "dia": 31.2,
-            "titulo": "Recalque no aterro",
-            "texto": "O levantamento final mostrou um afundamento de 2 cm na est. 10+10, justamente sobre o ponto aceito. A fiscalização exigiu monitoramento e reparo localizado do revestimento.",
+            "dia": {
+              "servico": "S25",
+              "frente": 2,
+              "em": "inicio",
+              "mais": 0.4
+            },
+            "titulo": "Recalque sobre a vala",
+            "texto": "No controle de aceitação da frente 2 apareceu um afundamento de 2 cm sobre a vala, na linha da rede. O revestimento e a base do trecho foram refeitos.",
             "efeitos": {
               "atraso": 1,
               "custo": 30,
@@ -222,7 +237,7 @@
           }
         },
         {
-          "texto": "Aerar com a grade de discos, recompactar e reensaiar o ponto.",
+          "texto": "Aerar a camada, recompactar e reensaiar o ponto.",
           "avaliacao": 2,
           "efeitos": {
             "atraso": 0,
@@ -230,10 +245,10 @@
             "qualidade": 0,
             "conformidade": 0
           },
-          "retorno": "Correto. Com a umidade de volta à faixa, a recompactação resolve. O reensaio deu 100,9 % e a camada seguinte foi liberada no mesmo dia."
+          "retorno": "Correto. Com a umidade de volta à faixa, a recompactação resolve. O reensaio deu 100,6 % e o reaterro seguiu."
         },
         {
-          "texto": "Lançar a próxima camada com 40 cm, para \"compensar\" com mais energia.",
+          "texto": "Lançar a camada seguinte com 40 cm, para \"compensar\" com mais energia.",
           "avaliacao": 0,
           "efeitos": {
             "atraso": 0,
@@ -241,10 +256,10 @@
             "qualidade": -20,
             "conformidade": -25
           },
-          "retorno": "Inadequado. A DNIT 108/2009-ES limita o corpo do aterro a 30 cm compactados. Uma camada mais espessa compacta pior, sem corrigir a de baixo."
+          "retorno": "Inadequado. Camada mais espessa compacta pior e não corrige a camada de baixo. O reaterro deve ser feito em camadas finas, controladas uma a uma."
         },
         {
-          "texto": "Parar a frente e esperar o solo secar sozinho.",
+          "texto": "Parar a vala e esperar o solo secar sozinho.",
           "avaliacao": 1,
           "efeitos": {
             "atraso": 1.5,
@@ -252,27 +267,30 @@
             "qualidade": 0,
             "conformidade": 0
           },
-          "retorno": "Aceitável, mas lento. A aeração mecânica com grade resolve em horas o que o sol leva dias para fazer."
+          "retorno": "Aceitável, mas lento. A aeração com revolvimento resolve em horas o que o sol leva dias para fazer, e a vala aberta por mais tempo aumenta o risco."
         }
       ]
     },
     {
       "id": "D4",
-      "servico": "S07",
+      "servico": "S11",
       "dia": {
-        "fixo": 10.2
+        "servico": "S11",
+        "frente": 1,
+        "em": "inicio",
+        "mais": 5
       },
-      "titulo": "Frente fria no fim da tarde",
-      "contexto": "A meteorologia indica chuva forte à noite, com 35 mm previstos. Há uma camada de aterro recém-espalhada e ainda não compactada entre as est. 9 e 12.",
-      "tempoNoDiario": "Manhã e tarde com tempo bom; frente fria com chuva forte prevista para a noite.",
+      "titulo": "Chuva forte prevista com vala aberta",
+      "tempoNoDiario": "Manhã e tarde com tempo bom; chuva forte prevista para a noite, com vala aberta na frente 1.",
+      "contexto": "A meteorologia indica 40 mm de chuva à noite. Na frente 1 há cerca de 60 m de vala aberta, com 1,5 m de profundidade, escoramento instalado e parte dos tubos já assentados sobre o berço.",
       "dados": [
         {
           "rotulo": "Chuva prevista",
-          "valor": "35 mm entre 20 h e 4 h"
+          "valor": "40 mm entre 20 h e 4 h"
         },
         {
-          "rotulo": "Camada exposta",
-          "valor": "≈ 60 m, solta"
+          "rotulo": "Vala aberta",
+          "valor": "≈ 60 m, 1,5 m de profundidade"
         },
         {
           "rotulo": "Horário",
@@ -281,7 +299,7 @@
       ],
       "opcoes": [
         {
-          "texto": "Compactar e selar a camada com rolo liso, dar caimento transversal e abrir saídas para a água.",
+          "texto": "Conferir o escoramento, cobrir a vala com lona, fazer leiras para desviar a enxurrada e deixar uma bomba pronta.",
           "avaliacao": 2,
           "efeitos": {
             "atraso": 0,
@@ -289,57 +307,87 @@
             "qualidade": 0,
             "conformidade": 0
           },
-          "retorno": "Correto. Superfície selada e com caimento escoa a chuva em vez de absorvê-la. No dia seguinte basta escarificar levemente e continuar."
+          "retorno": "Correto. A vala escorada e protegida não recebe a enxurrada da pista, as paredes não desmoronam e o berço não amolece. No dia seguinte basta conferir o fundo e seguir."
         },
         {
-          "texto": "Continuar lançando material até o fim do expediente.",
-          "avaliacao": 0,
-          "efeitos": {
-            "atraso": 1,
-            "custo": 18,
-            "qualidade": -10,
-            "conformidade": -10
-          },
-          "retorno": "Inadequado. O material solto absorve a chuva e fica muito acima da umidade ótima. Precisou ser removido ou aerado por um dia inteiro."
-        },
-        {
-          "texto": "Suspender a frente por dois dias por precaução.",
+          "texto": "Reaterrar e compactar até o fim do expediente o trecho com tubo assentado e manter aberto só o mínimo, escorado.",
           "avaliacao": 1,
           "efeitos": {
-            "atraso": 2,
-            "custo": 0,
-            "qualidade": 0,
+            "atraso": 0,
+            "custo": 1,
+            "qualidade": -3,
             "conformidade": 0
           },
-          "retorno": "Aceitável, mas caro em prazo. A camada solta sem selagem continuaria exposta à chuva do mesmo jeito."
+          "retorno": "Aceitável. Reduz o trecho exposto, mas o reaterro feito às pressas tende a ficar com camadas mais grossas e menos controle de umidade."
+        },
+        {
+          "texto": "Deixar como está e bombear a água acumulada pela manhã.",
+          "avaliacao": 1,
+          "efeitos": {
+            "atraso": 1,
+            "custo": 6,
+            "qualidade": -5,
+            "conformidade": 0
+          },
+          "retorno": "Aceitável, mas caro. A água amolece o fundo e o berço, que precisam ser removidos e refeitos antes de continuar o assentamento."
+        },
+        {
+          "texto": "Manter a vala aberta sem proteção, porque o escoramento segura as paredes.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": -10,
+            "conformidade": -20
+          },
+          "retorno": "Inadequado. A enxurrada entra pela vala, carrega solo para dentro da rede e solapa o pé do escoramento. É risco direto à segurança de quem desce na vala.",
+          "consequencia": {
+            "dia": {
+              "servico": "S11",
+              "frente": 1,
+              "em": "inicio",
+              "mais": 5.2
+            },
+            "titulo": "Desmoronamento na vala",
+            "texto": "Na manhã seguinte, um trecho da parede da vala cedeu atrás do escoramento e desalinhou 8 m de tubo. O trecho foi escavado e refeito, e a frente ficou parada para a inspeção de segurança.",
+            "efeitos": {
+              "atraso": 2,
+              "custo": 28,
+              "qualidade": -5,
+              "conformidade": -10
+            }
+          }
         }
       ]
     },
     {
       "id": "D5",
-      "servico": "S08",
+      "servico": "S11",
       "dia": {
-        "fixo": 12.25
+        "servico": "S11",
+        "frente": 1,
+        "em": "inicio",
+        "mais": 2
       },
-      "titulo": "Espessura da camada final",
-      "contexto": "O encarregado propõe lançar a camada final em uma única subcamada de 40 cm, em vez de 20 cm, para ganhar um dia.",
+      "titulo": "Reaterro da vala em camada única",
+      "contexto": "O encarregado propõe reaterrar a vala em uma única camada de 60 cm com a escavadeira, compactando só por cima, para ganhar um dia na frente 1.",
       "dados": [
         {
-          "rotulo": "Camada final",
-          "valor": "60 cm (3 × 20 cm no projeto)"
+          "rotulo": "Reaterro acima do tubo",
+          "valor": "≈ 1,0 m"
         },
         {
-          "rotulo": "Limite da especificação",
-          "valor": "0,20 m por camada"
+          "rotulo": "Projeto",
+          "valor": "camadas de até 20 cm"
         },
         {
-          "rotulo": "Rolo disponível",
-          "valor": "Pé-de-carneiro 11 t"
+          "rotulo": "Equipamento",
+          "valor": "Compactador de placa vibratória"
         }
       ],
       "opcoes": [
         {
-          "texto": "Aceitar a camada de 40 cm.",
+          "texto": "Aceitar a camada de 60 cm.",
           "avaliacao": 0,
           "efeitos": {
             "atraso": 0,
@@ -347,10 +395,10 @@
             "qualidade": -15,
             "conformidade": -20
           },
-          "retorno": "Inadequado. A DNIT 108/2009-ES limita a camada final a 0,20 m. O rolo não transmite energia ao fundo de 40 cm, e o frasco de areia só mede os 15 cm de cima."
+          "retorno": "Inadequado. A placa vibratória não transmite energia ao fundo de 60 cm, e o frasco de areia só mede a parte de cima. O reaterro recalca depois, já sob o pavimento novo."
         },
         {
-          "texto": "Manter as subcamadas de 20 cm, com ensaio em cada uma.",
+          "texto": "Manter camadas de até 20 cm, compactadas e ensaiadas.",
           "avaliacao": 2,
           "efeitos": {
             "atraso": 0,
@@ -358,10 +406,10 @@
             "qualidade": 0,
             "conformidade": 0
           },
-          "retorno": "Correto. Cada subcamada recebe energia uniforme e é controlada antes de ser coberta."
+          "retorno": "Correto. Cada camada recebe energia uniforme e é controlada antes de ser coberta, sem risco para o tubo."
         },
         {
-          "texto": "Aceitar 40 cm, mas com ensaio de GC dobrado no topo.",
+          "texto": "Aceitar 60 cm, mas com o ensaio de GC dobrado no topo.",
           "avaliacao": 0,
           "efeitos": {
             "atraso": 0,
@@ -375,14 +423,15 @@
     },
     {
       "id": "D6",
-      "servico": "S09",
+      "servico": "S17",
       "dia": {
-        "servico": "S09",
+        "servico": "S17",
+        "frente": 1,
         "em": "fim",
         "mais": -0.15
       },
       "titulo": "Pressão para liberar o subleito",
-      "contexto": "Quatro dos cinco pontos de GC da regularização estão conformes. O último, na est. 13+10, ainda está no laboratório (cerca de 2 h). O comando pede que a sub-base comece hoje.",
+      "contexto": "Quatro dos cinco pontos de GC da regularização da frente 1 estão conformes. O último, na est. 18+00, ainda está no laboratório (cerca de 2 h). O comando pede que o meio-fio e a sub-base comecem hoje.",
       "dados": [
         {
           "rotulo": "Pontos conformes",
@@ -394,12 +443,12 @@
         },
         {
           "rotulo": "Resultado pendente",
-          "valor": "est. 13+10"
+          "valor": "est. 18+00"
         }
       ],
       "opcoes": [
         {
-          "texto": "Emitir o BLC-1 agora, para todo o trecho.",
+          "texto": "Emitir o BLC-1 agora, para toda a frente.",
           "avaliacao": 0,
           "efeitos": {
             "atraso": 0,
@@ -410,7 +459,7 @@
           "retorno": "Inadequado. Liberar sem o último ensaio quebra a cadeia de liberação. Se o ponto reprovar, a sub-base terá de ser removida."
         },
         {
-          "texto": "Liberar só as est. 0 a 10, já ensaiadas, e o restante quando sair o último resultado.",
+          "texto": "Liberar só as est. 0 a 15, já ensaiadas, e o restante quando sair o último resultado.",
           "avaliacao": 2,
           "efeitos": {
             "atraso": 0,
@@ -435,12 +484,12 @@
     },
     {
       "id": "D7",
-      "servico": "S12",
+      "servico": "S21",
       "dia": {
         "falhaDeEnsaio": "^GC base$"
       },
       "titulo": "GC da base reprovado",
-      "contexto": "Na est. 9+00, bordo esquerdo, o frasco de areia deu GC = 98,1 %. A umidade de campo está 1,6 % abaixo da ótima. As deflexões da base ainda não foram medidas nesse segmento.",
+      "contexto": "Na frente 2, est. 31+00, bordo esquerdo, o frasco de areia deu GC = 98,1 %. A umidade de campo está 1,6 % abaixo da ótima. As deflexões da base ainda não foram medidas nesse segmento.",
       "dados": [
         {
           "rotulo": "GC medido",
@@ -467,9 +516,14 @@
           },
           "retorno": "Inadequado. A deflexão não substitui o grau de compactação: são critérios independentes da DNIT 141/2022-ES.",
           "consequencia": {
-            "dia": 30.6,
+            "dia": {
+              "servico": "S25",
+              "frente": 2,
+              "em": "inicio",
+              "mais": 0.5
+            },
             "titulo": "Deflexão alta e trilha de roda",
-            "texto": "No controle final, a est. 9+00 BE deu deflexão de 61 × 0,01 mm (acima do projeto) e marca de trilha de roda. O CBUQ e a base do segmento foram refeitos.",
+            "texto": "No controle de aceitação, a est. 31+00 BE deu deflexão de 61 × 0,01 mm (acima do projeto) e marca de trilha de roda. O CBUQ e a base do segmento foram refeitos.",
             "efeitos": {
               "atraso": 2,
               "custo": 62,
@@ -487,7 +541,7 @@
             "qualidade": 0,
             "conformidade": 0
           },
-          "retorno": "Correto. O retrabalho de 20 m custa um dia útil, e o reensaio deu 100,8 %. A imprimação e o CBUQ passam para o dia seguinte.",
+          "retorno": "Correto. O retrabalho de 20 m custa um dia útil na frente 2, e o reensaio deu 100,8 %. A imprimação da frente 2 passa para depois do reensaio, e as frentes seguintes esperam a equipe.",
           "opcoes": {
             "rwBase": 1
           }
@@ -507,14 +561,15 @@
     },
     {
       "id": "D8",
-      "servico": "S13",
+      "servico": "S22",
       "dia": {
-        "servico": "S13",
+        "servico": "S22",
+        "frente": 1,
         "em": "curaInicio",
         "mais": 0.6
       },
       "titulo": "Tráfego sobre a imprimação",
-      "contexto": "A imprimação está em cura. O comando da guarnição pede a via liberada amanhã cedo para o deslocamento de uma coluna de viaturas até a área de formatura.",
+      "contexto": "A imprimação da frente 1 está em cura. O comando da guarnição pede a via liberada amanhã cedo para o deslocamento de uma coluna de viaturas até a área de formatura.",
       "dados": [
         {
           "rotulo": "Cura mínima",
@@ -526,7 +581,7 @@
         },
         {
           "rotulo": "Rota alternativa",
-          "valor": "Avenida existente, +900 m"
+          "valor": "Desvio sinalizado pela faixa lateral, +300 m"
         }
       ],
       "opcoes": [
@@ -542,7 +597,7 @@
           "retorno": "Inadequado. Antes da cura, os pneus arrancam a película e levam ligante para a via. A imprimação teve de ser reaplicada nos trechos danificados."
         },
         {
-          "texto": "Manter a interdição e sinalizar o desvio pela avenida existente.",
+          "texto": "Manter a interdição e usar o desvio sinalizado da frente.",
           "avaliacao": 2,
           "efeitos": {
             "atraso": 0,
@@ -567,12 +622,12 @@
     },
     {
       "id": "D9",
-      "servico": "S15",
+      "servico": "S24",
       "dia": {
         "falhaDeEnsaio": "Rotarex\\), 1ª amostra"
       },
       "titulo": "Teor de ligante fora da tolerância",
-      "contexto": "A primeira amostra da produção deu 6,05 % de ligante (Rotarex). O projeto é 5,6 % ± 0,3 %. Um caminhão (≈ 28 m da faixa direita) já foi espalhado e compactado.",
+      "contexto": "A primeira amostra da produção deu 6,05 % de ligante (Rotarex). O projeto é 5,6 % ± 0,3 %. Um caminhão (≈ 28 m da faixa direita da frente 1) já foi espalhado e compactado.",
       "dados": [
         {
           "rotulo": "Teor medido",
@@ -599,9 +654,14 @@
           },
           "retorno": "Inadequado. A massa já aplicada fica com vazios baixos e tende a exsudar. A produção sem correção comprovada também mantém o risco.",
           "consequencia": {
-            "dia": 31,
+            "dia": {
+              "servico": "S25",
+              "frente": 1,
+              "em": "inicio",
+              "mais": 0.5
+            },
             "titulo": "Exsudação na faixa direita",
-            "texto": "No controle final, o segmento 0+00 a 1+10 BD apresentou exsudação e Vv abaixo de 3 % nos corpos de prova. O trecho foi fresado e refeito.",
+            "texto": "No controle de aceitação da frente 1, o segmento 0+00 a 1+10 BD apresentou exsudação e Vv abaixo de 3 % nos corpos de prova. O trecho foi fresado e refeito.",
             "efeitos": {
               "atraso": 1.5,
               "custo": 35,
@@ -619,7 +679,7 @@
             "qualidade": 0,
             "conformidade": 0
           },
-          "retorno": "Correto. A produção só volta com novo ensaio conforme. A faixa direita passa para o dia seguinte e o segmento fresado é refeito.",
+          "retorno": "Correto. A produção só volta com novo ensaio conforme. A faixa direita da frente 1 passa para o dia seguinte e o segmento fresado é refeito.",
           "opcoes": {
             "rwCbuq": 1
           }
@@ -639,15 +699,16 @@
     },
     {
       "id": "D10",
-      "servico": "S15",
+      "servico": "S24",
       "dia": {
-        "servico": "S15",
+        "servico": "S24",
+        "frente": 1,
         "faixa": "BD",
         "em": "fim",
         "mais": 0.03
       },
       "titulo": "Abertura da faixa ao tráfego",
-      "contexto": "A faixa direita acabou de ser compactada. O comando quer passar as viaturas blindadas por ela agora, para liberar a outra faixa à pavimentação de amanhã.",
+      "contexto": "A faixa direita da frente 1 acabou de ser compactada. O comando quer passar as viaturas blindadas por ela agora, para liberar a outra faixa à pavimentação.",
       "dados": [
         {
           "rotulo": "Temperatura da massa",
@@ -695,6 +756,259 @@
             "conformidade": 0
           },
           "retorno": "Aceitável, mas desnecessário. O desvio prolongado atrapalha a rotina da guarnição sem ganho para o pavimento."
+        }
+      ]
+    },
+    {
+      "id": "D11",
+      "servico": "S11",
+      "dia": {
+        "servico": "S11",
+        "frente": 2,
+        "em": "inicio",
+        "mais": 2
+      },
+      "titulo": "Rede não cadastrada na vala",
+      "contexto": "Na escavação da vala da frente 2, a escavadeira expôs um eletroduto a 0,9 m de profundidade, atravessando o traçado da rede. Ele não aparece no cadastro das concessionárias nem no da OM.",
+      "dados": [
+        {
+          "rotulo": "Interferência",
+          "valor": "Eletroduto de PVC ø 100 mm, sem registro"
+        },
+        {
+          "rotulo": "Profundidade",
+          "valor": "≈ 0,9 m"
+        },
+        {
+          "rotulo": "Posição",
+          "valor": "Cruza a vala na est. 22+10"
+        }
+      ],
+      "opcoes": [
+        {
+          "texto": "Parar a escavação no local, sondar à mão, acionar a concessionária e a OM e definir a solução com a fiscalização.",
+          "avaliacao": 2,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 3,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Correto. Sem saber o que passa no eletroduto, a única conduta segura é parar e identificar. A frente perde um dia, mas a rede é protegida ou remanejada com quem responde por ela.",
+          "opcoes": {
+            "rwRede": 1
+          }
+        },
+        {
+          "texto": "Desviar o traçado da rede por conta própria, contornando o eletroduto.",
+          "avaliacao": 1,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 6,
+            "qualidade": -5,
+            "conformidade": -10
+          },
+          "retorno": "Aceitável só como solução provisória. Mudar o traçado sem aprovação altera o caimento e pode criar outro cruzamento com redes que também não estão cadastradas."
+        },
+        {
+          "texto": "Seguir escavando com cuidado ao redor do eletroduto.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": 0,
+            "conformidade": -15
+          },
+          "retorno": "Inadequado. Sem identificar a rede, o operador não sabe se está diante de um cabo energizado. É um risco direto à segurança da equipe.",
+          "consequencia": {
+            "dia": {
+              "servico": "S11",
+              "frente": 2,
+              "em": "inicio",
+              "mais": 2.1
+            },
+            "titulo": "Cabo rompido na vala",
+            "texto": "A concha da escavadeira rompeu o eletroduto, que levava um cabo de energia de um aquartelamento. O setor ficou sem energia por 6 h e a vala foi interditada para a investigação do acidente.",
+            "efeitos": {
+              "atraso": 1,
+              "custo": 40,
+              "qualidade": 0,
+              "conformidade": -25
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "D12",
+      "servico": "S11",
+      "dia": {
+        "falhaDeEnsaio": "^Recebimento do lote de tubos"
+      },
+      "titulo": "Tubo de concreto trincado no recebimento",
+      "contexto": "Na inspeção de recebimento do lote de tubos da frente 3, três tubos apresentaram trincas longitudinais visíveis. O fornecedor sugere aproveitar o restante do lote.",
+      "dados": [
+        {
+          "rotulo": "Lote",
+          "valor": "tubos de concreto ø 600 mm da frente 3"
+        },
+        {
+          "rotulo": "Defeito",
+          "valor": "3 tubos com trinca longitudinal"
+        },
+        {
+          "rotulo": "Prazo de um novo lote",
+          "valor": "≈ 3 dias úteis"
+        }
+      ],
+      "opcoes": [
+        {
+          "texto": "Rejeitar o lote, devolvê-lo e só assentar o novo lote depois de inspecionado e ensaiado.",
+          "avaliacao": 2,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 1,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Correto. O lote reprovado não é assentado. A drenagem da frente 3 espera o novo lote, que passa pela inspeção e pela compressão diametral antes de ir para a vala.",
+          "opcoes": {
+            "rwTubo": 1
+          }
+        },
+        {
+          "texto": "Inspecionar tubo a tubo, separar os trincados e ensaiar uma nova amostra do restante antes de usar.",
+          "avaliacao": 1,
+          "efeitos": {
+            "atraso": 1,
+            "custo": 2,
+            "qualidade": -3,
+            "conformidade": 0
+          },
+          "retorno": "Aceitável, se a fiscalização concordar. A inspeção individual tira os defeitos visíveis, mas trincas finas podem passar, e o critério de aceitação do lote precisa ser conferido na NBR 8890."
+        },
+        {
+          "texto": "Assentar o lote mesmo assim, deixando os trincados nas pontas da rede.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": -15,
+            "conformidade": -20
+          },
+          "retorno": "Inadequado. Tubo trincado perde resistência e estanqueidade. A água infiltra no reaterro, que perde suporte sob o pavimento novo.",
+          "consequencia": {
+            "dia": {
+              "servico": "S25",
+              "frente": 3,
+              "em": "inicio",
+              "mais": 0.3
+            },
+            "titulo": "Infiltração na rede da frente 3",
+            "texto": "A inspeção dos poços de visita na entrega mostrou infiltração e carreamento de solo para dentro da rede da frente 3. O trecho foi escavado e os tubos trocados.",
+            "efeitos": {
+              "atraso": 2,
+              "custo": 35,
+              "qualidade": -10,
+              "conformidade": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "D13",
+      "servico": "S06",
+      "dia": {
+        "servico": "S06",
+        "em": "inicio",
+        "mais": 1.2
+      },
+      "titulo": "Percentual de fresado reaproveitado na usina",
+      "contexto": "Com a dosagem em andamento, é preciso decidir quanto do fresado estocado entra no CBUQ. A usina é contínua (tambor contrafluxo), sem anel de reciclagem, e o fresado foi caracterizado frente a frente.",
+      "dados": [
+        {
+          "rotulo": "Fresado estocado",
+          "valor": "≈ 700 m³ (solto)"
+        },
+        {
+          "rotulo": "Teor de ligante do fresado",
+          "valor": "5,3 % em média"
+        },
+        {
+          "rotulo": "Limite de projeto",
+          "valor": "20 % (parâmetro; conferir na DNIT 033/2021-ES)"
+        }
+      ],
+      "opcoes": [
+        {
+          "texto": "Não usar fresado (0 %) e mandar todo o material para bota-fora.",
+          "avaliacao": 1,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 8,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Aceitável, mas desperdiça material e paga transporte e bota-fora. O controle da mistura fica mais simples."
+        },
+        {
+          "texto": "Usar 10 % de fresado, com dosagem do reciclado e controle de teor e granulometria por frente.",
+          "avaliacao": 2,
+          "efeitos": {
+            "atraso": 0,
+            "custo": -18,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Correto. Com 10 %, a usina contínua aceita o fresado frio sem queimar o ligante, a dosagem é ajustada e a economia de CAP e agregado é real.",
+          "opcoes": {
+            "fresadoPct": 10
+          }
+        },
+        {
+          "texto": "Usar 20 %, o limite de projeto, aumentando a frequência dos ensaios na usina.",
+          "avaliacao": 1,
+          "efeitos": {
+            "atraso": 0,
+            "custo": -30,
+            "qualidade": -3,
+            "conformidade": 0
+          },
+          "retorno": "Aceitável. Fica no limite de projeto e economiza mais, mas a variação do fresado pesa mais na mistura e exige controle mais frequente.",
+          "opcoes": {
+            "fresadoPct": 20
+          }
+        },
+        {
+          "texto": "Usar 30 % para aumentar a economia.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": -40,
+            "qualidade": -10,
+            "conformidade": -15
+          },
+          "retorno": "Inadequado. Passa do limite de projeto e, sem anel de reciclagem, o fresado em excesso deixa a mistura heterogênea e envelhece o ligante.",
+          "opcoes": {
+            "fresadoPct": 30
+          },
+          "consequencia": {
+            "dia": {
+              "servico": "S24",
+              "frente": 2,
+              "em": "inicio",
+              "mais": 0.2
+            },
+            "titulo": "Teor variável na usina",
+            "texto": "Na produção da frente 2, os teores de ligante oscilaram fora da tolerância por causa do fresado. A produção foi reduzida para 10 % e um segmento foi refeito.",
+            "efeitos": {
+              "atraso": 1,
+              "custo": 25,
+              "qualidade": -10,
+              "conformidade": 0
+            }
+          }
         }
       ]
     }

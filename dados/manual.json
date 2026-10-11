@@ -1,6 +1,6 @@
 {
   "S01": {
-    "onde": "Pátio já nivelado ao lado da estaca 0, dentro da área militar, com acesso direto à via existente.",
+    "onde": "Pátio já nivelado no início do trecho (est. 0), dentro da área militar, com acesso direto à via e área para o estoque de fresado.",
     "como": [
       "Defina com a fiscalização e o comando da OM a área do canteiro, o horário de trabalho e as restrições de circulação (formaturas, deslocamento de tropa e viaturas).",
       "Instale os contêineres de escritório, laboratório, almoxarifado, refeitório e sanitários sobre calços nivelados e aterre as estruturas metálicas.",
@@ -16,38 +16,38 @@
     ]
   },
   "S02": {
-    "onde": "Eixo da via, estacas 0+00 a 15+00, com referências de nível fora da área de terraplenagem.",
+    "onde": "Eixo e bordos da via existente, estacas 0+00 a 80+00, com referências de nível fora da área de obra.",
     "como": [
-      "Implante o eixo com estacas a cada 20 m e marque os offsets (pés de corte e de aterro) dos dois lados.",
-      "Nivele o terreno natural em todas as estacas e gere as seções transversais primitivas.",
-      "Emita a nota de serviço com cotas de projeto, alturas de corte e aterro e larguras de plataforma.",
-      "Transfira as referências de nível para pontos fixos fora da área de trabalho (meios-fios e muros existentes)."
+      "Faça o levantamento planialtimétrico do eixo, dos bordos, das soleiras de acesso e das tampas existentes a cada 20 m.",
+      "Implante o eixo com estacas a cada 20 m e marque os limites de cada frente de 400 m.",
+      "Defina o greide do pavimento novo e o greide da rede de drenagem, com os pontos de deságue.",
+      "Emita a nota de serviço com as cotas da caixa do pavimento, da vala, das bocas de lobo e dos poços de visita.",
+      "Transfira as referências de nível para pontos fixos fora da área de trabalho."
     ],
-    "conferir": ["Seções primitivas arquivadas", "Referências de nível protegidas", "Nota de serviço assinada"]
+    "conferir": ["Nota de serviço assinada", "Greide da drenagem com caimento contínuo", "Referências de nível protegidas"]
   },
   "S03": {
-    "onde": "Subleito ao longo do eixo, jazida de empréstimo indicada pela fiscalização, pedreira e distribuidora de CAP.",
+    "onde": "Pavimento existente e subleito ao longo do eixo, jazida de empréstimo, pedreira e distribuidora de CAP.",
     "como": [
-      "Execute furos de sondagem a trado nas estacas 0, 4, 8, 11 e 15 e colete amostras deformadas de cada horizonte.",
+      "Abra sondagens do pavimento existente e do subleito a cada 200 m, medindo as espessuras de revestimento, base e sub-base.",
       "Faça granulometria, limites de Atterberg, compactação e ISC do subleito e classifique o solo (TRB).",
-      "Ensaie o solo da jazida para a camada final e a mistura de solo-brita para a sub-base.",
-      "Aprove a brita graduada (ISC, expansão, LL/IP e abrasão Los Angeles) e os agregados do CBUQ (Los Angeles, equivalente de areia, forma e adesividade).",
-      "Confira o certificado do CAP 50/70 de cada carga recebida."
+      "Delimite os trechos com solo mole (ISC abaixo do projeto) para a substituição de solo.",
+      "Ensaie o solo da jazida para a substituição e a mistura de solo-brita para a sub-base.",
+      "Aprove a brita graduada e os agregados do CBUQ, e confira o certificado do CAP 50/70 de cada carga."
     ],
-    "conferir": ["ISC do subleito ≥ ISC de projeto (9 %)", "Expansão do subleito ≤ 2 %", "Agregados aprovados antes de abastecer a usina"]
+    "conferir": ["ISC do subleito comparado ao projeto (9 %)", "Trechos de solo mole delimitados", "Agregados aprovados antes de abastecer a usina"]
   },
   "S04": {
-    "onde": "Faixa de domínio da obra, estacas 0+00 a 15+00, com 15 m de largura.",
+    "onde": "Área do canteiro no início do trecho e faixas laterais usadas pelos desvios.",
     "como": [
-      "Retire árvores, arbustos e tocos com o trator de esteiras, removendo também as raízes.",
-      "Raspe a camada vegetal (cerca de 20 cm) e estoque o material para a recomposição dos taludes.",
-      "Carregue os resíduos vegetais para a área de bota-fora autorizada pela OM.",
-      "Não deixe raízes nem material orgânico sob a área de aterro."
+      "Retire a vegetação e os entulhos das áreas de apoio com o trator de esteiras.",
+      "Raspe a camada vegetal das faixas de desvio e estoque o material para a recomposição.",
+      "Carregue os resíduos para o bota-fora autorizado pela OM."
     ],
-    "conferir": ["Supressão vegetal autorizada", "Expurgo removido da base dos aterros", "Terra vegetal estocada"]
+    "conferir": ["Supressão vegetal autorizada", "Áreas de apoio limpas", "Terra vegetal estocada"]
   },
   "S05": {
-    "onde": "Área da usina no canteiro, a cerca de 60 m do eixo, com saída para a via pela rampa de acesso.",
+    "onde": "Área da usina no canteiro, no início do trecho, com saída para a via pela rampa de acesso.",
     "como": [
       "Execute a base de concreto e os blocos de ancoragem conforme o projeto do fabricante.",
       "Posicione os silos dosadores, a correia coletora, o tambor, o filtro de mangas, o silo de massa e os tanques de CAP.",
@@ -58,43 +58,112 @@
     "conferir": ["Licença de operação ambiental", "Balanças aferidas", "Termômetros de 90 a 210 °C com precisão de ± 1 °C", "Bacia de contenção estanque"]
   },
   "S06": {
-    "onde": "Trechos em corte: estacas 0+00 a 6+14 e 14+06 a 15+00.",
+    "onde": "Laboratório de campo e usina de CBUQ.",
     "como": [
-      "Escave com a escavadeira em fatias de cerca de 1 m, mantendo a drenagem provisória da praça de trabalho.",
-      "Carregue os basculantes e transporte o material para o corpo do aterro (estacas 7 a 14).",
-      "Conforme os taludes de corte em 1V:1H e deixe o fundo do corte na cota do topo da terraplenagem indicada na nota de serviço.",
-      "Confira as cotas do fundo do corte com o nível a cada 20 m."
+      "Componha a curva granulométrica de projeto na faixa C-12,5 com brita 1, brita 0, pó de pedra e areia.",
+      "Molde corpos de prova Marshall (75 golpes) em 5 teores de ligante e determine Vv, VAM, RBV e estabilidade.",
+      "Escolha o teor de projeto para Vv = 4 % e confira RBV, resistência à tração e dano por umidade.",
+      "Calibre cada silo dosador (vazão × abertura) e a bomba de CAP com pesagens reais.",
+      "Produza uma mistura de teste e confira teor e granulometria antes de liberar a usina.",
+      "Se houver fresado, dose o reciclado conforme a DNIT 033/2021-ES, com o teor e a granulometria do fresado de cada frente."
     ],
-    "conferir": ["Distribuição pelo diagrama de massas", "Material inservível segregado", "Talude conferido com gabarito"]
+    "conferir": ["Vv 3 a 5 %, RBV 65 a 75 %", "RT ≥ 0,65 MPa e RRT ≥ 0,70", "Curvas de calibração arquivadas"]
   },
   "S07": {
-    "onde": "Trecho em aterro: estacas 6+14 a 14+05, onde a altura máxima chega a cerca de 2,5 m.",
+    "onde": "Início e fim de cada frente de 400 m e acessos às edificações dentro da frente.",
     "como": [
-      "Lance o material do corte em camadas de no máximo 30 cm compactados, começando pela cota mais baixa.",
-      "Homogeneíze com a grade de discos e corrija a umidade (caminhão-pipa ou aeração) para hót ± 3 %.",
-      "Compacte com o rolo pé-de-carneiro até atingir GC ≥ 100 % do Proctor normal.",
-      "Faça o ensaio de frasco de areia em pelo menos 5 pontos por camada antes de liberar a seguinte.",
-      "Mantenha caimento transversal para escoar a chuva e evitar empoçamento."
+      "Apresente o plano de desvio à OM: meia pista na fresagem e na drenagem, desvio total da remoção da base até a base nova, e meia pista no CBUQ.",
+      "Instale placas de advertência, cones, cavaletes e balizadores conforme o Manual de Sinalização de Obras e Emergências (IPR 738).",
+      "Mantenha passagem segura para pedestres e acesso às garagens e aos quartéis da frente.",
+      "Revise a sinalização a cada mudança de fase do desvio e no fim de cada dia."
     ],
-    "conferir": [
-      "Espessura solta conferida",
-      "Umidade dentro de hót ± 3 %",
-      "GC ≥ 100 % em todos os pontos",
-      "Taludes de 1V:1,5H com sobrelargura para corte posterior"
-    ]
+    "conferir": ["Plano de desvio aprovado pela OM", "Sinalização noturna funcionando", "Acessos às edificações garantidos"]
   },
   "S08": {
-    "onde": "Últimos 60 cm do aterro, nas estacas 6+14 a 14+05, com solo selecionado da jazida de empréstimo.",
+    "onde": "Toda a frente, com atenção aos cruzamentos e às entradas de edificações.",
     "como": [
-      "Lance o solo da jazida em três subcamadas de 20 cm compactados.",
-      "Corrija a umidade e compacte na energia intermediária (Método B).",
-      "Controle o GC em 5 pontos por subcamada e o ISC a cada 4 ensaios de compactação.",
-      "Acerte a última subcamada com a motoniveladora seguindo a nota de serviço."
+      "Reúna os cadastros de água, esgoto, energia e telecomunicações das concessionárias e da OM.",
+      "Percorra a frente com o detector de cabos e tubulações e marque as redes no pavimento.",
+      "Abra sondagens manuais onde houver suspeita de rede no traçado da vala.",
+      "Registre as interferências na nota de serviço e combine com os responsáveis o que será protegido ou remanejado."
     ],
-    "conferir": ["ISC ≥ 6 % e expansão ≤ 2 %", "GC ≥ 100 % (Método B)", "Cotas de eixo e bordos dentro de ± 4 cm"]
+    "conferir": ["Redes marcadas no pavimento", "Sondagens manuais nos cruzamentos", "Responsáveis por cada rede identificados"]
   },
   "S09": {
-    "onde": "Toda a plataforma, estacas 0+00 a 15+00, com 9,0 m de largura.",
+    "onde": "Toda a pista da frente (7,0 m), em meia pista, com o tráfego na outra faixa.",
+    "como": [
+      "Regule a fresadora para a espessura do revestimento existente (5 cm) e frese em faixas de 1,0 m.",
+      "Carregue o fresado direto no basculante pela esteira de carga e leve ao estoque do canteiro.",
+      "Varra a superfície fresada e confira a espessura com trena e régua a cada 100 m.",
+      "Não deixe degraus entre as faixas fresadas nem placas soltas."
+    ],
+    "conferir": ["Espessura fresada conferida", "Superfície uniforme, sem degraus", "Fresado separado por frente no canteiro"]
+  },
+  "S10": {
+    "onde": "Baia de fresado no canteiro, no início do trecho.",
+    "como": [
+      "Descarregue o fresado em pilhas por frente, sobre piso drenado e com cobertura contra chuva.",
+      "Separe material contaminado com solo ou base, que vai para bota-fora.",
+      "Colete amostras de cada pilha para teor de ligante e granulometria."
+    ],
+    "conferir": ["Pilhas identificadas por frente", "Fresado protegido da chuva", "Caracterização registrada"]
+  },
+  "S11": {
+    "onde": "Rede longitudinal sob a faixa direita (2,0 m do eixo), com ramais até as bocas de lobo.",
+    "como": [
+      "Confira o lote de tubos na chegada (inspeção visual e dimensional e compressão diametral por amostragem); lote reprovado não é assentado.",
+      "Escave a vala com a escavadeira na largura e na profundidade da nota de serviço, com escoramento metálico a partir de 1,25 m.",
+      "Regularize o fundo, execute o berço e assente os tubos com o munck, de jusante para montante, conferindo o caimento.",
+      "Rejunte as juntas e reaterre em camadas de até 20 cm, compactadas com a placa vibratória e ensaiadas.",
+      "Proteja a vala aberta contra a chuva e nunca deixe trecho aberto sem escoramento."
+    ],
+    "conferir": ["Lote de tubos aprovado", "Caimento conferido em cada trecho", "GC do reaterro ≥ 100 % em todas as camadas", "Escoramento instalado"]
+  },
+  "S12": {
+    "onde": "Sarjetas dos dois lados, a cada 40 m, com ramal até a rede.",
+    "como": [
+      "Escave a caixa e execute o fundo de concreto.",
+      "Assente a caixa pré-moldada ou levante as paredes, deixando o topo no nível da sarjeta.",
+      "Ligue o ramal à rede e rejunte.",
+      "Assente a grelha e molde corpos de prova do concreto."
+    ],
+    "conferir": ["Topo no nível da sarjeta", "Ramal com caimento para a rede", "Grelha assentada e travada"]
+  },
+  "S13": {
+    "onde": "Rede longitudinal, a cada 80 m e nas mudanças de diâmetro ou direção.",
+    "como": [
+      "Escave e execute a laje de fundo com a canaleta de passagem.",
+      "Monte os anéis pré-moldados, rejunte e instale os degraus.",
+      "Ajuste o tampão ao greide do pavimento novo."
+    ],
+    "conferir": ["Canaleta com o caimento da rede", "Anéis rejuntados", "Tampão no nível do pavimento novo"]
+  },
+  "S14": {
+    "onde": "Fim da rede, na est. 80, até o ponto de lançamento definido em projeto.",
+    "como": ["Execute a boca de saída da rede e o dissipador de energia.", "Proteja o terreno a jusante contra erosão."],
+    "conferir": ["Lançamento sem erosão", "Dissipador conforme projeto"]
+  },
+  "S15": {
+    "onde": "Caixa do pavimento da frente (8,1 m: pista, sarjetas e meios-fios), depois das valas reaterradas.",
+    "como": [
+      "Escave a base e a sub-base existentes até o subleito com a escavadeira, mantendo a drenagem provisória da caixa.",
+      "Carregue os basculantes e leve o material para o bota-fora licenciado.",
+      "Confira as cotas do fundo da caixa com o nível a cada 20 m.",
+      "Colete amostras do subleito exposto para o ISC a cada 50 m."
+    ],
+    "conferir": ["Caixa no fundo de projeto (± 3 cm)", "Valas e caixas da drenagem protegidas", "Amostras de ISC coletadas"]
+  },
+  "S16": {
+    "onde": "Trechos com ISC do subleito abaixo do projeto (entre as est. 28 e 32, na frente 2).",
+    "como": [
+      "Escave 60 cm do subleito no trecho delimitado.",
+      "Lance o solo da jazida em camadas de 20 cm compactados.",
+      "Corrija a umidade e compacte na energia intermediária, com ensaio de GC em cada camada."
+    ],
+    "conferir": ["ISC do material ≥ projeto", "GC ≥ 100 % em todas as camadas", "Cota final no fundo da caixa"]
+  },
+  "S17": {
+    "onde": "Fundo da caixa do pavimento da frente, com 8,1 m de largura.",
     "como": [
       "Escarifique 20 cm do subleito com a motoniveladora.",
       "Pulverize, umedeça ou aere até a umidade ótima (± 2 %) e homogeneíze.",
@@ -102,21 +171,28 @@
       "Confira as cotas a cada 20 m (eixo e bordos) e o abaulamento.",
       "Emita o Boletim de Liberação de Camada (BLC-1) antes de lançar a sub-base."
     ],
-    "conferir": ["GC ≥ 100 % em 5 pontos", "Cotas dentro de ± 3 cm", "Largura ≥ 9,0 m (tolerância ± 10 cm)"]
+    "conferir": ["GC ≥ 100 % em 5 pontos por frente", "Cotas dentro de ± 3 cm", "Largura da caixa conferida (tolerância ± 10 cm)"]
   },
-  "S10": {
-    "onde": "Laboratório de campo e usina de CBUQ.",
+  "S18": {
+    "onde": "Bordos da caixa, dos dois lados da frente.",
     "como": [
-      "Componha a curva granulométrica de projeto na faixa C-12,5 com brita 1, brita 0, pó de pedra e areia.",
-      "Molde corpos de prova Marshall (75 golpes) em 5 teores de ligante e determine Vv, VAM, RBV e estabilidade.",
-      "Escolha o teor de projeto para Vv = 4 % e confira RBV, resistência à tração e dano por umidade.",
-      "Calibre cada silo dosador (vazão × abertura) e a bomba de CAP com pesagens reais.",
-      "Produza uma mistura de teste e confira teor e granulometria antes de liberar a usina."
+      "Marque o alinhamento e a cota do meio-fio pela nota de serviço.",
+      "Assente o meio-fio pré-moldado sobre berço de concreto, com o munck.",
+      "Rejunte as peças e escore pelo lado do passeio."
     ],
-    "conferir": ["Vv 3 a 5 %, RBV 65 a 75 %", "RT ≥ 0,65 MPa e RRT ≥ 0,70", "Curvas de calibração arquivadas"]
+    "conferir": ["Alinhamento sem desvios", "Cota do topo conferida", "Juntas rejuntadas"]
   },
-  "S11": {
-    "onde": "Plataforma regularizada, estacas 0+00 a 15+00, com 8,0 m de largura.",
+  "S19": {
+    "onde": "Junto ao meio-fio, dos dois lados, com 0,40 m de largura.",
+    "como": [
+      "Prepare o lastro e confira o caimento até as bocas de lobo.",
+      "Execute a sarjeta com a extrusora e o concreto do caminhão betoneira.",
+      "Faça as juntas de dilatação e molde corpos de prova."
+    ],
+    "conferir": ["Caimento contínuo, sem pontos baixos", "Concordância com as grelhas das bocas de lobo", "Juntas executadas"]
+  },
+  "S20": {
+    "onde": "Subleito liberado (BLC-1), entre as sarjetas, com 7,0 m de largura, só depois da drenagem da frente concluída.",
     "como": [
       "Misture solo e brita (60/40 em massa) no pátio ou na pista e distribua com a motoniveladora.",
       "Corrija a umidade para a faixa de −2 a +1 ponto da ótima no início da compactação.",
@@ -125,8 +201,8 @@
     ],
     "conferir": ["ISC ≥ 20 %, expansão ≤ 1 %, IG = 0", "GC ≥ 100 % em 5 pontos", "Espessura de 20 cm ± 10 %"]
   },
-  "S12": {
-    "onde": "Sobre a sub-base liberada, estacas 0+00 a 15+00, com 7,6 m de largura.",
+  "S21": {
+    "onde": "Sobre a sub-base liberada, entre as sarjetas, com 7,0 m de largura.",
     "como": [
       "Descarregue a brita graduada em leiras e espalhe com a motoniveladora sem segregar.",
       "Corrija a umidade para hót ± 1 % com o caminhão-pipa.",
@@ -136,8 +212,8 @@
     ],
     "conferir": ["GC ≥ 100 %", "Dc = D̄ + k·S ≤ deflexão de projeto", "Espessura de 15 cm ± 10 %"]
   },
-  "S13": {
-    "onde": "Base acabada, em meia pista (primeiro o bordo direito, depois o esquerdo), mantendo o acesso das viaturas.",
+  "S22": {
+    "onde": "Base acabada da frente, em meia pista (primeiro o bordo direito, depois o esquerdo), com o tráfego pela outra faixa.",
     "como": [
       "Varra a superfície e umedeça levemente, se necessário.",
       "Aplique o CM-30 com o caminhão espargidor a 1,2 L/m², com a barra em altura constante.",
@@ -146,7 +222,7 @@
     ],
     "conferir": ["Taxa de 1,2 ± 0,2 L/m²", "Penetração e cura verificadas", "Sem excesso empoçado"]
   },
-  "S14": {
+  "S23": {
     "onde": "Sobre a base imprimada, na meia pista a pavimentar no dia.",
     "como": [
       "Varra a superfície imprimada, que ficou exposta ao tráfego de obra.",
@@ -155,8 +231,8 @@
     ],
     "conferir": ["Taxa de 0,9 ± 0,2 L/m²", "Emulsão rompida", "Junta longitudinal pintada no 2º dia"]
   },
-  "S15": {
-    "onde": "Usina no canteiro → avenida existente → meia pista em execução (faixa direita no 1º dia, esquerda no 2º).",
+  "S24": {
+    "onde": "Usina no início do trecho → via e desvio sinalizado → meia pista em execução na frente (faixa direita e depois esquerda).",
     "como": [
       "Aqueça o CAP a cerca de 155 °C e os agregados de 10 a 15 °C acima, sem passar de 177 °C.",
       "Carregue os caminhões sob o silo de massa em três montes, cubra com lona e registre o tíquete (massa e temperatura).",
@@ -167,18 +243,32 @@
     ],
     "conferir": ["Teor de ligante 5,6 ± 0,3 % a cada 4 h", "Temperatura em todos os caminhões", "GC entre 97 e 100 % a cada 100 m", "Espessura ± 5 %"]
   },
-  "S16": {
-    "onde": "Pista concluída, estacas 0+00 a 15+00.",
+  "S25": {
+    "onde": "Pista concluída da frente.",
     "como": [
-      "Meça as deflexões com a viga Benkelman a cada 20 m, alternando as faixas (15 pontos).",
+      "Meça as deflexões com a viga Benkelman a cada 20 m, alternando as faixas.",
       "Levante a irregularidade (IRI) por segmento de 200 m e a regularidade com régua de 3 m.",
-      "Faça o pêndulo britânico e a mancha de areia no segmento.",
-      "Compile o relatório final de controle tecnológico e as-built."
+      "Faça o pêndulo britânico e a mancha de areia a cada 300 m do trecho.",
+      "Registre os resultados no relatório de controle da frente."
     ],
     "conferir": ["IRI ≤ 2,0 m/km", "VDR ≥ 47", "Dc ≤ deflexão de projeto do revestimento"]
   },
-  "S17": {
-    "onde": "Canteiro, área da usina e jazida.",
+  "S26": {
+    "onde": "Pista concluída da frente.",
+    "como": [
+      "Pré-marque a faixa central e os bordos.",
+      "Aplique a tinta com o caminhão de pintura, com microesferas, na taxa do projeto.",
+      "Meça a retrorrefletância inicial."
+    ],
+    "conferir": ["Alinhamento das faixas", "Taxa de tinta e microesferas", "Retrorrefletância inicial conferida"]
+  },
+  "S27": {
+    "onde": "Pista concluída da frente, nos pontos do projeto de sinalização.",
+    "como": ["Instale os suportes e as placas definitivas.", "Retire a sinalização de obra da frente.", "Libere a frente ao tráfego com a OM."],
+    "conferir": ["Placas conforme o projeto", "Sinalização de obra retirada"]
+  },
+  "S28": {
+    "onde": "Canteiro, área da usina e baia de fresado, no início do trecho.",
     "como": [
       "Desmonte a usina e retire os tanques, os resíduos de CAP e o material contaminado para destinação licenciada.",
       "Recomponha o pátio e os taludes com a terra vegetal estocada.",
@@ -187,17 +277,35 @@
     "conferir": ["Passivo ambiental zerado", "As-built entregue", "Termo de Recebimento Provisório assinado"]
   },
   "R1": {
-    "onde": "Base, est. 8+10 a 9+10, bordo esquerdo.",
+    "onde": "Base da frente 2, est. 30+10 a 31+10, bordo esquerdo.",
     "como": ["Escarifique a base no segmento reprovado.", "Umedeça até hót ± 1 % e homogeneíze.", "Recompacte e refaça o ensaio no mesmo ponto."],
     "conferir": ["Reensaio GC ≥ 100 %"]
   },
   "R2": {
-    "onde": "Usina e segmento 0+00 a 1+08,6 (BD).",
+    "onde": "Usina e segmento 0+00 a 1+08,6 da frente 1 (BD).",
     "como": [
       "Pare a produção e recalibre a bomba de CAP.",
       "Frese o segmento lançado e retire o material.",
       "Reaplique a pintura e retome a pavimentação após o novo ensaio de teor conforme."
     ],
     "conferir": ["Novo teor dentro de 5,6 ± 0,3 %", "Segmento refeito"]
+  },
+  "R3": {
+    "onde": "Canteiro (recebimento) e frente 3.",
+    "como": [
+      "Devolva o lote reprovado ao fornecedor.",
+      "Receba o novo lote e repita a inspeção visual e dimensional e a compressão diametral.",
+      "Só libere o assentamento com o novo lote aprovado."
+    ],
+    "conferir": ["Lote novo aprovado", "Registro da devolução"]
+  },
+  "R4": {
+    "onde": "Vala da frente 2, est. 22+10.",
+    "como": [
+      "Pare a escavação no local e sonde à mão.",
+      "Acione a concessionária e a OM para identificar a rede.",
+      "Proteja ou remaneje a rede conforme a solução combinada e retome a vala."
+    ],
+    "conferir": ["Rede identificada", "Solução registrada com o responsável"]
   }
 }

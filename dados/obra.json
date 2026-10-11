@@ -1,52 +1,102 @@
 {
   "obra": {
-    "titulo": "Via interna da Vila Militar",
+    "titulo": "Reconstrução de via da Vila Militar",
     "local": "Vila Militar · Deodoro, Rio de Janeiro/RJ",
     "om": "Organização Militar de Engenharia executora (ilustrativa)",
     "trafego": "viaturas operacionais, ônibus e caminhões de abastecimento (N = 3 × 10⁶)",
-    "iscProjeto": 9
+    "iscProjeto": 9,
+    "aviso": "Quantitativos, produtividades (teóricas de referência, caso ideal das composições do SICRO, sem interferências, chuva, perdas ou esperas), terreno e resultados de ensaio são ilustrativos."
   },
   "calendario": {
     "inicio": "2027-05-03",
     "horaInicio": 7,
     "horasPorDia": 10,
-    "prazoContratualDias": 34
+    "prazoContratualDias": 110
   },
-  "geometria": {
-    "extensao": 300,
+  "trecho": {
+    "extensao": 1600,
     "estaca": 20,
     "cotaReferencia": 18,
-    "larguraPlataforma": 9,
-    "taludeCorte": 1,
-    "taludeAterro": 1.5,
-    "larguraSubBase": 8,
-    "larguraBase": 7.6,
-    "larguraRevestimento": 7,
+    "cotaGreideInicio": 24.5,
+    "rampaGreide": -0.004
+  },
+  "secao": {
+    "larguraPista": 7.0,
     "larguraFaixa": 3.5,
+    "larguraSarjeta": 0.4,
+    "larguraMeioFio": 0.15,
+    "alturaMeioFio": 0.15,
+    "espessuraSarjeta": 0.1
+  },
+  "pavimentoExistente": {
+    "nota": "Espessuras ilustrativas; serão confirmadas pelas sondagens do pavimento existente (S03).",
+    "espRevestimento": 0.05,
+    "espBase": 0.15,
+    "espSubBase": 0.2
+  },
+  "pavimentoNovo": {
     "espSubBase": 0.2,
     "espBase": 0.15,
     "espRevestimento": 0.05,
     "espRegularizacao": 0.2,
-    "espCamadaFinal": 0.6,
-    "espCamadaCorpo": 0.3,
-    "espSubcamadaFinal": 0.2,
-    "cotaGreideInicio": 23.6,
-    "rampaGreide": -0.0075,
-    "fatorHomogeneizacao": 1.2
+    "espSubstituicaoSolo": 0.6
+  },
+  "drenagem": {
+    "nota": "Traçado e dimensões ilustrativos: rede longitudinal sob a faixa direita, bocas de lobo nas sarjetas dos dois lados e poços de visita na rede.",
+    "afastamentoRede": 2.0,
+    "diametros": [
+      {
+        "ateEstaca": 800,
+        "diametro": 0.4
+      },
+      {
+        "ateEstaca": 1600,
+        "diametro": 0.6
+      }
+    ],
+    "diametroRamal": 0.4,
+    "comprimentoTubo": 1.0,
+    "cobrimento": 1.0,
+    "berco": 0.1,
+    "folgaLateralVala": 0.3,
+    "primeiraBocaDeLobo": 20,
+    "espacamentoBocasDeLobo": 40,
+    "espacamentoPocosDeVisita": 80,
+    "desagueNaEstaca": 1600
+  },
+  "empolamento": {
+    "fresado": 1.25,
+    "remocao": 1.3,
+    "escavacaoVala": 1.25
+  },
+  "subleito": {
+    "nota": "ISC ilustrativo. O trecho com solo mole aciona a substituição de solo (S16) na frente que o contém.",
+    "iscProjeto": 9,
+    "trechosComSoloRuim": [
+      {
+        "de": 560,
+        "ate": 640,
+        "isc": 4
+      }
+    ]
   },
   "canteiro": {
     "estacaInicio": 0,
     "estacaFim": 135,
     "afastamentoInicio": -112,
     "afastamentoFim": -40,
-    "cota": 22.6
+    "cota": 23.3
   },
   "taxas": {
     "densidadeCBUQ": 2.42,
     "imprimacao": 1.2,
     "pinturaDiluida": 0.9,
     "teorLigante": 0.056,
-    "larguraLimpeza": 15
+    "teorLiganteFresado": 0.053,
+    "larguraLimpeza": 15,
+    "areaCanteiro": 9720,
+    "fresadoMaximoPct": 20,
+    "notaFresado": "Percentual máximo de fresado na mistura tratado como parâmetro de projeto: a conferir no texto da DNIT 033/2021-ES (concreto asfáltico reciclado em usina a quente)."
   },
   "usina": [
     {
@@ -81,27 +131,27 @@
   "contexto": [
     {
       "titulo": "Obra militar dentro de área sob administração militar",
-      "texto": "O canteiro, a usina e a jazida ficam dentro da área sob administração militar. O cronograma é ajustado com o comando da guarnição para não interferir em formaturas, deslocamentos de tropa e no tráfego de viaturas."
+      "texto": "O canteiro, a usina e o estoque de fresado ficam no início do trecho, dentro da área sob administração militar. O cronograma é ajustado com o comando da guarnição para não interferir em formaturas, deslocamentos de tropa e no tráfego de viaturas."
     },
     {
-      "titulo": "Execução em meia pista",
-      "texto": "Imprimação, pintura e CBUQ são executados uma faixa por vez. A outra faixa fica livre para as viaturas e é usada pelos próprios caminhões da usina para chegar à vibroacabadora."
+      "titulo": "Via em uso e frentes de serviço",
+      "texto": "A via continua em uso. A obra avança por frentes de 400 m, com no máximo duas abertas ao mesmo tempo. Cada frente passa por meia pista (fresagem e drenagem), desvio total (remoção da base até as camadas granulares) e de novo meia pista (CBUQ), até ser liberada com a sinalização definitiva."
+    },
+    {
+      "titulo": "Drenagem antes do pavimento",
+      "texto": "A rede, as bocas de lobo e os poços de visita de cada frente são executados e reaterrados, com o GC do reaterro aprovado, antes de qualquer camada do pavimento novo."
     },
     {
       "titulo": "Janela climática",
-      "texto": "No Rio de Janeiro, maio a setembro é o período mais seco. As especificações proíbem a execução com chuva e com temperatura abaixo de 10 °C, e o cronograma usa essa janela."
+      "texto": "No Rio de Janeiro, maio a setembro é o período mais seco. As especificações proíbem a execução de camadas com chuva e com temperatura abaixo de 10 °C, e valas abertas precisam de proteção contra a chuva."
     },
     {
       "titulo": "Cadeia de liberação",
-      "texto": "O laboratório ensaia, o engenheiro residente analisa e a fiscalização assina o Boletim de Liberação de Camada (BLC). Nenhuma camada é coberta sem o BLC da anterior."
+      "texto": "O laboratório ensaia, o engenheiro residente analisa e a fiscalização assina o Boletim de Liberação de Camada (BLC) de cada frente. Nenhuma camada é coberta sem o BLC da anterior."
     },
     {
-      "titulo": "Efetivo",
-      "texto": "As equipes são formadas por sargentos encarregados, cabos e soldados de engenharia, com operadores e motoristas habilitados para cada equipamento."
-    },
-    {
-      "titulo": "Usina própria",
-      "texto": "Com a usina no canteiro, a distância de transporte cai para algumas centenas de metros. A massa chega quente e 4 caminhões (3 em ciclo e 1 reserva) mantêm a vibroacabadora sem paradas."
+      "titulo": "Usina própria e fresado",
+      "texto": "Com a usina no início do trecho, a distância de transporte vai de algumas dezenas de metros a 1,6 km. O fresado é estocado e caracterizado no canteiro para possível reaproveitamento no CBUQ (DNIT 033/2021-ES)."
     }
   ],
   "diario": {

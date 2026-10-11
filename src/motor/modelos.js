@@ -356,3 +356,46 @@ export function mkFlag() {
   g.userData.flag = f;
   return g;
 }
+
+// caminhão betoneira (balão gira durante o serviço)
+export function mkBetoneira() {
+  const g = mkTruck('pipa', C.olive);
+  g.children.filter(c => c.geometry && c.geometry.type === 'CylinderGeometry' && c.position.y > 2).forEach(c => (c.visible = false));
+  const tambor = new THREE.Group();
+  tambor.position.set(-1.0, 2.35, 0);
+  tambor.rotation.z = 0.25;
+  const corpo = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 0.7, 4.2, 18), mat(0xd9d6cf));
+  corpo.rotation.z = Math.PI / 2;
+  corpo.castShadow = true;
+  tambor.add(corpo);
+  g.add(tambor);
+  g.userData = { tambor };
+  return g;
+}
+// extrusora de sarjeta (fôrma deslizante)
+export function mkExtrusora() {
+  const g = new THREE.Group(),
+    m = mat(C.olive),
+    mk = mat(C.black);
+  g.add(bx(2.4, 0.6, 0.4, mk, 0, 0.3, 0.7));
+  g.add(bx(2.4, 0.6, 0.4, mk, 0, 0.3, -0.7));
+  g.add(bx(2.6, 1.0, 1.8, m, 0, 1.1, 0));
+  g.add(bx(0.9, 1.0, 1.0, m, -0.6, 2.0, 0));
+  g.add(bx(1.2, 0.5, 0.9, mat(C.steel, { metalness: 0.5 }), 1.6, 0.35, 0.9));
+  const funil = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.3, 0.9, 4), mat(C.oliveD));
+  funil.position.set(1.0, 2.0, 0.6);
+  funil.castShadow = true;
+  g.add(funil);
+  return g;
+}
+// compactador de placa vibratória (com o operador)
+export function mkPlaca() {
+  const g = new THREE.Group();
+  g.add(bx(0.9, 0.12, 0.6, mat(C.steel, { metalness: 0.5 }), 0, 0.06, 0));
+  g.add(bx(0.5, 0.45, 0.45, mat(C.yellow), 0, 0.4, 0));
+  const cabo = bx(1.1, 0.05, 0.05, mat(C.black), -0.55, 0.85, 0);
+  cabo.rotation.z = -0.6;
+  g.add(cabo);
+  g.add(bx(0.35, 1.6, 0.35, mat(0x3f5a32), -1.15, 0.8, 0));
+  return g;
+}

@@ -17,23 +17,60 @@
     "defl": "DNIT 133-ME",
     "irr": "DNIT 442-ME",
     "la": "DNIT 451-ME",
-    "ea": "DNIT 450-ME"
+    "ea": "DNIT 450-ME",
+    "nbr8890": "ABNT NBR 8890",
+    "nbr5739": "ABNT NBR 5739"
   },
   "referencias": [
     {
-      "norma": "DNIT 104/2009-ES",
-      "titulo": "Terraplenagem: serviços preliminares",
-      "aplicacao": "Limpeza e destocamento"
+      "norma": "DNIT 159/2011-ES",
+      "titulo": "Pavimentos asfálticos: fresagem a frio",
+      "aplicacao": "Fresagem do revestimento existente"
     },
     {
       "norma": "DNIT 106/2009-ES",
       "titulo": "Terraplenagem: cortes",
-      "aplicacao": "Escavação e transporte"
+      "aplicacao": "Remoção de base e sub-base (por analogia, a confirmar)"
+    },
+    {
+      "norma": "DNIT 104/2009-ES",
+      "titulo": "Terraplenagem: serviços preliminares",
+      "aplicacao": "Limpeza do canteiro e das faixas laterais"
     },
     {
       "norma": "DNIT 108/2009-ES",
       "titulo": "Terraplenagem: aterros",
-      "aplicacao": "Corpo e camada final"
+      "aplicacao": "Substituição de solo (por analogia, a confirmar)"
+    },
+    {
+      "norma": "DNIT 023/2024-ES",
+      "titulo": "Drenagem: bueiros tubulares de concreto",
+      "aplicacao": "Rede de tubos de concreto, berço e reaterro"
+    },
+    {
+      "norma": "DNIT 026/2025-ES",
+      "titulo": "Drenagem: caixas coletoras, caixas de ligação e passagem e bocas de bueiros",
+      "aplicacao": "Bocas de lobo"
+    },
+    {
+      "norma": "DNIT 030/2004-ES",
+      "titulo": "Drenagem: dispositivos de drenagem pluvial urbana",
+      "aplicacao": "Rede urbana, bocas de lobo e poços de visita (cobertura a confirmar)"
+    },
+    {
+      "norma": "DNIT 018/2023-ES",
+      "titulo": "Drenagem: sarjetas e valetas",
+      "aplicacao": "Sarjeta de concreto"
+    },
+    {
+      "norma": "DNIT 020/2023-ES",
+      "titulo": "Drenagem: meios-fios e guias",
+      "aplicacao": "Meio-fio pré-moldado"
+    },
+    {
+      "norma": "DNIT 022/2023-ES",
+      "titulo": "Drenagem: dissipadores de energia",
+      "aplicacao": "Deságue"
     },
     {
       "norma": "DNIT 137/2010-ES",
@@ -66,9 +103,39 @@
       "aplicacao": "CBUQ, usina e aceitação"
     },
     {
+      "norma": "DNIT 033/2021-ES",
+      "titulo": "Concreto asfáltico reciclado em usina a quente",
+      "aplicacao": "Reaproveitamento do fresado"
+    },
+    {
+      "norma": "DNIT 100/2018-ES",
+      "titulo": "Sinalização horizontal",
+      "aplicacao": "Sinalização definitiva"
+    },
+    {
+      "norma": "DNIT 101/2009-ES",
+      "titulo": "Sinalização vertical",
+      "aplicacao": "Sinalização definitiva"
+    },
+    {
+      "norma": "IPR 738 (DNIT, 2010)",
+      "titulo": "Manual de Sinalização de Obras e Emergências em Rodovias",
+      "aplicacao": "Sinalização de obra e desvio de tráfego"
+    },
+    {
+      "norma": "ABNT NBR 8890",
+      "titulo": "Tubos de concreto para águas pluviais e esgoto",
+      "aplicacao": "Recebimento dos tubos (edição a confirmar)"
+    },
+    {
+      "norma": "ABNT NBR 5739",
+      "titulo": "Concreto: ensaio de compressão de corpos de prova cilíndricos",
+      "aplicacao": "Concreto de bocas de lobo, poços e sarjeta"
+    },
+    {
       "norma": "DNER-ME 092/94",
       "titulo": "Massa específica in situ: frasco de areia",
-      "aplicacao": "GC das camadas"
+      "aplicacao": "GC das camadas e do reaterro"
     },
     {
       "norma": "DNER-ME 129/94",
@@ -78,7 +145,7 @@
     {
       "norma": "DNER-ME 049/94",
       "titulo": "Índice de Suporte Califórnia",
-      "aplicacao": "Materiais"
+      "aplicacao": "Materiais e subleito exposto"
     },
     {
       "norma": "DNIT 447-ME",

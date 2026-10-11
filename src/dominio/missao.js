@@ -11,18 +11,17 @@ export function diaDaDecisao(regra, svc, T) {
   }
   const s = svc.find(x => x.id === regra.servico);
   if (!s) return null;
-  let d;
-  if (regra.em === 'curaInicio') d = s.cura[0];
-  else {
-    const w = regra.faixa ? s.lanes[regra.faixa] : s.win[0];
-    d = regra.em === 'fim' ? w[1] : w[0];
-  }
+  const f = regra.frente != null ? regra.frente - 1 : null;
+  const w = s.jan.find(w => (f == null || w.f === f) && (regra.faixa == null || w.faixa === regra.faixa) && (regra.em !== 'curaInicio' || w.cura));
+  if (!w) return null;
+  const d = regra.em === 'curaInicio' ? w.cura[0] : regra.em === 'fim' ? w.b : w.a;
   return d + (regra.mais || 0);
 }
 
 // métricas da missão: atraso (d), custo (c), qualidade (q), conformidade (n), nota de 0 a 10 e conceito.
-// escolhas: [{ op: efeitos }], eventos: consequências já vistas; opt: opções de cronograma em vigor.
-export function metricas({ escolhas, eventos, fim, prazo, opt, pontuacao }) {
+// escolhas: efeitos das alternativas escolhidas; eventos: consequências já vistas;
+// atrasoSemPenalidade: atraso do cronograma causado pelos retrabalhos decididos corretamente (não reduz a nota).
+export function metricas({ escolhas, eventos, fim, prazo, atrasoSemPenalidade = 0, pontuacao }) {
   let d = Math.max(0, fim - prazo),
     c = 0,
     q = 100,
@@ -41,8 +40,7 @@ export function metricas({ escolhas, eventos, fim, prazo, opt, pontuacao }) {
   }
   q = clamp(q, 0, 100);
   n = clamp(n, 0, 100);
-  // retrabalho decidido corretamente: o atraso que ele causa não reduz a nota
-  const inev = pontuacao.retrabalhosSemPenalidade.filter(k => opt[k]).length;
+  const inev = Math.min(Math.max(0, fim - prazo), atrasoSemPenalidade);
   const ps = clamp(100 - pontuacao.pontosPorDiaDeAtraso * Math.max(0, d - inev), 0, 100),
     cs = clamp(100 - Math.max(0, c) / pontuacao.milReaisPorPonto, 0, 100);
   const p = pontuacao.pesos;

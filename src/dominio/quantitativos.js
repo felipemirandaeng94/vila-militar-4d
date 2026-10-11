@@ -1,93 +1,97 @@
-// Quantitativos: seções a cada estaca, volumes pela média das áreas, diagrama de massas e serviços de pavimentação.
-import { P, nat, gr, sg, dFill, section } from './geometria.js';
+// Quantitativos da reconstrução por frente de serviço e totais.
+// Demolição (fresagem e remoção), drenagem (vala, tubos, bocas de lobo, poços de visita), subleito, meio-fio, sarjeta,
+// camadas novas, ligantes e CBUQ. As chaves de cada frente são as usadas em "quantidade" de dados/servicos.json.
+import { P, gr, sg, diametroRede, larguraVala, profundidadeVala, bocasDeLobo, pocosDeVisita } from './geometria.js';
 
-export function buildQuant(taxas) {
-  const rows = [];
-  const step = P.EST;
-  let cum = 0,
-    prev = null,
-    Vc = 0,
-    Va = 0;
-  for (let s = 0; s <= P.L + 1e-6; s += step) {
-    const sec = section(s),
-      n0 = nat(s, 0);
-    const r = { s, est: s / P.EST, nat: n0, gr: gr(s), sg: sg(s), h: n0 - sg(s), ac: sec.ac, aa: sec.aa, vc: 0, va: 0 };
-    if (prev) {
-      r.vc = ((prev.ac + r.ac) / 2) * step;
-      r.va = ((prev.aa + r.aa) / 2) * step;
-    }
-    Vc += r.vc;
-    Va += r.va;
-    cum += r.vc - r.va * P.FH;
-    r.cum = cum;
-    rows.push(r);
-    prev = r;
-  }
-  // camada final (0,60 m) e corpo do aterro
-  let Vcf = 0,
-    minNat = 99,
-    maxTopCorpo = -99,
-    sFill0 = 999,
-    sFill1 = -1;
-  for (let s = 0; s <= P.L; s += 1) {
-    const n = nat(s, 0),
-      top = sg(s);
-    if (n < top) {
-      sFill0 = Math.min(sFill0, s);
-      sFill1 = Math.max(sFill1, s);
-      minNat = Math.min(minNat, n);
-      maxTopCorpo = Math.max(maxTopCorpo, top - P.E_CF);
-    }
-    let a = 0;
-    const dz = 0.1;
-    for (let z = -20; z <= 20; z += dz) {
-      const nn = nat(s, z),
-        f = dFill(s, z),
-        cfb = f - P.E_CF;
-      if (nn < f) a += (f - Math.max(nn, cfb)) * dz;
-    }
-    Vcf += a;
-  }
-  const nLifts = Math.max(1, Math.ceil((maxTopCorpo - minNat) / P.LIFT));
-  const q = {
-    rows,
-    Vc,
-    Va,
-    Vcf,
-    Vcorpo: Va - Vcf,
-    Vbota: Vc - Va * P.FH,
-    nLifts,
-    minNat,
-    sFill0,
-    sFill1,
-    Alimp: P.L * taxas.larguraLimpeza,
-    Areg: P.L * P.B,
-    Vsb: P.L * P.W_SB * P.E_SB,
-    Vba: P.L * P.W_BA * P.E_BA,
-    Aimp: P.L * P.W_BA,
-    Apint: P.L * P.W_RV,
-    Vrv: P.L * P.W_RV * P.E_RV
+const fmtD = D => D.toFixed(2).replace('.', ',');
+
+// trechos com solo mole (ISC abaixo do projeto) dentro de [s0, s1)
+export function trechosRuins(obra, s0, s1) {
+  return (obra.subleito.trechosComSoloRuim || []).map(t => ({ ...t, de: Math.max(t.de, s0), ate: Math.min(t.ate, s1) })).filter(t => t.ate > t.de);
+}
+
+export function quantitativosDaFrente(obra, fr, ultima) {
+  const { s0, s1 } = fr;
+  const L = s1 - s0;
+  const tx = obra.taxas,
+    emp = obra.empolamento,
+    dr = obra.drenagem;
+  const q = { frente: fr.i, s0, s1, extensao: L };
+  // demolição
+  q.areaFresagem = L * P.W_RV;
+  q.volFresado = q.areaFresagem * P.EX_RV;
+  q.volFresadoSolto = q.volFresado * emp.fresado;
+  q.volRemocao = L * P.W_CX * (P.EX_BA + P.EX_SB);
+  q.volRemocaoSolta = q.volRemocao * emp.remocao;
+  // drenagem: rede longitudinal por trechos de diâmetro constante e ramais das bocas de lobo
+  q.tubos = {};
+  let esc = 0,
+    berco = 0,
+    tuboExt = 0;
+  const addTrecho = (comp, D) => {
+    const w = larguraVala(D),
+      h = profundidadeVala(D);
+    q.tubos[fmtD(D)] = (q.tubos[fmtD(D)] || 0) + comp;
+    esc += comp * w * h;
+    berco += comp * w * dr.berco;
+    tuboExt += comp * Math.PI * (D / 2 + 0.06) ** 2;
   };
-  q.Trv = q.Vrv * taxas.densidadeCBUQ;
-  q.Limp = q.Aimp * taxas.imprimacao;
-  q.Lpint = q.Apint * taxas.pinturaDiluida;
-  q.teorLigante = taxas.teorLigante;
+  for (let s = s0; s < s1 - 1e-9; s += 1) addTrecho(Math.min(1, s1 - s), diametroRede(s + 0.5));
+  const bl = bocasDeLobo().filter(b => b.s >= s0 && (b.s < s1 || (ultima && b.s <= s1)));
+  const pv = pocosDeVisita().filter(p => p.s >= s0 && (p.s < s1 || (ultima && p.s <= s1)));
+  q.extRede = L;
+  q.extRamais = bl.reduce((a, b) => a + b.ramal, 0);
+  for (const b of bl) addTrecho(b.ramal, dr.diametroRamal);
+  q.extVala = q.extRede + q.extRamais;
+  q.volEscavacaoVala = esc;
+  q.volBerco = berco;
+  q.volReaterro = esc - berco - tuboExt;
+  q.volBotaForaVala = (esc - q.volReaterro) * emp.escavacaoVala;
+  q.nBocasDeLobo = bl.length;
+  q.nPocosDeVisita = pv.length;
+  q.desague = ultima ? 1 : 0;
+  // subleito
+  const ruins = trechosRuins(obra, s0, s1);
+  q.extSoloRuim = ruins.reduce((a, t) => a + (t.ate - t.de), 0);
+  q.volSubstituicao = q.extSoloRuim * P.W_CX * P.E_SUBST;
+  q.areaRegularizacao = L * P.W_CX;
+  // meio-fio e sarjeta nos dois lados
+  q.extMeioFio = 2 * L;
+  q.extSarjeta = 2 * L;
+  q.volConcretoSarjeta = q.extSarjeta * P.W_SAR * P.E_SAR;
+  // camadas novas (entre as sarjetas)
+  q.areaSubBase = L * P.W_SB;
+  q.volSubBase = q.areaSubBase * P.E_SB;
+  q.areaBase = L * P.W_BA;
+  q.volBase = q.areaBase * P.E_BA;
+  q.areaImprimacao = L * P.W_RV;
+  q.litrosImprimacao = q.areaImprimacao * tx.imprimacao;
+  q.areaPintura = L * P.W_RV;
+  q.litrosEmulsao = (q.areaPintura * tx.pinturaDiluida) / 2;
+  q.volCBUQ = L * P.W_RV * P.E_RV;
+  q.toneladasCBUQ = q.volCBUQ * tx.densidadeCBUQ;
+  q.toneladasCAP = q.toneladasCBUQ * tx.teorLigante;
   return q;
 }
 
-// estacas inicial e final de cada camada do corpo do aterro (null quando a camada não existe)
-export function extensoesDasCamadas(q) {
-  const out = [];
-  for (let k = 0; k < q.nLifts; k++) {
-    const lvl = q.minNat + P.LIFT * (k + 1);
-    let a = null,
-      b = null;
-    for (let s = 0; s <= P.L; s += 2)
-      if (nat(s, 0) < Math.min(lvl, sg(s) - P.E_CF) - 0.05) {
-        if (a == null) a = s;
-        b = s;
-      }
-    out.push(a == null ? null : [a, b]);
-  }
-  return out;
+// soma das chaves numéricas e dos tubos por diâmetro
+function somar(lista) {
+  const t = { tubos: {} };
+  for (const q of lista)
+    for (const [k, v] of Object.entries(q)) {
+      if (k === 'tubos') for (const [d, m] of Object.entries(v)) t.tubos[d] = (t.tubos[d] || 0) + m;
+      else if (typeof v === 'number' && !['frente', 's0', 's1'].includes(k)) t[k] = (t[k] || 0) + v;
+    }
+  return t;
+}
+
+// frentes: lista de { i, s0, s1 }
+export function buildQuant(obra, frentes) {
+  const porFrente = frentes.map((fr, i) => quantitativosDaFrente(obra, fr, i === frentes.length - 1));
+  const total = somar(porFrente);
+  total.areaLimpeza = obra.taxas.areaCanteiro;
+  // perfil longitudinal a cada estaca: greide do pavimento e cota do subleito
+  const rows = [];
+  for (let s = 0; s <= P.L + 1e-6; s += P.EST) rows.push({ s, est: s / P.EST, gr: gr(s), sg: sg(s), D: diametroRede(s) });
+  return { frentes: porFrente, total, rows, teorLigante: obra.taxas.teorLigante };
 }
