@@ -1,0 +1,5 @@
+dist/
+node_modules/
+src-legado/
+package-lock.json
+*.html

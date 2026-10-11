@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vila Militar 4D</title>
+<link rel="icon" href="data:,">
+<meta name="description" content="Obra de terraplenagem e pavimentação em CBUQ na Vila Militar, em 4D, com missão de decisões do engenheiro residente.">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="eyebrow">Obra militar de engenharia · Vila Militar · Deodoro, Rio de Janeiro/RJ</span>
+      <h1>Terraplenagem e pavimentação <em>em quatro dimensões</em></h1>
+      <span class="meta" id="meta">—</span>
+    </div>
+    <div class="controls">
+      <div class="seg mode" role="group" aria-label="Modo">
+        <button data-mode="explorar" aria-pressed="true">Explorar</button>
+        <button data-mode="missao" aria-pressed="false">Missão do engenheiro</button>
+      </div>
+      <div class="seg" role="group" aria-label="Vista">
+        <button data-view="iso" aria-pressed="true">3D</button>
+        <button data-view="top" aria-pressed="false">Planta</button>
+        <button data-view="perfil" aria-pressed="false">Perfil ×4</button>
+        <button data-view="usina" aria-pressed="false">Usina</button>
+        <button data-view="frente" aria-pressed="false">Seguir frente</button>
+      </div>
+    </div>
+  </header>
+  <div class="rule" aria-hidden="true"></div>
+
+  <div class="systems" role="group" aria-label="Liberações de camada"><span class="lab">Liberações</span><div id="systems"></div></div>
+  <div class="layout">
+    <aside class="side" aria-label="Painel da obra">
+      <section class="card" aria-labelledby="h-now">
+        <h2 id="h-now">Agora na obra <small id="nowDate"></small></h2>
+        <div id="now" aria-live="polite"></div>
+      </section>
+      <section class="card" aria-labelledby="h-sim">
+        <h2 id="h-sim">Simulação</h2>
+        <div class="opts">
+          <div class="field"><label for="optCen">Cenário de não conformidade</label><select id="optCen"></select><p class="cdesc" id="cenDesc"></p></div>
+          <div class="field"><span>Velocidade</span>
+            <div class="seg" role="group" aria-label="Velocidade" id="optSpd"><button data-spd="0.5" aria-pressed="false">½×</button><button data-spd="1" aria-pressed="true">1×</button><button data-spd="2" aria-pressed="false">2×</button><button data-spd="4" aria-pressed="false">4×</button></div></div>
+          <label class="ck"><input type="checkbox" id="optEx" checked> Espessuras do pavimento ×3</label>
+          <label class="ck"><input type="checkbox" id="optFollow"> Câmera segue a frente de serviço</label>
+        </div>
+      </section>
+      <details class="card">
+        <summary>Camadas</summary>
+        <div class="layers" id="layers"></div>
+      </details>
+      <p class="help">Arraste para girar, use a roda ou a pinça para aproximar e o botão direito (ou dois dedos) para mover. Clique em um equipamento, em uma camada, no terreno ou em um ponto de ensaio para ver os detalhes. <b>Executar a obra</b> reproduz a sequência dia a dia; ◀ e ▶ saltam entre os inícios de serviço (setas do teclado e barra de espaço também funcionam).</p>
+    </aside>
+
+    <section class="stage" aria-label="Modelo 3D da obra">
+      <div id="viewport"></div>
+      <div class="loading" id="loading">Montando o canteiro<small>terreno, usina, equipamentos e ensaios</small></div>
+      <div class="overlay-tl" id="badges"></div>
+      <div class="hud" id="hud" hidden aria-live="polite"></div>
+      <div class="gm" id="gm" hidden><div class="gmc" id="gmc" role="dialog" aria-modal="false" aria-label="Decisão da missão"></div></div>
+      <div class="legend3d" aria-hidden="true"><span><i class="dot" style="--c:var(--ok)"></i>Ensaio conforme</span><span><i class="dot" style="--c:var(--bad)"></i>Não conforme</span></div>
+      <div class="bar4d">
+        <button id="prev" class="btn ghost" aria-label="Serviço anterior">◀ Serviço</button>
+        <button id="play" class="btn" aria-pressed="false">▶ Executar a obra</button>
+        <button id="next" class="btn ghost" aria-label="Próximo serviço">Serviço ▶</button>
+        <input id="stg" type="range" min="0" max="34" step="0.01" value="0" aria-label="Dia da obra">
+        <span id="stgl" class="stgl">—</span>
+      </div>
+      <div class="info" id="info" hidden>
+        <button class="x" id="infox" aria-label="Fechar">×</button>
+        <h3 id="infot"></h3>
+        <dl id="infod"></dl>
+      </div>
+    </section>
+  </div>
+
+  <section class="sheet" aria-label="Planejamento e controle">
+    <div class="tabs" role="tablist" id="tabs">
+      <button role="tab" data-tab="seq" aria-selected="true">Sequência executiva</button>
+      <button role="tab" data-tab="missao" aria-selected="false">Missão</button>
+      <button role="tab" data-tab="diario" aria-selected="false">Diário de obra</button>
+      <button role="tab" data-tab="ctrl" aria-selected="false">Controle tecnológico</button>
+      <button role="tab" data-tab="lab" aria-selected="false">Laboratório</button>
+      <button role="tab" data-tab="usina" aria-selected="false">Usina e transporte</button>
+      <button role="tab" data-tab="quant" aria-selected="false">Quantitativos</button>
+      <button role="tab" data-tab="ctx" aria-selected="false">Contexto e normas</button>
+    </div>
+    <div id="pane" class="pane" role="tabpanel"></div>
+  </section>
+</div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+# Código e textos com fim de linha LF; scripts do Windows com CRLF.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+# Binários
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ktx2 binary
+*.glb binary
+*.hdr binary
+*.bin binary
+*.woff binary
+*.woff2 binary
+*.zip binary

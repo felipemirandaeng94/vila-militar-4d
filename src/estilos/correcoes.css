@@ -1,0 +1,5 @@
+/* Correção em relação ao HTML de referência: regras como .gm{display:flex} anulavam o atributo hidden,
+   e a camada da missão ficava sempre sobre o modelo (tela esbranquiçada, caixa vazia e cliques bloqueados). */
+[hidden] {
+  display: none !important;
+}
