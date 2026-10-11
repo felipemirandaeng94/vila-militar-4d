@@ -4,6 +4,10 @@ Este documento registra o novo escopo da obra e substitui o escopo anterior, que
 
 Todos os quantitativos, resultados de ensaio e dados de terreno do modelo são ilustrativos. A interface deve deixar isso claro.
 
+## Produtividades
+
+O cronograma usa produtividades teóricas de referência: caso ideal, baseado nas composições do SICRO (DNIT), sem interferências, chuva, perdas, esperas ou improdutividade. Os atrasos aparecem só pelos eventos modelados (não conformidades, retrabalhos e decisões da missão). Os valores ficam em `dados/servicos.json`, com a composição de referência de cada um.
+
 ## Local
 
 - Via existente em uso na Vila Militar, em Deodoro, Rio de Janeiro/RJ. O nome será identificado pelo OpenStreetMap na Fase 3.
@@ -24,7 +28,7 @@ A obra é a reconstrução completa do pavimento. O revestimento existente é fr
 
 ### 2. Sinalização de obra e desvio de tráfego
 - A via está em uso na Vila Militar, por isso a obra avança por frentes de 300 a 400 m. São 4 ou 5 frentes no total.
-- Em cada frente: sinalização provisória (placas, cones, cavaletes e balizadores), desvio ou operação em meia pista, controle de acesso às edificações e passagens para pedestres.
+- Em cada frente: sinalização provisória (placas, cones, cavaletes e balizadores), desvio ou operação em meia pista, controle de acesso às edificações e passagens para pedestres, conforme o Manual de Sinalização de Obras e Emergências em Rodovias do DNIT (Publicação IPR 738, 2010).
 - Uma frente só é aberta quando o plano de desvio for aprovado pela OM. Só é liberada ao tráfego com o revestimento concluído ou com uma solução provisória segura.
 
 ### 3. Serviços preliminares
@@ -34,7 +38,7 @@ A obra é a reconstrução completa do pavimento. O revestimento existente é fr
 - Ensaios do subleito: granulometria, limites, compactação, ISC e expansão (ensaios DNER-ME de `src-legado/data.js`).
 
 ### 4. Demolição do pavimento existente
-- Fresagem a frio do revestimento existente (DNIT 159/2011-ES). O material fresado é estocado e separado para possível reaproveitamento na usina ou para bota-fora licenciado.
+- Fresagem a frio do revestimento existente (DNIT 159/2011-ES). O material fresado é estocado e separado. A parte que atender à DNIT 033/2021-ES (concreto asfáltico reciclado em usina a quente) é reaproveitada no CBUQ da usina; o restante vai para bota-fora licenciado.
 - Remoção da base e da sub-base existentes até o subleito, com escavação, carga e transporte (DNIT 106/2009-ES, por analogia ao serviço de escavação, carga e transporte).
 - Em cada frente, a fresagem vem antes da drenagem. A remoção da base e da sub-base vem depois das valas reaterradas, para que a caixa do pavimento não fique exposta à chuva sem deságue.
 
@@ -65,7 +69,7 @@ Todos os serviços passam por controle tecnológico, com os planos e critérios 
 - Reaterro de valas: grau de compactação por camada, com frequência e critério a definir no projeto da Fase 2B.
 - Recebimento de tubos de concreto conforme a ABNT NBR 8890: inspeção visual e dimensional de cada lote e ensaio de compressão diametral por amostragem. O lote é rejeitado quando houver trinca ou quando a amostra for reprovada.
 - Meio-fio, sarjeta, caixas e poços de visita: resistência do concreto (corpos de prova), geometria e caimentos.
-- Fresado reaproveitado: caracterização (teor e granulometria do ligante recuperado) antes de entrar na mistura.
+- Fresado reaproveitado: caracterização (teor de ligante e granulometria do material recuperado) e controle da mistura reciclada conforme a DNIT 033/2021-ES.
 
 ### 10. Desmobilização e entrega
 - Limpeza final, desmontagem do canteiro e da usina, cadastro como construído das redes de drenagem e entrega à OM.
@@ -90,9 +94,9 @@ Conferidas em 11/10/2026 na página "Especificação de Serviço (ES)" da colet�
 | Sinalização horizontal | DNIT 100/2018-ES | Confirmada |
 | Sinalização vertical | DNIT 101/2009-ES | Confirmada |
 | Remoção de base e sub-base existentes | Sem especificação própria; DNIT 106/2009-ES por analogia | A confirmar |
-| Reaproveitamento de fresado no CBUQ | Percentual admitido pela DNIT 031/2024-ES ou por especificação de reciclagem | A confirmar |
+| Reaproveitamento de fresado no CBUQ | DNIT 033/2021-ES (Pavimentos flexíveis: concreto asfáltico reciclado em usina a quente) | Confirmada (percentual máximo a conferir no texto da norma) |
 | Tubos de concreto (recebimento) | ABNT NBR 8890 (edição vigente a confirmar) | A confirmar a edição |
-| Sinalização de obra e desvio | Manual de sinalização de obras do DNIT ou do CONTRAN | A confirmar qual documento adotar |
+| Sinalização de obra e desvio | Manual de Sinalização de Obras e Emergências em Rodovias, DNIT, Publicação IPR 738 (2ª ed., 2010) | Adotado |
 
 As especificações que já estavam no projeto (104/2009, 106/2009, 108/2009, 137/2010, 139/2010, 141/2022, 144/2014, 145/2012 e 031/2024) continuam valendo. A limpeza (DNIT 104/2009-ES) fica restrita a faixas laterais e às áreas do canteiro.
 

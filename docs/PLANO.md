@@ -36,11 +36,11 @@ Aceite: mudar um prazo ou uma decisão no JSON altera o modelo sem tocar no cód
 
 ## Fase 2B · Novo escopo: reconstrução, drenagem e frentes de serviço
 
-Troca o escopo do app (trecho novo de 300 m) pela reconstrução completa de cerca de 1,6 km descrita em `docs/ESCOPO.md`, ainda em eixo reto e terreno fictício. Entram os serviços e ensaios novos em JSON (fresagem, remoção de base e sub-base, drenagem, meio-fio e sarjeta, substituição de solo, sinalização), as frentes de serviço de 300 a 400 m com desvio de tráfego e o cronograma recalculado com produtividades típicas de BEC. Também entram os quantitativos de demolição, drenagem e pavimento, a representação 3D do pavimento existente sendo fresado e removido, de valas, tubos, caixas e meio-fio, e 4 decisões novas da missão.
+Troca o escopo do app (trecho novo de 300 m) pela reconstrução completa de cerca de 1,6 km descrita em `docs/ESCOPO.md`, ainda em eixo reto e terreno fictício. Entram os serviços e ensaios novos em JSON (fresagem, remoção de base e sub-base, drenagem, meio-fio e sarjeta, substituição de solo, sinalização), as frentes de serviço de 300 a 400 m com desvio de tráfego e o cronograma recalculado com produtividades teóricas de referência (caso ideal, composições do SICRO). Também entram os quantitativos de demolição, drenagem e pavimento, a representação 3D do pavimento existente sendo fresado e removido, de valas, tubos, caixas e meio-fio, e 4 decisões novas da missão.
 
 Prompt: `docs/prompts/fase-02b.md`
 
-Trabalho manual: validar as produtividades, os quantitativos de referência e o texto técnico das novas decisões.
+Trabalho manual: validar o texto técnico das novas decisões.
 
 Aceite: o cronograma e o 3D mostram as frentes avançando em sequência ao longo de 1,6 km; drenagem antes das camadas do pavimento; `npm test` passa com os novos testes.
 
