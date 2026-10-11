@@ -128,7 +128,14 @@ export function buildTests(cfg, normas, obra, svc, frentes, opt) {
       if (camada) t.layer = camada;
       t.nome = texto(it.nome, c);
       t.norma = norma(it.norma, c);
-      const s = it.s != null ? (ctx.f != null && it.relativoAFrente ? ctx.s0 + it.s : it.s) : it.meioDaFrente && ctx.f != null ? Math.round((ctx.s0 + ctx.s1) / 2) : null;
+      const s =
+        it.s != null
+          ? ctx.f != null && it.relativoAFrente
+            ? ctx.s0 + it.s
+            : it.s
+          : it.meioDaFrente && ctx.f != null
+            ? Math.round((ctx.s0 + ctx.s1) / 2)
+            : null;
       if (s != null) {
         t.s = s;
         t.z = it.z ?? 0;
@@ -195,7 +202,9 @@ export function buildTests(cfg, normas, obra, svc, frentes, opt) {
       const c = { ...ctx, i };
       let s = s0,
         z = afastamento(b.z, b.zDesloc, c, i);
-      const falha = (b.falhas || []).find(f => f.ponto === i + 1 && (f.frente == null || f.frente === c.frente) && (f.camada == null || f.camada === c.k + 1) && cond(f.condicao, c));
+      const falha = (b.falhas || []).find(
+        f => f.ponto === i + 1 && (f.frente == null || f.frente === c.frente) && (f.camada == null || f.camada === c.k + 1) && cond(f.condicao, c)
+      );
       if (falha && falha.s != null) {
         s = falha.s;
         z = falha.z;

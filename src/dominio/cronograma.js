@@ -26,7 +26,14 @@ export function servicoInterno(def) {
   o.lib = def.liberacao;
   o.jan = [];
   Object.defineProperty(o, 'meta', {
-    value: { curto: def.curto, representacao: def.representacao, diario: def.diario, escopo: def.escopo || 'frente', quantidade: def.quantidade, produtividade: def.produtividade },
+    value: {
+      curto: def.curto,
+      representacao: def.representacao,
+      diario: def.diario,
+      escopo: def.escopo || 'frente',
+      quantidade: def.quantidade,
+      produtividade: def.produtividade
+    },
     enumerable: false
   });
   return o;
@@ -107,7 +114,8 @@ export function buildSchedule(dados, quant, opt = {}) {
         plano = tentar(pend[k]);
         if (plano) break;
       }
-      if (!plano) throw new Error(`Cronograma: dependência impossível na frente ${fr.nome} (${pend.map(p => p.e.def.id + (p.faixa ? ' ' + p.faixa : '')).join(', ')}).`);
+      if (!plano)
+        throw new Error(`Cronograma: dependência impossível na frente ${fr.nome} (${pend.map(p => p.e.def.id + (p.faixa ? ' ' + p.faixa : '')).join(', ')}).`);
       programar(pend[k], plano);
       pend.splice(k, 1);
     }
@@ -151,7 +159,9 @@ export function buildSchedule(dados, quant, opt = {}) {
       const ant = historico[fr.i - 1];
       if (ant)
         for (const dp of def.dependeFrenteAnterior || []) {
-          const ws = Object.keys(ant).filter(k => k.split('|')[0] === dp.de).map(k => ant[k]);
+          const ws = Object.keys(ant)
+            .filter(k => k.split('|')[0] === dp.de)
+            .map(k => ant[k]);
           if (ws.length) t = Math.max(t, Math.max(...ws.map(w => w.b)) + (dp.defasagem || 0));
         }
       return { t, tts };
@@ -175,7 +185,15 @@ export function buildSchedule(dados, quant, opt = {}) {
       if (r && it.faixa === (r.faixa || it.faixa)) {
         const fa = ini,
           fb = r6(fa + r.falha.duracao);
-        entry(def).falha = { a: fa, b: fb, s0: fr.s0, s: fr.s0 + r.falha.extensao, rem: [r6(fa + r.falha.remocao[0]), r6(fa + r.falha.remocao[1])], f: fr.i, faixa: it.faixa };
+        entry(def).falha = {
+          a: fa,
+          b: fb,
+          s0: fr.s0,
+          s: fr.s0 + r.falha.extensao,
+          rem: [r6(fa + r.falha.remocao[0]), r6(fa + r.falha.remocao[1])],
+          f: fr.i,
+          faixa: it.faixa
+        };
         const dr = r.servico.duracaoFixa;
         entry(r.servico).jan.push({ a: fb, b: r6(fb + dr), f: fr.i, faixa: it.faixa, s0: fr.s0, s1: fr.s0 + r.falha.extensao });
         ini = r6(fb + dr);
@@ -251,7 +269,8 @@ export function activeList(svc, d) {
       if (d >= w.a && d < w.b) out.push({ s, w, p: (d - w.a) / (w.b - w.a), lane: w.faixa, f: w.f });
       else if (w.cura && d >= w.cura[0] && d < w.cura[1]) out.push({ s, w, p: (d - w.cura[0]) / (w.cura[1] - w.cura[0]), cura: 1, f: w.f });
     }
-    if (s.falha && d >= s.falha.a && d < s.falha.b) out.push({ s, w: { a: s.falha.a, b: s.falha.b }, p: (d - s.falha.a) / (s.falha.b - s.falha.a), lane: s.falha.faixa, f: s.falha.f });
+    if (s.falha && d >= s.falha.a && d < s.falha.b)
+      out.push({ s, w: { a: s.falha.a, b: s.falha.b }, p: (d - s.falha.a) / (s.falha.b - s.falha.a), lane: s.falha.faixa, f: s.falha.f });
   }
   return out;
 }

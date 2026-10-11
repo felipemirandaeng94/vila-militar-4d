@@ -1,8 +1,8 @@
 # Vila Militar 4D
 
-Modelo 4D interativo de uma obra militar de terraplenagem e pavimentação em CBUQ na Vila Militar (Deodoro, Rio de Janeiro/RJ), com usina de CBUQ no canteiro, controle tecnológico conforme as normas do DNIT, diário de obra e a missão de decisões do engenheiro residente.
+Modelo 4D interativo da reconstrução de cerca de 1,6 km de uma via da Vila Militar (Deodoro, Rio de Janeiro/RJ), com fresagem, drenagem nova, pavimento em CBUQ, frentes de serviço com desvio de tráfego, usina de CBUQ no canteiro, controle tecnológico conforme as normas do DNIT, diário de obra e a missão de decisões do engenheiro residente.
 
-Terreno, quantidades e resultados de ensaio são ilustrativos.
+Terreno, quantidades, produtividades (teóricas de referência) e resultados de ensaio são ilustrativos. O escopo está em `docs/ESCOPO.md`.
 
 ## Requisitos
 

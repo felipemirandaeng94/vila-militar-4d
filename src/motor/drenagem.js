@@ -47,7 +47,12 @@ export function buildDrenagem() {
     const D = diametroRede(s),
       fundo = sg(s) - (profundidadeVala(D) - P.E_EX);
     const v = diasDaVala(s);
-    tubos.push({ s, matrix: matriz(wx(s), wy(fundo + P.DRN.berco + D / 2 + 0.06), zr, 0, 0, Math.PI / 2, (D / 2 + 0.06) / 0.5, passo * 0.98, (D / 2 + 0.06) / 0.5), dias: [finito(v.tubo), NUNCA], D });
+    tubos.push({
+      s,
+      matrix: matriz(wx(s), wy(fundo + P.DRN.berco + D / 2 + 0.06), zr, 0, 0, Math.PI / 2, (D / 2 + 0.06) / 0.5, passo * 0.98, (D / 2 + 0.06) / 0.5),
+      dias: [finito(v.tubo), NUNCA],
+      D
+    });
   }
   instancias(new THREE.CylinderGeometry(0.5, 0.5, 1, 14, 1, true), mat(0xa9a69c, { side: THREE.DoubleSide }).clone(), tubos, {
     t: 'Tubos de concreto da rede',
@@ -62,18 +67,41 @@ export function buildDrenagem() {
       v = diasDaVala(s);
     const topo = alturas(s).exBa,
       fundo = sg(s) - (h - P.E_EX);
-    for (const sd of [-1, 1]) esc.push({ s, matrix: matriz(wx(s), wy((topo + 0.35 + fundo) / 2), zr + (sd * w) / 2, 0, 0, 0, 1.9, topo + 0.35 - fundo, 0.06), dias: [finito(v.esc), finito(v.reat)] });
+    for (const sd of [-1, 1])
+      esc.push({
+        s,
+        matrix: matriz(wx(s), wy((topo + 0.35 + fundo) / 2), zr + (sd * w) / 2, 0, 0, 0, 1.9, topo + 0.35 - fundo, 0.06),
+        dias: [finito(v.esc), finito(v.reat)]
+      });
   }
-  instancias(new THREE.BoxGeometry(1, 1, 1), mat(0x4f5a62, { metalness: 0.4, roughness: 0.5 }).clone(), esc, { t: 'Escoramento metálico da vala', d: { Situação: 'Instalado enquanto a vala está aberta', Serviço: nome('vala') } });
+  instancias(new THREE.BoxGeometry(1, 1, 1), mat(0x4f5a62, { metalness: 0.4, roughness: 0.5 }).clone(), esc, {
+    t: 'Escoramento metálico da vala',
+    d: { Situação: 'Instalado enquanto a vala está aberta', Serviço: nome('vala') }
+  });
   // bocas de lobo (caixa de concreto com grelha) nas sarjetas
   const bl = bocasDeLobo().map(b => {
     const h = alturas(b.s),
       prof = 1.2;
-    return { s: b.s, lado: b.lado, matrix: matriz(wx(b.s), wy(h.top - prof / 2), b.z, 0, 0, 0, 1.0, prof, 0.9), dias: [finito(diaRep('bocasDeLobo', b.s)), NUNCA] };
+    return {
+      s: b.s,
+      lado: b.lado,
+      matrix: matriz(wx(b.s), wy(h.top - prof / 2), b.z, 0, 0, 0, 1.0, prof, 0.9),
+      dias: [finito(diaRep('bocasDeLobo', b.s)), NUNCA]
+    };
   });
-  instancias(new THREE.BoxGeometry(1, 1, 1), mat(0x8e8b84).clone(), bl, { t: 'Boca de lobo (caixa coletora com grelha)', d: { Serviço: nome('bocasDeLobo'), Norma: 'DNIT 026/2025-ES', Espaçamento: '40 m em cada lado' } });
-  const grelhas = bl.map(b => ({ s: b.s, matrix: matriz(wx(b.s), wy(alturas(b.s).top + 0.01), b.lado === 'BD' ? P.Z_SAR : -P.Z_SAR, 0, 0, 0, 0.9, 0.04, 0.6), dias: b.dias }));
-  instancias(new THREE.BoxGeometry(1, 1, 1), mat(0x2b2d2f, { metalness: 0.6, roughness: 0.4 }).clone(), grelhas, { t: 'Grelha da boca de lobo', d: { Serviço: nome('bocasDeLobo') } });
+  instancias(new THREE.BoxGeometry(1, 1, 1), mat(0x8e8b84).clone(), bl, {
+    t: 'Boca de lobo (caixa coletora com grelha)',
+    d: { Serviço: nome('bocasDeLobo'), Norma: 'DNIT 026/2025-ES', Espaçamento: '40 m em cada lado' }
+  });
+  const grelhas = bl.map(b => ({
+    s: b.s,
+    matrix: matriz(wx(b.s), wy(alturas(b.s).top + 0.01), b.lado === 'BD' ? P.Z_SAR : -P.Z_SAR, 0, 0, 0, 0.9, 0.04, 0.6),
+    dias: b.dias
+  }));
+  instancias(new THREE.BoxGeometry(1, 1, 1), mat(0x2b2d2f, { metalness: 0.6, roughness: 0.4 }).clone(), grelhas, {
+    t: 'Grelha da boca de lobo',
+    d: { Serviço: nome('bocasDeLobo') }
+  });
   // ramais das bocas de lobo até a rede (visíveis só enquanto a caixa é executada)
   const ramais = bocasDeLobo().map(b => {
     const z0 = b.z,
@@ -83,22 +111,38 @@ export function buildDrenagem() {
     const d = finito(diaRep('bocasDeLobo', b.s));
     return { s: b.s, matrix: matriz(wx(b.s), wy(y), zc, Math.PI / 2, 0, 0, 0.45, L, 0.45), dias: [d, d + 0.3] };
   });
-  instancias(new THREE.CylinderGeometry(0.5, 0.5, 1, 10, 1, true), mat(0xa9a69c, { side: THREE.DoubleSide }).clone(), ramais, { t: 'Ramal da boca de lobo', d: { Diâmetro: 'ø 0,40 m', Serviço: nome('bocasDeLobo') } });
+  instancias(new THREE.CylinderGeometry(0.5, 0.5, 1, 10, 1, true), mat(0xa9a69c, { side: THREE.DoubleSide }).clone(), ramais, {
+    t: 'Ramal da boca de lobo',
+    d: { Diâmetro: 'ø 0,40 m', Serviço: nome('bocasDeLobo') }
+  });
   // poços de visita na rede
   const pv = pocosDeVisita().map(p => {
     const D = diametroRede(Math.min(p.s, P.L - 1)),
       fundo = sg(p.s) - (profundidadeVala(D) - P.E_EX);
     const topo = alturas(p.s).top;
-    return { s: p.s, matrix: matriz(wx(p.s), wy((topo + fundo) / 2), zr, 0, 0, 0, 1.3, topo - fundo, 1.3), dias: [finito(diaRep('pocosDeVisita', p.s)), NUNCA] };
+    return {
+      s: p.s,
+      matrix: matriz(wx(p.s), wy((topo + fundo) / 2), zr, 0, 0, 0, 1.3, topo - fundo, 1.3),
+      dias: [finito(diaRep('pocosDeVisita', p.s)), NUNCA]
+    };
   });
-  instancias(new THREE.CylinderGeometry(0.5, 0.5, 1, 18), mat(0x9c988f).clone(), pv, { t: 'Poço de visita', d: { Serviço: nome('pocosDeVisita'), Norma: 'DNIT 030/2004-ES (a confirmar)', Espaçamento: '80 m' } });
+  instancias(new THREE.CylinderGeometry(0.5, 0.5, 1, 18), mat(0x9c988f).clone(), pv, {
+    t: 'Poço de visita',
+    d: { Serviço: nome('pocosDeVisita'), Norma: 'DNIT 030/2004-ES (a confirmar)', Espaçamento: '80 m' }
+  });
   const tampas = pv.map(p => ({ s: p.s, matrix: matriz(wx(p.s), wy(alturas(p.s).top + 0.01), zr, 0, 0, 0, 0.75, 0.03, 0.75), dias: p.dias }));
-  instancias(new THREE.CylinderGeometry(0.5, 0.5, 1, 18), mat(0x2b2d2f, { metalness: 0.6 }).clone(), tampas, { t: 'Tampão do poço de visita', d: { Serviço: nome('pocosDeVisita') } });
+  instancias(new THREE.CylinderGeometry(0.5, 0.5, 1, 18), mat(0x2b2d2f, { metalness: 0.6 }).clone(), tampas, {
+    t: 'Tampão do poço de visita',
+    d: { Serviço: nome('pocosDeVisita') }
+  });
   // marcação das interferências no pavimento (sai com a fresagem)
   const marcas = [];
   for (let s = 5; s < P.L; s += 10) {
     const d = finito(diaRep('interferencias', s));
     marcas.push({ s, matrix: matriz(wx(s), wy(alturas(s).exTop + 0.01), zr, 0, 0, 0, 3, 0.02, 0.12), dias: [d, finito(diaRep('fresagem', s))] });
   }
-  instancias(new THREE.BoxGeometry(1, 1, 1), mat(0xf0c419, { roughness: 0.6 }).clone(), marcas, { t: 'Marcação de interferências e do eixo da rede', d: { Serviço: nome('interferencias') } });
+  instancias(new THREE.BoxGeometry(1, 1, 1), mat(0xf0c419, { roughness: 0.6 }).clone(), marcas, {
+    t: 'Marcação de interferências e do eixo da rede',
+    d: { Serviço: nome('interferencias') }
+  });
 }

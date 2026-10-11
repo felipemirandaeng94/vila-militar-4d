@@ -1,7 +1,6 @@
 // Controlador: liga domínio, motor, interface e jogo. Monta o modelo, avança o tempo e redesenha a cada quadro.
 import { M, ST, D, acoes } from './estado.js';
 import { clamp } from './dominio/util.js';
-import { stateAt } from './dominio/frentes.js';
 import { svcStarts } from './dominio/cronograma.js';
 import { configurarDominio, montarModelo } from './dominio/modelo.js';
 import { montarMotor, reconstruirMotor, atualizarMotor, quadro, renderizar, applyTheme } from './motor/index.js';
@@ -51,7 +50,7 @@ function jumpSvc(dir) {
 let clk = 0,
   lastT = performance.now();
 function tick(force) {
-  const st = stateAt(M.frentes, ST.day);
+  const st = { d: ST.day };
   atualizarMotor(st, clk, force, curto);
   updateUI(force);
 }

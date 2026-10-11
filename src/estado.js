@@ -19,7 +19,8 @@ export const ST = {
   cen: 'nenhum', // cenário de não conformidade (modo explorar)
   modo: 'explorar', // 'explorar' ou 'missao'
   tab: 'seq',
-  man: 'S15', // serviço aberto no procedimento
+  man: 'S24', // serviço aberto no procedimento
+  gantt: 'servico', // agrupamento do cronograma: 'servico' ou 'frente'
   profile: false, // corte em perfil ativo
   labPulse: 0 // ensaios de laboratório ou de usina em andamento
 };

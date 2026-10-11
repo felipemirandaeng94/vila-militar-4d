@@ -15,7 +15,9 @@ export function comDias(material, { crescer = false } = {}) {
         '#include <begin_vertex>',
         '#include <begin_vertex>\nvDias = aDias;' + (crescer ? '\ntransformed *= 0.4 + 0.6 * clamp((uDia - aDias.x) * 6.0, 0.0, 1.0);' : '')
       );
-    sh.fragmentShader = 'uniform float uDia;\nvarying vec2 vDias;\n' + sh.fragmentShader.replace('void main() {', 'void main() {\n  if (uDia < vDias.x || uDia >= vDias.y) discard;');
+    sh.fragmentShader =
+      'uniform float uDia;\nvarying vec2 vDias;\n' +
+      sh.fragmentShader.replace('void main() {', 'void main() {\n  if (uDia < vDias.x || uDia >= vDias.y) discard;');
   };
   material.customProgramCacheKey = () => 'comDias' + (crescer ? 'C' : '');
   return material;

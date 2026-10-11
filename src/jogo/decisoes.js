@@ -25,7 +25,7 @@ export function carregarDecisoes() {
       fb: o.retorno,
       ...(o.opcoes ? { opt: o.opcoes } : {}),
       ...(o.consequencia
-        ? { later: { day: o.consequencia.dia, titulo: o.consequencia.titulo, txt: o.consequencia.texto, ...efeitos(o.consequencia.efeitos) } }
+        ? { later: { regra: o.consequencia.dia, titulo: o.consequencia.titulo, txt: o.consequencia.texto, ...efeitos(o.consequencia.efeitos) } }
         : {})
     }))
   }));

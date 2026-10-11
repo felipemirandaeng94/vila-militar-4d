@@ -1,7 +1,7 @@
 // Entorno fictício da Vila Militar ao longo do trecho: avenida e ruas transversais, edificações e vegetação
 // (substituído pelo local real na Fase 3). Árvores e janelas usam InstancedMesh para manter o desempenho em 1,6 km.
 import * as THREE from 'three';
-import { P, nat, gr } from '../dominio/geometria.js';
+import { P, nat } from '../dominio/geometria.js';
 import { rng } from '../dominio/util.js';
 import { wx, wy, mat, bx, info, C } from './base.js';
 import { cena } from './renderizador.js';
@@ -66,15 +66,16 @@ function predio(w, d, floors) {
   return g;
 }
 
-export const RUAS = [-30, 500, 1000, P.L + 32];
-const livreDeRua = (s, folga) => RUAS.every(r => Math.abs(s - r) > folga);
+// ruas existentes (estacas); calculadas depois de configurar a geometria
+export const RUAS = () => [-30, 500, 1000, P.L + 32];
+const livreDeRua = (s, folga) => RUAS().every(r => Math.abs(s - r) > folga);
 
 export function buildSurroundings() {
   const LAY = cena.LAY;
   const asf = mat(0x55595a, { roughness: 0.92 }),
     dash = mat(0xe8c34a, { roughness: 0.6 });
   // avenida no início, ruas transversais e rua no fim do trecho (só fora da caixa da obra)
-  RUAS.forEach((sx, i) => {
+  RUAS().forEach((sx, i) => {
     for (const lado of [-1, 1]) {
       const pts = [];
       const z0 = lado < 0 ? -150 : P.W_CX / 2 + 2.5,
@@ -82,7 +83,10 @@ export function buildSurroundings() {
       for (let z = z0; z <= z1; z += 3) pts.push([sx, z]);
       if (pts.length < 2) continue;
       LAY.entorno.add(
-        info(ribbon(pts, 9, asf), i === 0 ? 'Avenida existente da Vila Militar' : 'Rua transversal existente', { Uso: i === 0 ? 'Acesso ao canteiro e à usina' : 'Via existente, fora da obra', Pavimento: 'CBUQ existente' })
+        info(ribbon(pts, 9, asf), i === 0 ? 'Avenida existente da Vila Militar' : 'Rua transversal existente', {
+          Uso: i === 0 ? 'Acesso ao canteiro e à usina' : 'Via existente, fora da obra',
+          Pavimento: 'CBUQ existente'
+        })
       );
       for (let z = z0 + 4; z <= z1 - 4; z += 8) {
         const d = bx(0.15, 0.03, 4, dash, wx(sx), wy(nat(sx, z)) + 0.09, z);
@@ -110,7 +114,9 @@ export function buildSurroundings() {
       blds.push([s, z, w, d]);
       const b = predio(w, d, f);
       b.position.set(wx(s), wy(nat(s, z)), z);
-      LAY.entorno.add(info(b, 'Edificação existente da Vila Militar', { Uso: 'Instalações militares e residências', Interferência: 'Nenhuma; fora da faixa da obra' }));
+      LAY.entorno.add(
+        info(b, 'Edificação existente da Vila Militar', { Uso: 'Instalações militares e residências', Interferência: 'Nenhuma; fora da faixa da obra' })
+      );
     }
   }
   // vegetação instanciada (troncos e copas); as árvores na faixa do desvio saem com a limpeza
@@ -151,28 +157,45 @@ export function buildSurroundings() {
   const info_ = { t: 'Vegetação existente', d: { Situação: 'Preservada; só as árvores da faixa de desvio são removidas na limpeza' } };
   const tronco = new THREE.CylinderGeometry(0.18, 0.28, 1, 7);
   tronco.translate(0, 0.5, 0);
-  montar(tronco, mat(0x5b4632).clone(), lista, (t, ob) => {
-    ob.position.set(wx(t.s), wy(nat(t.s, t.z)) - 0.1, t.z);
-    ob.rotation.set(0, t.rot, 0);
-    ob.scale.set(t.palma ? 0.7 : 1, t.h * (t.palma ? 0.9 : 0.45), t.palma ? 0.7 : 1);
-  }, info_);
+  montar(
+    tronco,
+    mat(0x5b4632).clone(),
+    lista,
+    (t, ob) => {
+      ob.position.set(wx(t.s), wy(nat(t.s, t.z)) - 0.1, t.z);
+      ob.rotation.set(0, t.rot, 0);
+      ob.scale.set(t.palma ? 0.7 : 1, t.h * (t.palma ? 0.9 : 0.45), t.palma ? 0.7 : 1);
+    },
+    info_
+  );
   const copa = new THREE.IcosahedronGeometry(1, 1);
   const redondas = lista.filter(t => !t.palma);
   for (const cor of [true, false])
-    montar(copa, mat(cor ? 0x4c6e35 : 0x5a7d3c, { flatShading: true }).clone(), redondas.filter(t => t.cor === cor), (t, ob) => {
-      ob.position.set(wx(t.s), wy(nat(t.s, t.z)) - 0.1 + t.h * 0.7, t.z);
-      ob.rotation.set(0, t.rot, 0);
-      ob.scale.set(t.h * 0.38, t.h * 0.32, t.h * 0.38);
-    }, info_);
+    montar(
+      copa,
+      mat(cor ? 0x4c6e35 : 0x5a7d3c, { flatShading: true }).clone(),
+      redondas.filter(t => t.cor === cor),
+      (t, ob) => {
+        ob.position.set(wx(t.s), wy(nat(t.s, t.z)) - 0.1 + t.h * 0.7, t.z);
+        ob.rotation.set(0, t.rot, 0);
+        ob.scale.set(t.h * 0.38, t.h * 0.32, t.h * 0.38);
+      },
+      info_
+    );
   const folha = new THREE.BoxGeometry(2.6, 0.05, 0.5);
   folha.translate(1.1, 0, 0);
   const palmas = lista.filter(t => t.palma).flatMap(t => Array.from({ length: 7 }, (_, k) => ({ ...t, k })));
-  montar(folha, mat(0x4f7a3a).clone(), palmas, (t, ob) => {
-    ob.position.set(wx(t.s), wy(nat(t.s, t.z)) - 0.1 + t.h * 0.9, t.z);
-    ob.rotation.set(0, -t.k + t.rot, -0.35);
-    ob.scale.set(1, 1, 1);
-  }, info_);
-  void gr;
+  montar(
+    folha,
+    mat(0x4f7a3a).clone(),
+    palmas,
+    (t, ob) => {
+      ob.position.set(wx(t.s), wy(nat(t.s, t.z)) - 0.1 + t.h * 0.9, t.z);
+      ob.rotation.set(0, -t.k + t.rot, -0.35);
+      ob.scale.set(1, 1, 1);
+    },
+    info_
+  );
 }
 
 export function updateTrees() {}

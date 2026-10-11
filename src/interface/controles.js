@@ -23,7 +23,8 @@ export function botaoTocar(onPlay) {
 
 export function initUI() {
   $('meta').textContent =
-    `Trecho de ${P.L} m · pista de ${nf(P.W_RV, 1)} m · CBUQ 5 cm sobre base de 15 cm e sub-base de 20 cm · ${nf(M.fim, 0)} dias úteis a partir de ${fmtDate(0)}`;
+    `Reconstrução de ${nf(P.L, 0)} m em ${M.frentes.length} frentes · drenagem nova · pista de ${nf(P.W_RV, 1)} m · CBUQ 5 cm sobre base de 15 cm e sub-base de 20 cm · ${nf(M.fim, 0)} dias úteis a partir de ${fmtDate(0)}`;
+  $('aviso').textContent = D.obra.obra.aviso;
   // vistas
   document.querySelectorAll('[data-view]').forEach(
     b =>
@@ -35,8 +36,8 @@ export function initUI() {
   // camadas
   const LAYS = [
     ['grp', 'Modelo'],
-    ['terreno', 'Terreno e terraplenagem', '#a3591c'],
-    ['pavimento', 'Pavimento', '#3b4650'],
+    ['terreno', 'Terreno', '#a3591c'],
+    ['pavimento', 'Pavimento, drenagem e sinalização', '#3b4650'],
     ['usina', 'Usina de CBUQ', '#c7851a'],
     ['canteiro', 'Canteiro e estoques', '#728078'],
     ['equip', 'Equipamentos', '#5a6340'],
@@ -124,7 +125,7 @@ export function initUI() {
   // abas
   document.querySelectorAll('[data-tab]').forEach(b => (b.onclick = () => openTab(b.dataset.tab)));
   ST.tab = 'seq';
-  ST.man = 'S15';
+  ST.man = 'S24';
   const savedTab = lsGet('vm4d.tab');
   if (savedTab && document.querySelector(`[data-tab="${savedTab}"]`)) {
     ST.tab = savedTab;

@@ -1,21 +1,20 @@
 // Vistas da câmera, animação entre vistas, corte em perfil e acompanhamento da frente de serviço.
 import * as THREE from 'three';
-import { lerp } from '../dominio/util.js';
-import { activeSvc } from '../dominio/cronograma.js';
-import { stateAt } from '../dominio/frentes.js';
+import { P } from '../dominio/geometria.js';
 import { M, ST, emit } from '../estado.js';
 import { wx, wy } from './base.js';
 import { cena } from './renderizador.js';
 import { malhaTerreno } from './terreno.js';
-import { PAV, surfC } from './pavimento.js';
-import { liftFront, tri, frac } from './equipamentos.js';
+import { CAMADAS, superficie } from './pavimento.js';
+import { frentesAtivas } from './equipamentos.js';
 
 let camAnim = null;
 const CLIPZ = new THREE.Plane(new THREE.Vector3(0, 0, -1), 0);
+// vistas: início do trecho (canteiro e frente 1), planta de todo o trecho, perfil e usina
 const VIEWS = () => ({
-  iso: { p: [-205, 125, 215], t: [5, 0, -18] },
-  top: { p: [0.01, 470, 0.01], t: [0, 0, -30] },
-  perfil: { p: [0, 22, 290], t: [0, 14, 0] },
+  iso: { p: [wx(60) - 205, 125, 215], t: [wx(160), 0, -18] },
+  top: { p: [0.01, 1350, 0.01], t: [0, 0, -30] },
+  perfil: { p: [wx(220), 22, 290], t: [wx(220), 14, 0] },
   usina: { p: [wx(115), 34, -28], t: [wx(52), 4, -82] },
   frente: null
 });
@@ -31,9 +30,7 @@ export function setProfileClip(on) {
     m.needsUpdate = true;
   };
   apply(malhaTerreno().material);
-  for (const k in PAV) {
-    if (PAV[k].material) apply(PAV[k].material);
-  }
+  for (const o of CAMADAS) apply(o.material);
   ['entorno', 'canteiro', 'usina'].forEach(k => (cena.LAY[k].visible = !on && ST.lay[k] !== false));
 }
 
@@ -64,10 +61,13 @@ export function setView(v, instant) {
   camAnim = { p0: camera.position.clone(), t0: controls.target.clone(), p, t, k: 0 };
 }
 
-// anima a câmera até olhar para o alvo, com o deslocamento informado
 export function animarPara(target, desloc) {
   const { camera, controls } = cena;
   camAnim = { p0: camera.position.clone(), t0: controls.target.clone(), p: target.clone().add(desloc), t: target, k: 0 };
+}
+// aproxima a câmera de um ponto da obra (estaca s, cota y, afastamento z)
+export function focarPonto(s, y, z) {
+  animarPara(new THREE.Vector3(wx(s), wy(y), z), new THREE.Vector3(-22, 16, 26));
 }
 
 // posiciona a câmera de imediato olhando para a estaca s e o afastamento z
@@ -75,36 +75,18 @@ export function camAt(s, z, dx, dy, dz) {
   const { camera, controls } = cena;
   camAnim = null;
   ST.follow = false;
-  const y = wy(surfC(s, z, stateAt(M.frentes, ST.day)));
+  const y = wy(superficie(s, z, ST.day));
   controls.target.set(wx(s), y, z);
   camera.position.set(wx(s) + dx, y + dy, z + dz);
   controls.update();
 }
 
-// frente de serviço ativa no estado st (para o rótulo e para a câmera que segue a frente)
+// frente de serviço principal ativa no dia (para o rótulo e para a câmera que segue a frente)
 export function frontPoint(st) {
-  const d = st.d;
-  const pick_ = [
-    ['S15', () => Math.max(st.rvBD, 0)],
-    ['S14', () => 0],
-    ['S13', () => 0],
-    ['S12', () => st.ba],
-    ['S11', () => st.sb],
-    ['S09', () => st.reg],
-    ['S08', () => lerp(M.q.sFill0, M.q.sFill1, frac(st.cf))],
-    ['S07', () => liftFront(st)],
-    ['S06', () => 8 + 116 * tri(st.pc * 3)],
-    ['S04', () => st.limp]
-  ];
-  for (const [id, fn] of pick_) {
-    const a = activeSvc(M.svc, id, d);
-    if (!a) continue;
-    let s = fn();
-    if (a.lane) s = st[(id === 'S15' ? 'rv' : id === 'S14' ? 'pin' : 'imp') + a.lane];
-    return { s, nome: a.s.nome, id };
-  }
-  const a5 = activeSvc(M.svc, 'S05', d);
-  if (a5 || activeSvc(M.svc, 'S10', d)) return { s: 60, z: -80, nome: a5 ? 'Montagem da usina' : 'Calibração da usina', id: a5 ? 'S05' : 'S10' };
+  const a = frentesAtivas(st.d)[0];
+  if (a) return { s: a.s, z: 0, nome: a.svc.nome, id: a.svc.id };
+  const us = M.svc.find(s => s.meta && ['usina', 'dosagem'].includes(s.meta.representacao) && st.d >= s.a && st.d < s.b);
+  if (us) return { s: 60, z: -80, nome: us.nome, id: us.id };
   return null;
 }
 
@@ -112,7 +94,7 @@ export function frontPoint(st) {
 export function seguirFrente(st, fp) {
   if (!ST.follow || !fp) return;
   const { camera, controls } = cena;
-  const tg = new THREE.Vector3(wx(fp.s), wy(surfC(fp.s, fp.z || 0, st)), fp.z || 0);
+  const tg = new THREE.Vector3(wx(fp.s), wy(superficie(fp.s, fp.z || 0, st.d)), fp.z || 0);
   const off = camera.position.clone().sub(controls.target);
   controls.target.lerp(tg, 0.08);
   camera.position.copy(controls.target).add(off);
@@ -130,8 +112,4 @@ export function passoCamera(dt) {
   }
   root.scale.y += (ST.vexag - root.scale.y) * 0.1;
 }
-
-// aproxima a câmera de um ponto da obra (estaca s, cota y, afastamento z)
-export function focarPonto(s, y, z) {
-  animarPara(new THREE.Vector3(wx(s), wy(y), z), new THREE.Vector3(-22, 16, 26));
-}
+export const extensaoDoTrecho = () => P.L;

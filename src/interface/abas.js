@@ -81,6 +81,13 @@ function bindTab() {
         irParaOModelo();
       })
   );
+  document.querySelectorAll('#pane [data-gantt]').forEach(
+    b =>
+      (b.onclick = () => {
+        ST.gantt = b.dataset.gantt;
+        renderTab(true);
+      })
+  );
   if ($('fSvc')) {
     $('fSvc').onchange = filterReg;
     $('fSt').onchange = filterReg;

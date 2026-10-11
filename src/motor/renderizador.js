@@ -5,7 +5,7 @@ import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
 import { css } from './base.js';
 
 // objetos centrais do motor, preenchidos em iniciarRenderizador
-export const cena = { renderer: null, lr: null, scene: null, camera: null, controls: null, root: null, LAY: {}, vp: null };
+export const cena = { renderer: null, lr: null, scene: null, camera: null, controls: null, root: null, LAY: {}, vp: null, sol: null };
 
 export function iniciarRenderizador(vp) {
   cena.vp = vp;
@@ -24,13 +24,13 @@ export function iniciarRenderizador(vp) {
   lr.domElement.style.pointerEvents = 'none';
   vp.appendChild(lr.domElement);
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(38, 1, 0.5, 3000);
+  const camera = new THREE.PerspectiveCamera(38, 1, 0.5, 5000);
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = 0.08;
   controls.maxPolarAngle = Math.PI * 0.495;
   controls.minDistance = 6;
-  controls.maxDistance = 900;
+  controls.maxDistance = 2200;
   // iluminação física (r155+): intensidades × π mantêm o resultado da versão original (r128)
   scene.add(new THREE.HemisphereLight(0xdfe9f3, 0x4a5236, 0.55 * Math.PI));
   const sunL = new THREE.DirectionalLight(0xfff1dc, 1.9 * Math.PI);
@@ -57,7 +57,7 @@ export function iniciarRenderizador(vp) {
     cena.LAY[k] = new THREE.Group();
     root.add(cena.LAY[k]);
   }
-  Object.assign(cena, { renderer, lr, scene, camera, controls, root });
+  Object.assign(cena, { renderer, lr, scene, camera, controls, root, sol: sunL });
   applyTheme();
   const ro = new ResizeObserver(resize);
   ro.observe(vp);
@@ -68,7 +68,7 @@ export function iniciarRenderizador(vp) {
 export function applyTheme() {
   const bg = new THREE.Color(css('--scene') || '#dfe6dd');
   cena.scene.background = bg;
-  cena.scene.fog = new THREE.Fog(bg.clone(), 420, 1100);
+  cena.scene.fog = new THREE.Fog(bg.clone(), 900, 3200);
 }
 export function resize() {
   const w = cena.vp.clientWidth,
@@ -80,6 +80,10 @@ export function resize() {
 }
 export function renderizar() {
   cena.controls.update();
+  // a sombra cobre a região em torno do alvo da câmera (o trecho tem 1,6 km)
+  const t = cena.controls.target;
+  cena.sol.position.set(t.x - 60, 110, t.z + 190);
+  cena.sol.target.position.set(t.x, 0, t.z);
   cena.renderer.render(cena.scene, cena.camera);
   cena.lr.render(cena.scene, cena.camera);
 }

@@ -82,7 +82,7 @@ export function buildCanteiro() {
     LAY.canteiro.add(p);
   });
   for (let i = 0; i < 4; i++) {
-    const w = bx(0.4, 1.6, 12, mat(C.conc), wx(94 + i * 12), wy(22.6) + 0.8, -100);
+    const w = bx(0.4, 1.6, 12, mat(C.conc), wx(94 + i * 12), wy(P.CANT.cota) + 0.8, -100);
     w.userData.mob = 0.84;
     LAY.canteiro.add(w);
   }
@@ -110,18 +110,34 @@ export function buildCanteiro() {
   USI.siloZ = -80 + USI.parts.siloPos.z;
   // pátio de estacionamento
   for (let i = 0; i < 8; i++) {
-    const l = bx(0.12, 0.02, 5, mat(0xf2f0e6), wx(64 + i * 5), wy(22.6) + 0.04, -52);
+    const l = bx(0.12, 0.02, 5, mat(0xf2f0e6), wx(64 + i * 5), wy(P.CANT.cota) + 0.04, -52);
     l.castShadow = false;
     LAY.canteiro.add(l);
   }
 }
 
-// mobilização, montagem da usina e desmobilização conforme o progresso de S01, S05 e S17
+// monte de fresado na baia do canteiro, que cresce com a fresagem das frentes
+let fresado = null;
+export function buildFresado() {
+  fresado = mkPile(7, 3.2, 0x34363a);
+  placeOn(fresado, 22, -98);
+  info(fresado, 'Estoque de fresado', {
+    Uso: 'Reaproveitamento no CBUQ (DNIT 033/2021-ES) ou bota-fora',
+    Controle: 'Teor de ligante e granulometria por frente'
+  });
+  cena.LAY.canteiro.add(fresado);
+}
+
+const winRep = (rep, d) => {
+  const s = M.svc.find(x => x.meta && x.meta.representacao === rep);
+  return s ? winProg(M.svc, s.id, d) : 0;
+};
+// mobilização, montagem da usina e desmobilização conforme o progresso desses serviços
 export function updateSite(st) {
   const d = st.d,
-    pin = winProg(M.svc, 'S01', d),
-    pu = winProg(M.svc, 'S05', d),
-    pout = winProg(M.svc, 'S17', d);
+    pin = winRep('mobilizacao', d),
+    pu = winRep('usina', d),
+    pout = winRep('desmobilizacao', d);
   for (const o of cena.LAY.canteiro.children) {
     const k = o.userData.mob;
     if (k == null) continue;
@@ -133,4 +149,13 @@ export function updateSite(st) {
     o.visible = pu >= k && pout < 1 - k;
   }
   USI.ready = pu >= 1 && pout < 0.1;
+  if (fresado) {
+    const fr = M.svc.find(x => x.meta && x.meta.representacao === 'fresagem');
+    let feito = 0;
+    if (fr) for (const w of fr.jan) feito += Math.min(1, Math.max(0, (d - w.a) / (w.b - w.a))) * (w.s1 - w.s0);
+    const k = feito / P.L;
+    fresado.visible = k > 0.005 && pout < 0.5;
+    fresado.scale.set(0.3 + 0.7 * Math.sqrt(k), 0.2 + 0.8 * k, 0.3 + 0.7 * Math.sqrt(k));
+    fresado.position.y = wy(P.CANT.cota) + (3.2 * fresado.scale.y) / 2;
+  }
 }

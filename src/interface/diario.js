@@ -4,13 +4,8 @@ import { nf, clamp } from '../dominio/util.js';
 import { fmtDate, fmtHour, estStr } from '../dominio/calendario.js';
 import { esc } from './dom.js';
 import { tempoNoDiario, ocorrenciasDaMissao } from '../jogo/missao.js';
-
-// quantidade do serviço para o diário: chave dos quantitativos ou valor fixo (retrabalhos)
-function qtdDoServico(s) {
-  const di = s.meta && s.meta.diario;
-  if (!di) return null;
-  return [di.quantitativo ? M.q[di.quantitativo] : di.valor, di.unidade, di.texto];
-}
+import { quantidadeDaJanela } from '../dominio/cronograma.js';
+import { estadoDoDesvio } from '../dominio/frentes.js';
 
 function diarioData() {
   const END = M.fim;
@@ -22,33 +17,30 @@ function diarioData() {
   let efet = 0;
   const eq = {};
   for (const s of M.svc) {
-    const ws = s.win ? s.win : Object.values(s.lanes);
-    let frac = 0,
-      fracAc = 0,
-      ativo = false;
-    for (const w of ws) {
-      const L = w[1] - w[0];
-      const ov = Math.max(0, Math.min(b, w[1]) - Math.max(a, w[0]));
-      if (ov > 0) ativo = true;
-      frac += ov / L / ws.length;
-      fracAc += clamp((d - w[0]) / L, 0, 1) / ws.length;
+    let ativoNoServico = false;
+    for (const w of s.jan) {
+      const L = w.b - w.a;
+      const ov = Math.max(0, Math.min(b, w.b) - Math.max(a, w.a));
+      const cura = w.cura && Math.min(b, w.cura[1]) > Math.max(a, w.cura[0]);
+      if (ov <= 0 && !cura) continue;
+      const frac = L > 0 ? ov / L : 0,
+        fracAc = L > 0 ? clamp((d - w.a) / L, 0, 1) : 1;
+      const q = quantidadeDaJanela(s, w, M.q);
+      const di = s.meta && s.meta.diario;
+      const onde = w.f != null ? `${M.frentes[w.f].nome}${w.faixa ? ' ' + w.faixa : ''}` : '';
+      svcs.push({
+        s,
+        onde,
+        txt:
+          ov > 0 && q != null
+            ? `${nf(q * frac, q * frac < 10 ? 1 : 0)} ${di.unidade} de ${di.texto} no dia · ${Math.round(fracAc * 100)} % da frente`
+            : ov > 0
+              ? `${Math.round(fracAc * 100)} % concluído`
+              : 'Imprimação em cura, faixa interditada'
+      });
+      if (ov > 0) ativoNoServico = true;
     }
-    const cura = s.cura && Math.min(b, s.cura[1]) > Math.max(a, s.cura[0]);
-    if (!ativo && !cura) continue;
-    const q = qtdDoServico(s);
-    svcs.push({
-      s,
-      frac,
-      fracAc,
-      cura: cura && !ativo,
-      txt:
-        q && ativo
-          ? `${nf(q[0] * frac, 0)} ${q[1]} de ${q[2]} no dia · ${Math.round(fracAc * 100)} % acumulado`
-          : cura && !ativo
-            ? 'Imprimação em cura, faixa interditada'
-            : `${Math.round(fracAc * 100)} % concluído`
-    });
-    if (ativo) {
+    if (ativoNoServico) {
       efet += (s.efetivo.match(/\d+/g) || []).reduce((x, y) => x + +y, 0);
       s.eq.forEach(([n, k]) => (eq[n] = Math.max(eq[n] || 0, k)));
     }
@@ -56,9 +48,14 @@ function diarioData() {
   const ens = M.ensaios.filter(t => t.day >= a && t.day <= b);
   const libs = M.liberacoes.filter(g => g.day >= a && g.day <= b + 1e-6 && d >= g.day);
   const oc = [];
-  ens.filter(t => !t.ok).forEach(t => oc.push(`Não conformidade: ${t.nome} = ${t.v} ${t.u} (critério ${t.crit}). ${t.obs || ''}`.trim()));
+  ens
+    .filter(t => !t.ok)
+    .forEach(t =>
+      oc.push(`Não conformidade${t.f != null ? ' (' + M.frentes[t.f].nome + ')' : ''}: ${t.nome} = ${t.v} ${t.u} (critério ${t.crit}). ${t.obs || ''}`.trim())
+    );
   oc.push(...ocorrenciasDaMissao(a, b));
-  return { D: Dd, d, parcial: d < Dd + 1 - 1e-6 && d < END - 1e-6, svcs, efet, eq, ens, libs, oc, tempo: tempoNoDiario(Dd) || D.obra.diario.tempoBom };
+  const desvio = M.frentes.map(f => `${f.nome}: ${D.servicos.frentes.desvio.estados[estadoDoDesvio(f, Math.min(b, d))]}`).join(' · ');
+  return { D: Dd, d, parcial: d < Dd + 1 - 1e-6 && d < END - 1e-6, svcs, efet, eq, ens, libs, oc, desvio, tempo: tempoNoDiario(Dd) || D.obra.diario.tempoBom };
 }
 
 export function tabDiario() {
@@ -67,7 +64,8 @@ export function tabDiario() {
   return `<div class="pane-head"><h2>Diário de obra</h2><p>Gerado a partir do dia exibido no modelo: serviços, quantidades, efetivo, equipamentos, ensaios, liberações e ocorrências. Avance a obra para preencher o dia seguinte.</p></div>
   <article class="diario"><header><div><h3>Diário de obra nº ${String(x.D + 1).padStart(3, '0')}</h3><div class="m">${esc(OBRA.titulo)} · ${esc(OBRA.local)}</div></div><div class="m">${fmtDate(x.D)}${x.parcial ? ` · parcial até ${fmtHour(x.d)}` : ''}<br>Efetivo no dia: ${x.efet} militares</div></header>
   <section><h4>Condições do tempo</h4><ul><li>${esc(x.tempo)}</li></ul></section>
-  <section><h4>Serviços executados</h4><ul>${x.svcs.length ? x.svcs.map(v => `<li><b>${v.s.id}</b> ${esc(v.s.nome)}: ${esc(v.txt)}</li>`).join('') : '<li>Sem frente de serviço neste dia.</li>'}</ul></section>
+  <section><h4>Tráfego nas frentes</h4><ul><li>${esc(x.desvio)}</li></ul></section>
+  <section><h4>Serviços executados</h4><ul>${x.svcs.length ? x.svcs.map(v => `<li><b>${v.s.id}</b>${v.onde ? ' <span class="tag">' + esc(v.onde) + '</span>' : ''} ${esc(v.s.nome)}: ${esc(v.txt)}</li>`).join('') : '<li>Sem frente de serviço neste dia.</li>'}</ul></section>
   <section><h4>Equipamentos em operação</h4><ul>${
     Object.keys(x.eq).length
       ? Object.entries(x.eq)
@@ -94,9 +92,12 @@ export function diarioTexto() {
     'CONDIÇÕES DO TEMPO',
     x.tempo,
     '',
+    'TRÁFEGO NAS FRENTES',
+    x.desvio,
+    '',
     'SERVIÇOS EXECUTADOS'
   );
-  x.svcs.forEach(v => L.push(`- ${v.s.id} ${v.s.nome}: ${v.txt}`));
+  x.svcs.forEach(v => L.push(`- ${v.s.id}${v.onde ? ' (' + v.onde + ')' : ''} ${v.s.nome}: ${v.txt}`));
   if (!x.svcs.length) L.push('- Sem frente de serviço.');
   L.push('', 'EQUIPAMENTOS');
   Object.entries(x.eq).forEach(([n, k]) => L.push(`- ${k}x ${n}`));

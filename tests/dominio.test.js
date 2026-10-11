@@ -107,7 +107,8 @@ describe('precedência', () => {
       const m = modelo(opt);
       for (const f of m.frentes) {
         const sb = iniNaFrente(m, 'S20', f.i);
-        for (const id of ['S11', 'S12', 'S13', 'S14', 'R3', 'R4']) if (m.svc.some(s => s.id === id && s.jan.some(w => w.f === f.i))) expect(sb).toBeGreaterThanOrEqual(fimNaFrente(m, id, f.i));
+        for (const id of ['S11', 'S12', 'S13', 'S14', 'R3', 'R4'])
+          if (m.svc.some(s => s.id === id && s.jan.some(w => w.f === f.i))) expect(sb).toBeGreaterThanOrEqual(fimNaFrente(m, id, f.i));
         const reaterro = m.ensaios.filter(t => t.f === f.i && /^GC do reaterro/.test(t.nome));
         expect(reaterro.length).toBeGreaterThan(0);
         expect(sb).toBeGreaterThan(Math.max(...reaterro.map(t => t.day)));
@@ -149,8 +150,7 @@ describe('cronograma', () => {
       const s = S(id);
       const w = jan(m, id, 0);
       const esperado = arredondar(qf[s.quantidade.chave] / s.produtividade.valor, 0.1);
-      if (['S11'].includes(id)) expect(w.b - w.a).toBeCloseTo(esperado, 9);
-      else expect(w.b - w.a).toBeCloseTo(esperado, 9);
+      expect(w.b - w.a).toBeCloseTo(esperado, 9);
     }
     expect(jan(m, 'S09', 0).b - jan(m, 'S09', 0).a).toBeCloseTo(1.4, 9); // 2.800 m² ÷ 2.000 m²/dia
     expect(jan(m, 'S11', 0).b - jan(m, 'S11', 0).a).toBeCloseTo(13.6, 9); // 474 m de vala ÷ 35 m/dia
@@ -261,7 +261,8 @@ describe('ensaios', () => {
   });
   it('dia dos ensaios novos acompanha a passagem do serviço pela estaca', () => {
     const m = modelo();
-    for (const t of m.ensaios.filter(t => /^GC do reaterro da vala/.test(t.nome) && !t.re)) expect(t.day).toBeCloseTo(diaNaEstaca(jan(m, 'S11', t.f), t.s) + 0.6, 9);
+    for (const t of m.ensaios.filter(t => /^GC do reaterro da vala/.test(t.nome) && !t.re))
+      expect(t.day).toBeCloseTo(diaNaEstaca(jan(m, 'S11', t.f), t.s) + 0.6, 9);
     for (const t of m.ensaios.filter(t => /^ISC do subleito exposto/.test(t.nome))) expect(t.day).toBeCloseTo(diaNaEstaca(jan(m, 'S15', t.f), t.s) + 4, 9);
   });
   it('reprovação do ISC do subleito gera o serviço de substituição de solo na frente afetada', () => {
@@ -352,13 +353,25 @@ describe('missão', () => {
     for (const k of dados.decisoes.pontuacao.retrabalhosSemPenalidade) delete semRw[k];
     const fimSemRw = buildSchedule(dados, q, semRw).svc.reduce((a, s) => Math.max(a, s.b), 0);
     const eventos = ops.filter(o => o.consequencia).map(o => ef(o.consequencia));
-    return metricas({ escolhas: ops.map(ef), eventos, fim: m.fim, prazo: dados.obra.calendario.prazoContratualDias, atrasoSemPenalidade: m.fim - fimSemRw, pontuacao: dados.decisoes.pontuacao });
+    return metricas({
+      escolhas: ops.map(ef),
+      eventos,
+      fim: m.fim,
+      prazo: dados.obra.calendario.prazoContratualDias,
+      atrasoSemPenalidade: m.fim - fimSemRw,
+      pontuacao: dados.decisoes.pontuacao
+    });
   };
   it('13 decisões carregam do JSON, incluindo as 4 novas, e aparecem em dias do cronograma da missão', () => {
     const D = dados.decisoes.decisoes;
     expect(D).toHaveLength(13);
     const titulos = D.map(d => d.titulo);
-    for (const t of ['Rede não cadastrada na vala', 'Chuva forte prevista com vala aberta', 'Tubo de concreto trincado no recebimento', 'Percentual de fresado reaproveitado na usina'])
+    for (const t of [
+      'Rede não cadastrada na vala',
+      'Chuva forte prevista com vala aberta',
+      'Tubo de concreto trincado no recebimento',
+      'Percentual de fresado reaproveitado na usina'
+    ])
       expect(titulos).toContain(t);
     const m = modelo(dados.decisoes.opcoesBase);
     for (const d of D) {
@@ -366,7 +379,8 @@ describe('missão', () => {
       expect(dia, d.id).not.toBeNull();
       expect(dia).toBeGreaterThan(0);
       expect(dia).toBeLessThan(m.fim);
-      for (const o of d.opcoes.filter(o => o.consequencia && typeof o.consequencia.dia === 'object')) expect(diaDaDecisao(o.consequencia.dia, m.svc, m.ensaios)).toBeGreaterThan(dia);
+      for (const o of d.opcoes.filter(o => o.consequencia && typeof o.consequencia.dia === 'object'))
+        expect(diaDaDecisao(o.consequencia.dia, m.svc, m.ensaios)).toBeGreaterThan(dia);
     }
   });
   it('todas as melhores decisões: nota alta, sem penalidade pelos retrabalhos decididos', () => {

@@ -12,7 +12,7 @@ export function tabCtx() {
     'Fiscalização assina o BLC',
     'Próxima camada liberada'
   ];
-  return `<div class="pane-head"><h2>Contexto da obra militar</h2><p>${esc(OBRA.local)}. A via interna liga duas ruas existentes da Vila Militar e foi projetada para o tráfego de ${esc(OBRA.trafego)}.</p></div>
+  return `<div class="pane-head"><h2>Contexto da obra militar</h2><p>${esc(OBRA.local)}. A obra reconstrói a via existente, que continua em uso pelo tráfego de ${esc(OBRA.trafego)}, com drenagem nova e pavimento em CBUQ, por frentes de serviço de 400 m.</p></div>
   <div class="flow">${flow.map((f, i) => `<div class="fstep${i === 3 ? ' warn' : ''}"><b>${i + 1}</b>${esc(f)}</div>`).join('<span class="farr">→</span>')}</div>
   <div class="masonry">${D.obra.contexto.map(c => `<div class="ccard"><h4>${esc(c.titulo)}</h4><p class="csub">${esc(c.texto)}</p></div>`).join('')}</div>
   <h3 class="h3">Normas utilizadas</h3><div class="tbl"><table><thead><tr><th>Norma</th><th>Título</th><th>Aplicação no modelo</th></tr></thead><tbody>${D.normas.referencias.map(n => `<tr><td class="m">${n.norma}</td><td>${esc(n.titulo)}</td><td>${esc(n.aplicacao)}</td></tr>`).join('')}</tbody></table></div>

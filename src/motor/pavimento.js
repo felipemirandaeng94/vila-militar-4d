@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { P, sg, nat, diametroRede, larguraVala, profundidadeVala } from '../dominio/geometria.js';
 import { diaDoServico, janela } from '../dominio/frentes.js';
 import { trechosRuins } from '../dominio/quantitativos.js';
+import { rng } from '../dominio/util.js';
 import { M, ST, D } from '../estado.js';
 import { wx, wy, mat } from './base.js';
 import { cena } from './renderizador.js';
@@ -102,6 +103,7 @@ function faixa({ z0, z1, bot, top, dias, cor, opts = {}, nome, info, s0 = 0, s1 
 
 // textura simples de pavimento desgastado e de superfície fresada (geradas em canvas)
 function textura(tipo) {
+  const rnd = rng(tipo === 'velho' ? 11 : 12);
   const c = document.createElement('canvas');
   c.width = 256;
   c.height = 64;
@@ -110,21 +112,21 @@ function textura(tipo) {
     g.fillStyle = '#5d6062';
     g.fillRect(0, 0, 256, 64);
     for (let i = 0; i < 900; i++) {
-      const v = 70 + Math.floor(Math.random() * 40);
+      const v = 70 + Math.floor(rnd() * 40);
       g.fillStyle = `rgb(${v},${v + 2},${v + 4})`;
-      g.fillRect(Math.random() * 256, Math.random() * 64, 2, 2);
+      g.fillRect(rnd() * 256, rnd() * 64, 2, 2);
     }
     g.strokeStyle = 'rgba(30,30,30,.55)';
     for (let i = 0; i < 9; i++) {
       g.beginPath();
-      let x = Math.random() * 256,
-        y = Math.random() * 64;
+      let x = rnd() * 256,
+        y = rnd() * 64;
       g.moveTo(x, y);
-      for (let k = 0; k < 6; k++) g.lineTo((x += (Math.random() - 0.3) * 18), (y += (Math.random() - 0.5) * 10));
+      for (let k = 0; k < 6; k++) g.lineTo((x += (rnd() - 0.3) * 18), (y += (rnd() - 0.5) * 10));
       g.stroke();
     }
     g.fillStyle = 'rgba(40,40,40,.35)';
-    for (let i = 0; i < 4; i++) g.fillRect(Math.random() * 230, Math.random() * 50, 18 + Math.random() * 20, 8 + Math.random() * 8);
+    for (let i = 0; i < 4; i++) g.fillRect(rnd() * 230, rnd() * 50, 18 + rnd() * 20, 8 + rnd() * 8);
   } else {
     g.fillStyle = '#4a4c4c';
     g.fillRect(0, 0, 256, 64);
@@ -176,8 +178,26 @@ export function buildPavement() {
   ];
   for (const bd of bandas) {
     const ateVala = s => (bd.vala ? vala(s).esc : Infinity);
-    faixa({ z0: bd.z0, z1: bd.z1, bot: s => h(s).b, top: s => h(s).exSb, dias: s => [-1, mn(rem(s), ateVala(s))], cor: 0xa08a68, nome: 'ex-subbase', info: exInfo('Sub-base existente', '20 cm') });
-    faixa({ z0: bd.z0, z1: bd.z1, bot: s => h(s).exSb, top: s => h(s).exBa, dias: s => [-1, mn(rem(s), ateVala(s))], cor: 0x8f8e88, nome: 'ex-base', info: exInfo('Base existente', '15 cm') });
+    faixa({
+      z0: bd.z0,
+      z1: bd.z1,
+      bot: s => h(s).b,
+      top: s => h(s).exSb,
+      dias: s => [-1, mn(rem(s), ateVala(s))],
+      cor: 0xa08a68,
+      nome: 'ex-subbase',
+      info: exInfo('Sub-base existente', '20 cm')
+    });
+    faixa({
+      z0: bd.z0,
+      z1: bd.z1,
+      bot: s => h(s).exSb,
+      top: s => h(s).exBa,
+      dias: s => [-1, mn(rem(s), ateVala(s))],
+      cor: 0x8f8e88,
+      nome: 'ex-base',
+      info: exInfo('Base existente', '15 cm')
+    });
   }
   // revestimento existente (pista) e bordas antigas
   const zi = [
@@ -195,7 +215,10 @@ export function buildPavement() {
       cor: 0xffffff,
       opts: { map: textura('velho'), roughness: 0.95 },
       nome: 'ex-revestimento',
-      info: { t: 'Revestimento existente (CBUQ antigo)', d: { Situação: 'Desgastado, com trincas e remendos', Espessura: '5 cm', Serviço: nomeSvc('fresagem') } }
+      info: {
+        t: 'Revestimento existente (CBUQ antigo)',
+        d: { Situação: 'Desgastado, com trincas e remendos', Espessura: '5 cm', Serviço: nomeSvc('fresagem') }
+      }
     });
     uvPlanta(o, 24);
   }
@@ -240,29 +263,141 @@ export function buildPavement() {
     info: { t: 'Vala da rede de drenagem', d: { Serviço: nomeSvc('vala'), Norma: 'DNIT 023/2024-ES', Escoramento: 'Painéis metálicos' } }
   });
   // reaterro compactado: parte abaixo do subleito (fica) e parte acima (sai com a remoção da base)
-  faixa({ z0: v0, z1: v1, bot: fundoDaVala, top: s => h(s).b, dias: s => [vala(s).reat, NUNCA].map(finito), cor: 0x9b7a55, nome: 'reaterro', info: { t: 'Reaterro compactado da vala', d: { Serviço: nomeSvc('vala'), Controle: 'GC por camada (frasco de areia)' } } });
-  faixa({ z0: v0, z1: v1, bot: s => h(s).b, top: s => h(s).exBa + 0.02, dias: s => [vala(s).reat, rem(s)].map(finito), cor: 0x9b7a55, nome: 'reaterro', info: { t: 'Reaterro compactado da vala', d: { Serviço: nomeSvc('vala') } } });
+  faixa({
+    z0: v0,
+    z1: v1,
+    bot: fundoDaVala,
+    top: s => h(s).b,
+    dias: s => [vala(s).reat, NUNCA].map(finito),
+    cor: 0x9b7a55,
+    nome: 'reaterro',
+    info: { t: 'Reaterro compactado da vala', d: { Serviço: nomeSvc('vala'), Controle: 'GC por camada (frasco de areia)' } }
+  });
+  faixa({
+    z0: v0,
+    z1: v1,
+    bot: s => h(s).b,
+    top: s => h(s).exBa + 0.02,
+    dias: s => [vala(s).reat, rem(s)].map(finito),
+    cor: 0x9b7a55,
+    nome: 'reaterro',
+    info: { t: 'Reaterro compactado da vala', d: { Serviço: nomeSvc('vala') } }
+  });
   // subleito: fundo da caixa (sempre presente; fica visível depois da remoção da base)
-  faixa({ z0: -hW, z1: hW, bot: s => h(s).b - 1.2, top: s => h(s).b, dias: () => [-1, NUNCA], cor: 0xa4683e, nome: 'subleito', lados: false, info: { t: 'Subleito exposto', d: { Controle: 'ISC a cada 50 m (ilustrativo)' } } });
+  faixa({
+    z0: -hW,
+    z1: hW,
+    bot: s => h(s).b - 1.2,
+    top: s => h(s).b,
+    dias: () => [-1, NUNCA],
+    cor: 0xa4683e,
+    nome: 'subleito',
+    lados: false,
+    info: { t: 'Subleito exposto', d: { Controle: 'ISC a cada 50 m (ilustrativo)' } }
+  });
   // substituição de solo e regularização (películas no fundo da caixa)
   for (const t of trechosRuins(D.obra, 0, P.L))
-    faixa({ z0: -hW, z1: hW, s0: t.de, s1: t.ate, bot: s => h(s).b, top: s => h(s).b + 0.015, dias: s => [diaRep('substituicao', s), NUNCA].map(finito), cor: 0xb58a55, lados: false, nome: 'substituicao', info: { t: 'Substituição de solo (60 cm)', d: { Serviço: nomeSvc('substituicao'), Material: 'Solo de jazida, ISC 14 %' } } });
-  faixa({ z0: -hW, z1: hW, bot: s => h(s).b, top: s => h(s).b + 0.03, dias: s => [diaRep('regularizacao', s), NUNCA].map(finito), cor: 0xc7a275, lados: false, nome: 'regularizacao', info: { t: 'Subleito regularizado', d: { Serviço: nomeSvc('regularizacao'), Norma: 'DNIT 137/2010-ES' } } });
+    faixa({
+      z0: -hW,
+      z1: hW,
+      s0: t.de,
+      s1: t.ate,
+      bot: s => h(s).b,
+      top: s => h(s).b + 0.015,
+      dias: s => [diaRep('substituicao', s), NUNCA].map(finito),
+      cor: 0xb58a55,
+      lados: false,
+      nome: 'substituicao',
+      info: { t: 'Substituição de solo (60 cm)', d: { Serviço: nomeSvc('substituicao'), Material: 'Solo de jazida, ISC 14 %' } }
+    });
+  faixa({
+    z0: -hW,
+    z1: hW,
+    bot: s => h(s).b,
+    top: s => h(s).b + 0.03,
+    dias: s => [diaRep('regularizacao', s), NUNCA].map(finito),
+    cor: 0xc7a275,
+    lados: false,
+    nome: 'regularizacao',
+    info: { t: 'Subleito regularizado', d: { Serviço: nomeSvc('regularizacao'), Norma: 'DNIT 137/2010-ES' } }
+  });
   // sarjetas (concreto), dos dois lados
   for (const sd of [-1, 1])
-    faixa({ z0: sd * hP, z1: sd * (hP + P.W_SAR), bot: s => h(s).b, top: s => h(s).top - 0.02, dias: s => [diaRep('sarjeta', s), NUNCA].map(finito), cor: 0xbdbab2, nome: 'sarjeta', info: { t: 'Sarjeta de concreto', d: { Serviço: nomeSvc('sarjeta'), Norma: 'DNIT 018/2023-ES', Largura: '0,40 m' } } });
+    faixa({
+      z0: sd * hP,
+      z1: sd * (hP + P.W_SAR),
+      bot: s => h(s).b,
+      top: s => h(s).top - 0.02,
+      dias: s => [diaRep('sarjeta', s), NUNCA].map(finito),
+      cor: 0xbdbab2,
+      nome: 'sarjeta',
+      info: { t: 'Sarjeta de concreto', d: { Serviço: nomeSvc('sarjeta'), Norma: 'DNIT 018/2023-ES', Largura: '0,40 m' } }
+    });
   // camadas novas, entre as sarjetas
   const sbInfo = { t: 'Sub-base de solo-brita', d: { Espessura: '20 cm', Largura: '7,0 m', Norma: 'DNIT 139/2010-ES', 'GC mínimo': '100 %' } };
-  faixa({ z0: -hP, z1: hP, bot: s => h(s).b + 0.03, top: s => h(s).sb, dias: s => [diaRep('subBase', s), NUNCA].map(finito), cor: 0xb79a72, nome: 'subBase', info: sbInfo });
-  faixa({ z0: -hP, z1: hP, bot: s => h(s).sb, top: s => h(s).ba, dias: s => [diaRep('base', s), NUNCA].map(finito), cor: 0x9d9d97, nome: 'base', info: { t: 'Base de brita graduada', d: { Espessura: '15 cm', Largura: '7,0 m', Norma: 'DNIT 141/2022-ES', 'GC mínimo': '100 %' } } });
+  faixa({
+    z0: -hP,
+    z1: hP,
+    bot: s => h(s).b + 0.03,
+    top: s => h(s).sb,
+    dias: s => [diaRep('subBase', s), NUNCA].map(finito),
+    cor: 0xb79a72,
+    nome: 'subBase',
+    info: sbInfo
+  });
+  faixa({
+    z0: -hP,
+    z1: hP,
+    bot: s => h(s).sb,
+    top: s => h(s).ba,
+    dias: s => [diaRep('base', s), NUNCA].map(finito),
+    cor: 0x9d9d97,
+    nome: 'base',
+    info: { t: 'Base de brita graduada', d: { Espessura: '15 cm', Largura: '7,0 m', Norma: 'DNIT 141/2022-ES', 'GC mínimo': '100 %' } }
+  });
   const film = 0.012 * Math.max(1, ST.exag);
   for (const [fx, z0, z1] of [
     ['BD', 0, hP],
     ['BE', -hP, 0]
   ]) {
-    faixa({ z0, z1, bot: s => h(s).ba, top: s => h(s).ba + film, dias: s => [diaRep('imprimacao', s, fx), NUNCA].map(finito), cor: 0x5a3d26, opts: { roughness: 0.5 }, lados: false, nome: 'imprimacao', info: { t: `Imprimação com CM-30 (${fx})`, d: { Taxa: '1,20 L/m²', Norma: 'DNIT 144/2014-ES' } } });
-    faixa({ z0, z1, bot: s => h(s).ba, top: s => h(s).ba + film * 1.6, dias: s => [diaRep('pintura', s, fx), NUNCA].map(finito), cor: 0x231d19, opts: { roughness: 0.5 }, lados: false, nome: 'pintura', info: { t: `Pintura de ligação RR-1C (${fx})`, d: { Taxa: '0,90 L/m² diluída 1:1', Norma: 'DNIT 145/2012-ES' } } });
-    faixa({ z0, z1, bot: s => h(s).ba, top: s => h(s).top, dias: s => [diaRep('cbuq', s, fx), NUNCA].map(finito), cor: 0x2e3133, opts: { roughness: 0.78 }, nome: 'cbuq', info: { t: `Revestimento em CBUQ (faixa ${fx === 'BD' ? 'direita' : 'esquerda'})`, d: { Espessura: '5 cm', Faixa: 'C-12,5', Ligante: 'CAP 50/70 · 5,6 %', Norma: 'DNIT 031/2024-ES' } } });
+    faixa({
+      z0,
+      z1,
+      bot: s => h(s).ba,
+      top: s => h(s).ba + film,
+      dias: s => [diaRep('imprimacao', s, fx), NUNCA].map(finito),
+      cor: 0x5a3d26,
+      opts: { roughness: 0.5 },
+      lados: false,
+      nome: 'imprimacao',
+      info: { t: `Imprimação com CM-30 (${fx})`, d: { Taxa: '1,20 L/m²', Norma: 'DNIT 144/2014-ES' } }
+    });
+    faixa({
+      z0,
+      z1,
+      bot: s => h(s).ba,
+      top: s => h(s).ba + film * 1.6,
+      dias: s => [diaRep('pintura', s, fx), NUNCA].map(finito),
+      cor: 0x231d19,
+      opts: { roughness: 0.5 },
+      lados: false,
+      nome: 'pintura',
+      info: { t: `Pintura de ligação RR-1C (${fx})`, d: { Taxa: '0,90 L/m² diluída 1:1', Norma: 'DNIT 145/2012-ES' } }
+    });
+    faixa({
+      z0,
+      z1,
+      bot: s => h(s).ba,
+      top: s => h(s).top,
+      dias: s => [diaRep('cbuq', s, fx), NUNCA].map(finito),
+      cor: 0x2e3133,
+      opts: { roughness: 0.78 },
+      nome: 'cbuq',
+      info: {
+        t: `Revestimento em CBUQ (faixa ${fx === 'BD' ? 'direita' : 'esquerda'})`,
+        d: { Espessura: '5 cm', Faixa: 'C-12,5', Ligante: 'CAP 50/70 · 5,6 %', Norma: 'DNIT 031/2024-ES' }
+      }
+    });
   }
   // trecho de CBUQ lançado com teor fora da tolerância e depois fresado (cenário ou decisão)
   const cb = servicoRep('cbuq');
@@ -340,6 +475,8 @@ export const surfC = (s, z, st) => superficie(s, z, st.d);
 export function ativas(rep, d) {
   const s = servicoRep(rep);
   if (!s) return [];
-  return s.jan.filter(w => w.f != null && d >= w.a && d < w.b).map(w => ({ w, s: w.s0 + Math.min(1, Math.max(0, (d - w.a) / (w.b - w.a))) * (w.s1 - w.s0), faixa: w.faixa }));
+  return s.jan
+    .filter(w => w.f != null && d >= w.a && d < w.b)
+    .map(w => ({ w, s: w.s0 + Math.min(1, Math.max(0, (d - w.a) / (w.b - w.a))) * (w.s1 - w.s0), faixa: w.faixa }));
 }
 export { janela };

@@ -89,6 +89,46 @@ DOM e textos de tela.
 - Inicia o motor e a interface.
 - Avança o tempo a cada quadro e chama motor e interface.
 
+## Frentes de serviço e cronograma (Fase 2B)
+
+A obra é a reconstrução de cerca de 1,6 km da via existente (`docs/ESCOPO.md`). O trecho é dividido em frentes de `servicos.json.frentes.tamanho` metros (padrão de 400 m, 4 frentes) a partir do canteiro, no início do trecho. A última frente fica com o resto.
+
+`src/dominio/cronograma.js` programa:
+- **Serviços globais** (`escopo: "global"`), com janelas fixas: mobilização, topografia, ensaios prévios, usina e dosagem.
+- **Serviços por frente** (`escopo: "frente"`), na ordem do arquivo e frente a frente.
+- **Serviço final** (`escopo: "final"`), a desmobilização depois da liberação de todas as frentes.
+
+Em cada frente:
+- **Duração:** `quantidade da frente ÷ produtividade`, arredondada para cima em décimos de dia útil (1 h), ou `duracaoFixa`. As quantidades vêm de `src/dominio/quantitativos.js` (chaves listadas em `CHAVES_DE_QUANTIDADE`). As produtividades são as teóricas de referência (caso ideal do SICRO).
+- **Dependências** (`depende`):
+  - `TI` (término → início, o padrão), com `em: "fimDaCura"` para esperar a cura;
+  - `II` (início → início, com `defasagem`);
+  - `TT` (término → término);
+  - `passagem` (a frente do serviço passou pelo trecho de solo mole há `defasagem` dias).
+- **Faixas:** `faixas: true` executa a meia pista (BD e depois BE), metade da quantidade em cada uma. `dependeFaixa` liga faixas entre serviços (pintura BD → CBUQ BD → pintura BE → CBUQ BE).
+- **Equipes:** cada serviço tem a sua equipe (`equipes`, padrão 1). A equipe atende uma frente de cada vez, o que produz a cascata.
+- **Abertura de frente:** no máximo `abertasAoMesmoTempo` frentes com tráfego desviado. Além disso, `dependeFrenteAnterior` abre a frente seguinte perto do fim da drenagem da anterior.
+- **Retrabalhos** (`servicos.json.retrabalhos`), ativados pelas opções do cenário ou da missão:
+  - `inserirApos` / `inserirAntes` (com `bloqueia`);
+  - `acrescentar` (dias a um serviço);
+  - `falhaAntesDe` (trecho de CBUQ lançado e removido).
+  O atraso afeta só a frente do retrabalho e as que dependem dela pela equipe ou pela abertura de frente.
+
+### Regra de precedência da drenagem
+Nenhuma camada de pavimento começa antes de a drenagem da frente estar concluída e com o reaterro aprovado:
+- A sub-base (S20) depende de S11 a S14 (rede, bocas de lobo, poços de visita e deságue).
+- A remoção da base (S15) só começa depois das valas reaterradas.
+- Os testes conferem, em todos os cenários, que a sub-base de cada frente começa depois do último ensaio de GC do reaterro e da liberação BLC-D da frente.
+
+### Desvio de tráfego
+`servicos.json.frentes.desvio` define os estados de cada frente: via em uso, meia pista (da sinalização de obra), desvio total (da remoção da base), meia pista (da imprimação) e liberada (fim da sinalização definitiva). O domínio grava as mudanças em `frente.desvio`. A interface mostra o estado no painel "Frentes de serviço" e no diário, e o motor 3D desenha cones, cavaletes e a faixa de desvio provisória.
+
+### 3D por dias de execução
+O motor não refaz geometria a cada quadro:
+- Cada faixa do pavimento e cada instância (tubos, caixas, meio-fio, cones, marcadores) guarda `[dia em que aparece, dia em que some]` no atributo `aDias`.
+- O uniforme `uDia` (`src/motor/dias.js`) descarta no shader o que ainda não existe ou já foi removido: o pavimento existente sai na fresagem e na remoção, a vala abre e é reaterrada, e as camadas novas aparecem.
+- O motor localiza cada serviço pela `representacao` definida no JSON, sem códigos fixos.
+
 ## Fluxo de dados
 
 1. `main.js` carrega e valida `dados/`. Com dados válidos, chama `iniciar`.
@@ -99,12 +139,11 @@ DOM e textos de tela.
 
 ## Como adicionar ou alterar só editando JSON
 
-### Mudar o prazo de um serviço
-Em `servicos.json`, altere `janelas` (ou `faixas`, para serviços em meia pista) do serviço. As janelas são `[início, fim]` em dias úteis.
-
-O Gantt, o painel "Agora na obra", o diário, o 3D (as frentes usam as janelas) e os dias dos ensaios ligados à frente acompanham a mudança.
-
-As janelas não se ajustam umas às outras. Se o serviço seguinte depender deste, ajuste também a janela dele. A precedência automática entre frentes entra na Fase 2B.
+### Mudar uma produtividade, o tamanho da frente ou as equipes
+- **Produtividade:** em `servicos.json`, altere `produtividade.valor` do serviço. A duração em cada frente é recalculada, e o Gantt, o 3D, os dias dos ensaios e as liberações acompanham.
+- **Tamanho da frente:** altere `frentes.tamanho` (por exemplo, 320 m dá 5 frentes).
+- **Equipes:** acrescente `"equipes": 2` a um serviço para ter duas equipes trabalhando em frentes diferentes.
+- **Abertura de frentes:** `frentes.abertasAoMesmoTempo` limita quantas frentes ficam com o tráfego desviado.
 
 ### Adicionar um serviço
 Acrescente um objeto em `servicos.json.servicos` com:
@@ -152,4 +191,14 @@ A ordem no arquivo é a ordem de numeração das decisões.
 
 ## Testes
 
-`npm test` roda `tests/dominio.test.js`. A referência `tests/referencia/fase1.json` foi gerada com o código da Fase 1 (o comportamento do HTML original). Os testes exigem que o domínio reproduza os mesmos quantitativos, cronogramas, frentes e ensaios, nos 5 casos: sem não conformidade, base, CBUQ e as duas combinações da missão. Também cobrem a validação dos dados, as liberações, a nota da missão e a alteração de dados sem tocar no código.
+`npm test` roda `tests/dominio.test.js`. A suíte cobre:
+- **Dados:** validação de todos os arquivos.
+- **Frentes:** divisão contígua, resto na última frente, sequência e limite de frentes abertas.
+- **Precedência:** drenagem antes do pavimento, CBUQ só depois da imprimação curada e liberação depois da sinalização definitiva.
+- **Cronograma:** quantidade ÷ produtividade, efeito de dobrar uma produtividade e retrabalhos que atrasam só as frentes afetadas.
+- **Quantitativos:** pista, meio-fio, sarjeta, CBUQ, bocas de lobo e poços de visita.
+- **Ensaios:** ensaios novos por frente e seus dias, ISC reprovado que gera a substituição de solo e lote de tubos reprovado que não é assentado.
+- **Liberações** por frente.
+- **Missão:** 13 decisões e efeito das 4 novas na nota.
+
+A referência da Fase 1 (`tests/referencia/fase1.json`, escopo de 300 m) foi removida na Fase 2B, porque o escopo mudou. Os testes do domínio da Fase 2 que dependiam dela foram substituídos pelos acima.

@@ -102,10 +102,38 @@ const OBRA = {
 
 // chaves de quantidade por frente calculadas em src/dominio/quantitativos.js
 export const CHAVES_DE_QUANTIDADE = [
-  'extensao', 'areaFresagem', 'volFresado', 'volFresadoSolto', 'volRemocao', 'volRemocaoSolta', 'extRede', 'extRamais', 'extVala', 'volEscavacaoVala',
-  'volBerco', 'volReaterro', 'nBocasDeLobo', 'nPocosDeVisita', 'extSoloRuim', 'volSubstituicao', 'areaRegularizacao', 'extMeioFio', 'extSarjeta',
-  'volConcretoSarjeta', 'areaSubBase', 'volSubBase', 'areaBase', 'volBase', 'areaImprimacao', 'litrosImprimacao', 'areaPintura', 'litrosEmulsao',
-  'volCBUQ', 'toneladasCBUQ', 'toneladasCAP', 'areaLimpeza'
+  'extensao',
+  'areaFresagem',
+  'volFresado',
+  'volFresadoSolto',
+  'volRemocao',
+  'volRemocaoSolta',
+  'extRede',
+  'extRamais',
+  'extVala',
+  'volEscavacaoVala',
+  'volBerco',
+  'volReaterro',
+  'nBocasDeLobo',
+  'nPocosDeVisita',
+  'extSoloRuim',
+  'volSubstituicao',
+  'areaRegularizacao',
+  'extMeioFio',
+  'extSarjeta',
+  'volConcretoSarjeta',
+  'areaSubBase',
+  'volSubBase',
+  'areaBase',
+  'volBase',
+  'areaImprimacao',
+  'litrosImprimacao',
+  'areaPintura',
+  'litrosEmulsao',
+  'volCBUQ',
+  'toneladasCBUQ',
+  'toneladasCAP',
+  'areaLimpeza'
 ];
 
 const DEP = { de: txt, '?tipo': ['umDe', 'TI', 'II', 'TT', 'passagem'], '?defasagem': num, '?em': ['umDe', 'fimDaCura'], '?trecho': ['umDe', 'soloRuim'] };
@@ -266,7 +294,15 @@ function validarGerador(g, caminho, erros, servicos) {
 }
 
 const EFEITOS = { atraso: num, custo: num, qualidade: num, conformidade: num };
-const REGRA_DIA = { '?fixo': num, '?falhaDeEnsaio': txt, '?servico': txt, '?frente': num, '?faixa': ['umDe', 'BD', 'BE'], '?em': ['umDe', 'inicio', 'fim', 'curaInicio'], '?mais': num };
+const REGRA_DIA = {
+  '?fixo': num,
+  '?falhaDeEnsaio': txt,
+  '?servico': txt,
+  '?frente': num,
+  '?faixa': ['umDe', 'BD', 'BE'],
+  '?em': ['umDe', 'inicio', 'fim', 'curaInicio'],
+  '?mais': num
+};
 const DECISOES = {
   opcoesBase: ['mapa', num],
   avaliacoes: ['lista', txt, 3],
@@ -320,7 +356,15 @@ export function validarDados(d) {
   verifica(d.normas, { metodos: ['mapa', txt], referencias: ['lista', { norma: txt, titulo: txt, aplicacao: txt }] }, 'normas.json', erros);
   verifica(
     d.ensaios,
-    { semente: num, plano: ['lista', 'qualquer'], '?notaPlano': txt, dosagem: 'qualquer', granulometria: 'qualquer', compactacao: 'qualquer', geradores: ['lista', 'qualquer', 1] },
+    {
+      semente: num,
+      plano: ['lista', 'qualquer'],
+      '?notaPlano': txt,
+      dosagem: 'qualquer',
+      granulometria: 'qualquer',
+      compactacao: 'qualquer',
+      geradores: ['lista', 'qualquer', 1]
+    },
     'ensaios.json',
     erros
   );
@@ -343,11 +387,14 @@ export function validarDados(d) {
     if (s.quantidade && s.quantidade.chave && !CHAVES_DE_QUANTIDADE.includes(s.quantidade.chave))
       erros.push(`${c}.quantidade.chave: "${s.quantidade.chave}" não é calculada pelos quantitativos (${CHAVES_DE_QUANTIDADE.join(', ')})`);
     if (s.produtividade && s.produtividade.valor <= 0) erros.push(`${c}.produtividade: deve ser maior que zero`);
-    for (const dp of [...(s.depende || []), ...(s.inicio ? [s.inicio] : [])]) if (!todos.has(dp.de)) erros.push(`${c}.depende: o serviço "${dp.de}" não existe`);
-    for (const [fx, lst] of Object.entries(s.dependeFaixa || {})) lst.forEach(dp => !todos.has(dp.de) && erros.push(`${c}.dependeFaixa.${fx}: o serviço "${dp.de}" não existe`));
+    for (const dp of [...(s.depende || []), ...(s.inicio ? [s.inicio] : [])])
+      if (!todos.has(dp.de)) erros.push(`${c}.depende: o serviço "${dp.de}" não existe`);
+    for (const [fx, lst] of Object.entries(s.dependeFaixa || {}))
+      lst.forEach(dp => !todos.has(dp.de) && erros.push(`${c}.dependeFaixa.${fx}: o serviço "${dp.de}" não existe`));
     for (const g of s.aposGlobal || []) if (!globais.has(g)) erros.push(`${c}.aposGlobal: "${g}" não é um serviço global`);
     if (s.equipe && !todos.has(s.equipe)) erros.push(`${c}.equipe: a equipe "${s.equipe}" não corresponde a nenhum serviço`);
-    if (s.diario?.quantitativo && !CHAVES_DE_QUANTIDADE.includes(s.diario.quantitativo)) erros.push(`${c}.diario.quantitativo: "${s.diario.quantitativo}" não é calculada pelos quantitativos`);
+    if (s.diario?.quantitativo && !CHAVES_DE_QUANTIDADE.includes(s.diario.quantitativo))
+      erros.push(`${c}.diario.quantitativo: "${s.diario.quantitativo}" não é calculada pelos quantitativos`);
     if (s.diario && s.diario.quantitativo == null && s.diario.valor == null) erros.push(`${c}.diario: informe "quantitativo" ou "valor"`);
     if (retrabalho && !s.retrabalho) erros.push(`${c}: serviço de retrabalho precisa de "retrabalho": true`);
   };
@@ -360,8 +407,10 @@ export function validarDados(d) {
   S.retrabalhos.forEach((r, i) => {
     const c = `servicos.json.retrabalhos[${i}]`;
     checarServico(r.servico, c + '.servico', true);
-    for (const id of [r.inserirApos, r.inserirAntes, r.falhaAntesDe, r.acrescentar?.servico, ...(r.bloqueia || [])]) if (id && !ids.has(id)) erros.push(`${c}: o serviço "${id}" não existe`);
-    if (![r.inserirApos, r.inserirAntes, r.acrescentar, r.falhaAntesDe].some(Boolean)) erros.push(`${c}: indique "inserirApos", "inserirAntes", "acrescentar" ou "falhaAntesDe"`);
+    for (const id of [r.inserirApos, r.inserirAntes, r.falhaAntesDe, r.acrescentar?.servico, ...(r.bloqueia || [])])
+      if (id && !ids.has(id)) erros.push(`${c}: o serviço "${id}" não existe`);
+    if (![r.inserirApos, r.inserirAntes, r.acrescentar, r.falhaAntesDe].some(Boolean))
+      erros.push(`${c}: indique "inserirApos", "inserirAntes", "acrescentar" ou "falhaAntesDe"`);
     if (r.falhaAntesDe && !r.falha) erros.push(`${c}: "falhaAntesDe" exige "falha"`);
   });
   for (const m of S.frentes.desvio.sequencia) {

@@ -1,39 +1,52 @@
 // Painéis sobre o modelo e ao lado dele: barra 4D, selos, "Agora na obra", liberações e janela de informação.
-import { M, ST, acoes } from '../estado.js';
+import { M, ST, D, acoes } from '../estado.js';
 import { nf } from '../dominio/util.js';
 import { fmtDate, fmtHour, estStr } from '../dominio/calendario.js';
 import { activeList } from '../dominio/cronograma.js';
+import { estadoDoDesvio } from '../dominio/frentes.js';
 import { gateStatus } from '../dominio/liberacoes.js';
-import { $, esc, svcById, corGrupo } from './dom.js';
+import { $, esc, svcById, corGrupo, curto } from './dom.js';
 import { focarPonto } from '../motor/index.js';
 import { linhaDoDiaNoGantt } from './abas/sequencia.js';
 import { renderTab } from './abas.js';
 import { missaoAtiva, updateHud } from '../jogo/missao.js';
 
 // ---------- liberações de camada ----------
+const tiposDeLiberacao = () => [...new Set(M.liberacoes.map(g => g.tipo))];
+const doTipo = t => M.liberacoes.filter(g => g.tipo === t).sort((x, y) => x.day - y.day);
 export function renderGates() {
-  $('systems').innerHTML = M.liberacoes
-    .map(g => `<button data-gate="${g.id}" aria-pressed="false" title="${esc(g.nome)}: dia ${nf(g.day, 1)}">${g.id} · ${esc(g.nome)}</button>`)
+  $('systems').innerHTML = tiposDeLiberacao()
+    .map(t => {
+      const g = doTipo(t)[0];
+      return `<button data-gate="${t}" aria-pressed="false">${t} · ${esc(g.nome)} <small></small></button>`;
+    })
     .join('');
   $('systems')
     .querySelectorAll('button')
     .forEach(
       b =>
         (b.onclick = () => {
-          const g = M.liberacoes.find(x => x.id === b.dataset.gate);
+          const lista = doTipo(b.dataset.gate);
+          const g = lista.find(x => x.day > ST.day + 0.02) || lista[lista.length - 1];
           acoes.irParaDia(Math.min(M.fim, g.day + 0.01));
         })
     );
 }
+// situação agregada por tipo: emitida em todas as frentes, com não conformidade aberta, em ensaio ou pendente
 function updateGates() {
   $('systems')
     .querySelectorAll('button')
     .forEach(b => {
-      const g = M.liberacoes.find(x => x.id === b.dataset.gate),
-        s = gateStatus(g, M.ensaios, ST.day);
-      b.setAttribute('aria-pressed', s.k === 'ok');
-      b.dataset.k = s.k;
-      b.title = `${g.nome}: ${s.txt}${s.k === 'ok' ? ' no dia ' + nf(g.day, 1) : ''}`;
+      const lista = doTipo(b.dataset.gate);
+      const st = lista.map(g => gateStatus(g, M.ensaios, ST.day));
+      const ok = st.filter(x => x.k === 'ok').length;
+      const k = ok === lista.length ? 'ok' : st.some(x => x.k === 'bad') ? 'bad' : st.some(x => x.k === 'run') || ok ? 'run' : 'pend';
+      b.setAttribute('aria-pressed', k === 'ok');
+      b.dataset.k = k;
+      b.querySelector('small').textContent = lista.length > 1 ? `${ok}/${lista.length}` : '';
+      b.title = lista
+        .map((g, i) => `${g.f != null ? M.frentes[g.f].nome : 'Trecho'}: ${st[i].txt}${st[i].k === 'ok' ? ' no dia ' + nf(g.day, 1) : ''}`)
+        .join(' · ');
     });
 }
 
@@ -48,13 +61,21 @@ export function updateUI(force) {
   $('stg').value = d;
   const act = activeList(M.svc, d);
   const hour = fmtHour(d);
-  $('stgl').innerHTML =
-    `<b>Dia útil ${Math.min(Math.floor(d) + 1, Math.ceil(END))} de ${Math.ceil(END)}</b> · ${fmtDate(d)} · ${hour} · ${act.length ? act.map(a => esc(a.s.nome) + (a.lane ? ' (' + a.lane + ')' : '')).join(' · ') : d >= END - 0.01 ? 'Obra concluída e entregue' : 'Sem frente de serviço em execução'}`;
+  $('stgl').innerHTML = `<b>Dia útil ${Math.min(Math.floor(d) + 1, Math.ceil(END))} de ${Math.ceil(END)}</b> · ${fmtDate(d)} · ${hour} · ${
+    act.length
+      ? act
+          .filter(a => !a.cura)
+          .map(a => esc(curto(a.s.id) || a.s.nome) + onde(a))
+          .join(' · ')
+      : d >= END - 0.01
+        ? 'Obra concluída e entregue'
+        : 'Sem frente de serviço em execução'
+  }`;
   $('nowDate').textContent = fmtDate(d, false);
   const badges = [`<span class="chip">Dia ${Math.min(Math.floor(d) + 1, Math.ceil(END))} · ${fmtDate(d)} · ${hour}</span>`];
   act.forEach(a =>
     badges.push(
-      `<span class="chip" style="--c:${corGrupo(a.s.g)}"><i class="dot"></i>${esc(a.s.id)} ${esc(a.s.nome.split(':')[0])}${a.lane ? ' · ' + a.lane : ''}${a.cura ? ' · cura' : ''}</span>`
+      `<span class="chip" style="--c:${corGrupo(a.s.g)}"><i class="dot"></i>${esc(a.s.id)} ${esc(curto(a.s.id) || a.s.nome.split(':')[0])}${onde(a)}${a.cura ? ' · cura' : ''}</span>`
     )
   );
   const nc = TT.filter(t => !t.ok && t.day <= d && t.day > d - 0.6);
@@ -67,7 +88,7 @@ export function updateUI(force) {
     h += `<p class="muted">${d >= END - 0.01 ? 'Obra concluída. O Termo de Recebimento Provisório foi assinado.' : 'Nenhuma frente em execução neste instante.'}</p>`;
   for (const a of act) {
     const s = a.s;
-    h += `<div class="now-svc${s.rework ? ' rw' : ''}"><div class="now-h"><i class="dot" style="--c:${corGrupo(s.g)}"></i><b>${esc(s.id)}</b> ${esc(s.nome)}${a.lane ? ` <span class="tag">${a.lane === 'BD' ? 'faixa direita' : 'faixa esquerda'}</span>` : ''}${a.cura ? ' <span class="tag">cura</span>' : ''}</div>
+    h += `<div class="now-svc${s.rework ? ' rw' : ''}"><div class="now-h"><i class="dot" style="--c:${corGrupo(s.g)}"></i><b>${esc(s.id)}</b> ${esc(s.nome)}${a.f != null ? ` <span class="tag">${M.frentes[a.f].nome}</span>` : ''}${a.lane ? ` <span class="tag">${a.lane === 'BD' ? 'faixa direita' : 'faixa esquerda'}</span>` : ''}${a.cura ? ' <span class="tag">cura</span>' : ''}</div>
       <div class="pbar"><span style="width:${Math.round(a.p * 100)}%"></span></div>
       <div class="now-m">${esc(s.norma)} · ${esc(s.efetivo)}</div>
       ${a.cura ? '' : `<div class="now-eq">${s.eq.map(([n, q]) => `<span>${q}× ${esc(n)}</span>`).join('')}</div>`}</div>`;
@@ -77,12 +98,13 @@ export function updateUI(force) {
     .reverse();
   if (recent.length)
     h += `<div class="grp">Ensaios recentes</div><ul class="tlist">${recent.map(t => `<li data-t="${t.id}"><span class="${t.ok ? 'ok' : 'bad'}">${t.ok ? '✓' : '✕'}</span><span class="tn">${esc(t.nome)}${t.s != null ? ` <small>est. ${estStr(t.s)}</small>` : ''}</span><b>${esc(t.v)} ${esc(t.u)}</b></li>`).join('')}</ul>`;
-  const nextG = M.liberacoes.find(g => d < g.day);
+  const nextG = [...M.liberacoes].sort((x, y) => x.day - y.day).find(g => d < g.day);
   if (nextG) {
     const s = gateStatus(nextG, TT, d);
-    h += `<div class="grp">Próxima liberação</div><div class="gate ${s.k}"><b>${nextG.id}</b> ${esc(nextG.nome)}<span>${s.done} de ${nextG.n} ensaios · ${s.txt}</span></div>`;
+    h += `<div class="grp">Próxima liberação</div><div class="gate ${s.k}"><b>${nextG.tipo}${nextG.f != null ? ' · ' + M.frentes[nextG.f].nome : ''}</b> ${esc(nextG.nome)}<span>${s.done} de ${nextG.n} ensaios · ${s.txt}</span></div>`;
   }
   $('now').innerHTML = h;
+  painelDeFrentes(d, act);
   $('now')
     .querySelectorAll('[data-t]')
     .forEach(
@@ -102,6 +124,33 @@ export function updateUI(force) {
       renderTab(true);
     }
   }
+}
+
+const onde = a => (a.f != null ? ` (${M.frentes[a.f].nome}${a.lane ? ' ' + a.lane : ''})` : a.lane ? ` (${a.lane})` : '');
+
+// ---------- painel das frentes: trecho, serviço em execução e estado do desvio ----------
+function painelDeFrentes(d, act) {
+  const nomes = D.servicos.frentes.desvio.estados;
+  $('frentes').innerHTML =
+    `<div class="frentes">` +
+    M.frentes
+      .map(f => {
+        const e = estadoDoDesvio(f, d);
+        const svs = act.filter(a => a.f === f.i && !a.cura).map(a => curto(a.s.id) || a.s.nome);
+        const cura = act.some(a => a.f === f.i && a.cura);
+        const txt = svs.length
+          ? svs.join(', ')
+          : cura
+            ? 'Imprimação em cura'
+            : e === 'liberada'
+              ? 'Concluída'
+              : e === 'emUso'
+                ? 'Aguardando abertura'
+                : 'Sem serviço no momento';
+        return `<div class="frente-l" title="est. ${estStr(f.s0)} a ${estStr(f.s1)}"><b>${f.nome}</b><span class="svc">${esc(txt)}</span><span class="desvio" data-e="${e}">${esc(nomes[e])}</span></div>`;
+      })
+      .join('') +
+    `</div>`;
 }
 
 // ---------- janela de informação ----------

@@ -4,7 +4,8 @@ import { M, ST, D, acoes } from '../estado.js';
 import { P } from '../dominio/geometria.js';
 import { nf } from '../dominio/util.js';
 import { fmtDate, fmtHour } from '../dominio/calendario.js';
-import { metricas } from '../dominio/missao.js';
+import { metricas, diaDaDecisao } from '../dominio/missao.js';
+import { buildSchedule, fimDaObra } from '../dominio/cronograma.js';
 import { $, esc, svcById, curto, lsGet, lsSet } from '../interface/dom.js';
 import { renderTab, openTab } from '../interface/abas.js';
 import { camAt } from '../motor/index.js';
@@ -29,7 +30,7 @@ export const GAME = {
         const d = dc.day();
         if (d != null) out.push({ k: 'dec', d, dc });
       }
-    for (const ev of this.events) if (!ev.seen) out.push({ k: 'ev', d: ev.day, ev });
+    for (const ev of this.events) if (!ev.seen) out.push({ k: 'ev', d: diaDoEvento(ev), ev });
     return out.sort((a, b) => a.d - b.d);
   },
   nextStop() {
@@ -37,16 +38,27 @@ export const GAME = {
     return q.length ? q[0] : null;
   },
   metrics() {
+    // atraso causado pelos retrabalhos decididos (não reduz a nota): fim com e sem esses retrabalhos
+    const semRw = { ...M.opt };
+    for (const k of D.decisoes.pontuacao.retrabalhosSemPenalidade) delete semRw[k];
+    const fimSemRw = fimDaObra(buildSchedule(D, M.q, semRw).svc);
     return metricas({
       escolhas: Object.values(this.done).map(x => x.op),
       eventos: this.events.filter(ev => ev.seen),
       fim: M.fim,
       prazo: D.obra.calendario.prazoContratualDias,
-      opt: M.opt,
+      atrasoSemPenalidade: M.fim - fimSemRw,
       pontuacao: D.decisoes.pontuacao
     });
   }
 };
+
+// dia da consequência: número fixo ou regra relativa ao cronograma atual
+function diaDoEvento(ev) {
+  if (typeof ev.regra === 'number') return ev.regra;
+  const d = diaDaDecisao(ev.regra, M.svc, M.ensaios);
+  return d == null ? M.fim - 0.5 : d;
+}
 
 export const missaoAtiva = () => ST.modo === 'missao';
 // opções de cronograma em vigor: as da missão ou as do cenário escolhido
@@ -97,8 +109,8 @@ export function briefing() {
   const best = lsGet('vm4d.best');
   const prazo = D.obra.calendario.prazoContratualDias;
   gm(`<p class="gm-eye">Missão · engenheiro residente</p><h3>${esc(D.obra.obra.titulo)}</h3>
-  <p>Você é o engenheiro residente da obra. Tem <b>${prazo} dias úteis</b> para entregar ${P.L} m de via em CBUQ, com a terraplenagem, a usina no canteiro e todo o controle tecnológico.</p>
-  <p>Ao longo da obra aparecem <b>${DECISOES.length} decisões</b>, no momento em que acontecem: ensaios reprovados, chuva, pressão do comando, propostas de atalho. Cada escolha muda o prazo, o custo, a qualidade e a conformidade com as normas. Algumas consequências só aparecem semanas depois.</p>
+  <p>Você é o engenheiro residente da obra. Tem <b>${prazo} dias úteis</b> para reconstruir ${P.L} m da via existente em ${M.frentes.length} frentes, com a demolição, a drenagem nova, o pavimento em CBUQ, a usina no início do trecho e todo o controle tecnológico, sem fechar a Vila Militar ao tráfego.</p>
+  <p>Ao longo da obra aparecem <b>${DECISOES.length} decisões</b>, no momento em que acontecem: ensaios reprovados, chuva com vala aberta, redes não cadastradas, tubos trincados, o uso do fresado, pressão do comando e propostas de atalho. Cada escolha muda o prazo, o custo, a qualidade e a conformidade com as normas. Algumas consequências só aparecem semanas depois.</p>
   <ul class="gm-rules"><li>A linha do tempo não avança além da próxima decisão.</li><li>Decisões com retrabalho aparecem no modelo 3D e no cronograma.</li><li>No fim, você recebe a nota e o conceito da missão.</li></ul>
   ${best ? `<p class="gm-best">Sua melhor nota neste navegador: <b>${esc(best)}</b></p>` : ''}
   <div class="gm-act"><button class="btn" id="gmGo">Iniciar missão</button><button class="btn ghost" id="gmBack">Voltar a explorar</button></div>`);
@@ -156,7 +168,11 @@ function showStop(stop) {
 function choose(dc, i, day) {
   const op = dc.ops[i];
   GAME.done[dc.id] = { i, op, day };
-  if (op.later) GAME.events.push(Object.assign({ from: dc.titulo + ' (decisão ' + (DECISOES.indexOf(dc) + 1) + ')' }, op.later));
+  if (op.later) {
+    const ev = Object.assign({ from: dc.titulo + ' (decisão ' + (DECISOES.indexOf(dc) + 1) + ')' }, op.later);
+    Object.defineProperty(ev, 'day', { get: () => diaDoEvento(ev), enumerable: true });
+    GAME.events.push(ev);
+  }
   if (op.opt) {
     acoes.reconstruir();
     ST.day = day;

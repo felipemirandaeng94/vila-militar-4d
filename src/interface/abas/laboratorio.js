@@ -4,6 +4,9 @@ import { nf } from '../../dominio/util.js';
 import { estStr } from '../../dominio/calendario.js';
 import { deflStats } from '../../dominio/ensaios.js';
 import { chart, card, lg } from '../graficos.js';
+import { P } from '../../dominio/geometria.js';
+
+const EIXO = () => Array.from({ length: Math.floor(P.L / 200) + 1 }, (_, i) => i * 200);
 
 export function tabLab() {
   const d = ST.day,
@@ -33,16 +36,16 @@ export function tabLab() {
     )
   );
   // GC por camada
-  const LC = { corpo: 'var(--c-esg)', cf: 'var(--c-tug)', reg: 'var(--c-ilum)', sb: 'var(--c-clima)', ba: 'var(--c-alim)' };
-  const gcs = TT.filter(t => /^GC (corpo|camada|regulariza|sub-base|base)/.test(t.nome));
+  const LC = { vala: 'var(--c-esg)', subst: 'var(--c-tug)', reg: 'var(--c-ilum)', sb: 'var(--c-clima)', ba: 'var(--c-alim)' };
+  const gcs = TT.filter(t => /^GC (do reaterro|da substituição|regulariza|sub-base|base)/.test(t.nome));
   out.push(
     card(
       'Grau de compactação das camadas',
       'Frasco de areia ao longo do trecho. O critério é GC ≥ 100 %; o ponto vermelho é a reprovação seguida de reensaio.',
       chart({
-        x: [0, 300],
+        x: [0, P.L],
         y: [96.5, 103.5],
-        xt: [0, 60, 120, 180, 240, 300],
+        xt: EIXO(),
         xf: v => 'est. ' + v / 20,
         yt: [97, 98, 99, 100, 101, 102, 103],
         xl: 'Estaca',
@@ -57,7 +60,7 @@ export function tabLab() {
           `${t.nome} · est. ${estStr(t.s)} · ${t.v} %`
         ])
       }),
-      Object.entries({ corpo: 'Corpo do aterro', cf: 'Camada final', reg: 'Regularização', sb: 'Sub-base', ba: 'Base' })
+      Object.entries({ vala: 'Reaterro de vala', subst: 'Substituição de solo', reg: 'Regularização', sb: 'Sub-base', ba: 'Base' })
         .map(([k, n]) => lg(LC[k], n))
         .join('')
     )
@@ -139,9 +142,9 @@ export function tabLab() {
       title,
       sub + (st ? ` n = ${st.n}, D̄ = ${nf(st.m, 1)}, s = ${nf(st.sd, 1)}, k = ${nf(st.k, 2)}.` : ' Medições ainda não realizadas.'),
       chart({
-        x: [0, 300],
+        x: [0, P.L],
         y: [0, Math.max(80, lim + 10)],
-        xt: [0, 60, 120, 180, 240, 300],
+        xt: EIXO(),
         xf: v => 'est. ' + v / 20,
         yt: [0, 20, 40, 60, 80],
         xl: 'Estaca',
@@ -165,11 +168,11 @@ export function tabLab() {
   out.push(
     card(
       'Grau de compactação do CBUQ',
-      'Corpos de prova extraídos a cada 100 m por faixa. A faixa aceitável é de 97 % a 100 %.',
+      'Corpos de prova extraídos a cada 100 m por faixa, em todas as frentes. A faixa aceitável é de 97 % a 100 %.',
       chart({
-        x: [0, 300],
+        x: [0, P.L],
         y: [95, 101.5],
-        xt: [0, 100, 200, 300],
+        xt: EIXO(),
         xf: v => 'est. ' + v / 20,
         yt: [95, 96, 97, 98, 99, 100, 101],
         xl: 'Estaca',
