@@ -243,7 +243,7 @@
       "camada": "ex",
       "nome": "Sondagem do pavimento existente e do subleito",
       "norma": "DNER-PRO 381/98",
-      "estacas": [0, 200, 400, 600, 800, 1000, 1200, 1400, 1600],
+      "estacas": [0, 200, 400, 600, 800, 1000, 1200, 1400, 1580],
       "z": [0],
       "dia": {
         "servico": "S03",

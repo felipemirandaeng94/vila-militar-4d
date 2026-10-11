@@ -1,27 +1,58 @@
 // Vistas da câmera, animação entre vistas, corte em perfil e acompanhamento da frente de serviço.
 import * as THREE from 'three';
-import { P } from '../dominio/geometria.js';
+import { P, gr, noCanteiro } from '../dominio/geometria.js';
 import { M, ST, emit } from '../estado.js';
-import { wx, wy } from './base.js';
+import { wy, mundo, girar } from './base.js';
 import { cena } from './renderizador.js';
 import { malhaTerreno } from './terreno.js';
 import { CAMADAS, superficie } from './pavimento.js';
 import { frentesAtivas } from './equipamentos.js';
 
 let camAnim = null;
+// plano do corte em perfil: vertical, pela corda do eixo (início → fim); some o lado direito
 const CLIPZ = new THREE.Plane(new THREE.Vector3(0, 0, -1), 0);
+function ajustarCorte() {
+  const a = mundo(0),
+    b = mundo(P.L),
+    l = Math.hypot(b.x - a.x, b.z - a.z) || 1;
+  // normal à direita da corda: (-tz, tx); o plano passa pelo meio do eixo (origem do mundo)
+  const nx = -(b.z - a.z) / l,
+    nz = (b.x - a.x) / l;
+  CLIPZ.normal.set(-nx, 0, -nz);
+  CLIPZ.constant = 0;
+}
+// ponto do mundo na estaca s, afastamento z e altura y
+const pm = (s, z, y) => {
+  const p = mundo(s, z);
+  return [p.x, y, p.z];
+};
+// câmera a partir do alvo, com o deslocamento (dx ao longo do eixo, dz à direita) girado pelo rumo na estaca s
+const desde = (t, s, dx, dy, dz) => {
+  const g = girar(s, dx, dz);
+  return [t[0] + g.x, t[1] + dy, t[2] + g.z];
+};
 // vistas: início do trecho (canteiro e frente 1), planta de todo o trecho, perfil e usina
-const VIEWS = () => ({
-  iso: { p: [wx(60) - 205, 125, 215], t: [wx(160), 0, -18] },
-  top: { p: [0.01, 1350, 0.01], t: [0, 0, -30] },
-  perfil: { p: [wx(220), 22, 290], t: [wx(220), 14, 0] },
-  usina: { p: [wx(115), 34, -28], t: [wx(52), 4, -82] },
-  frente: null
-});
+const VIEWS = () => {
+  const yc = wy(P.CANT.cota),
+    // vista inicial: canteiro e usina (a noroeste) e o início do trecho
+    iso = pm((P.CANT.s1 + 120) / 2, (P.CANT.z0 + P.CANT.z1) / 3, wy(gr(0))),
+    perfil = pm(220, 0, wy(gr(220)) + 8),
+    u = noCanteiro(52, -82),
+    ucam = noCanteiro(115, -28),
+    usina = pm(u.s, u.z, yc - 1.3);
+  return {
+    iso: { p: desde(iso, 0, -220, 210, 330), t: iso },
+    top: { p: [0.01, 1350, 0.01], t: [0, 0, -30] },
+    perfil: { p: desde(perfil, 220, 0, 8, 290), t: perfil },
+    usina: { p: pm(ucam.s, ucam.z, yc + 28.7), t: usina },
+    frente: null
+  };
+};
 
 // vista em perfil: corta o modelo no eixo e esconde o entorno, o canteiro e a usina
 export function setProfileClip(on) {
   ST.profile = on;
+  ajustarCorte();
   const apply = m => {
     if (!m) return;
     const cp = (m.clippingPlanes || []).filter(p => p !== CLIPZ);
@@ -67,7 +98,9 @@ export function animarPara(target, desloc) {
 }
 // aproxima a câmera de um ponto da obra (estaca s, cota y, afastamento z)
 export function focarPonto(s, y, z) {
-  animarPara(new THREE.Vector3(wx(s), wy(y), z), new THREE.Vector3(-22, 16, 26));
+  const p = mundo(s, z),
+    g = girar(s, -22, 26);
+  animarPara(new THREE.Vector3(p.x, wy(y), p.z), new THREE.Vector3(g.x, 16, g.z));
 }
 
 // posiciona a câmera de imediato olhando para a estaca s e o afastamento z
@@ -75,9 +108,11 @@ export function camAt(s, z, dx, dy, dz) {
   const { camera, controls } = cena;
   camAnim = null;
   ST.follow = false;
-  const y = wy(superficie(s, z, ST.day));
-  controls.target.set(wx(s), y, z);
-  camera.position.set(wx(s) + dx, y + dy, z + dz);
+  const y = wy(superficie(s, z, ST.day)),
+    p = mundo(s, z),
+    g = girar(s, dx, dz);
+  controls.target.set(p.x, y, p.z);
+  camera.position.set(p.x + g.x, y + dy, p.z + g.z);
   controls.update();
 }
 
@@ -86,7 +121,10 @@ export function frontPoint(st) {
   const a = frentesAtivas(st.d)[0];
   if (a) return { s: a.s, z: 0, nome: a.svc.nome, id: a.svc.id };
   const us = M.svc.find(s => s.meta && ['usina', 'dosagem'].includes(s.meta.representacao) && st.d >= s.a && st.d < s.b);
-  if (us) return { s: 60, z: -80, nome: us.nome, id: us.id };
+  if (us) {
+    const c = noCanteiro(60, -80);
+    return { s: c.s, z: c.z, nome: us.nome, id: us.id };
+  }
   return null;
 }
 
@@ -94,7 +132,8 @@ export function frontPoint(st) {
 export function seguirFrente(st, fp) {
   if (!ST.follow || !fp) return;
   const { camera, controls } = cena;
-  const tg = new THREE.Vector3(wx(fp.s), wy(superficie(fp.s, fp.z || 0, st.d)), fp.z || 0);
+  const p = mundo(fp.s, fp.z || 0);
+  const tg = new THREE.Vector3(p.x, wy(superficie(fp.s, fp.z || 0, st.d)), p.z);
   const off = camera.position.clone().sub(controls.target);
   controls.target.lerp(tg, 0.08);
   camera.position.copy(controls.target).add(off);

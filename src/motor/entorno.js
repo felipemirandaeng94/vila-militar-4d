@@ -1,148 +1,255 @@
-// Entorno fictício da Vila Militar ao longo do trecho: avenida e ruas transversais, edificações e vegetação
-// (substituído pelo local real na Fase 3). Árvores e janelas usam InstancedMesh para manter o desempenho em 1,6 km.
+// Entorno real do trecho (public/local/): vias existentes do OpenStreetMap sobre o relevo, edificações do IPP (contorno e
+// altura do Lidar 2019; OSM onde o IPP não cobre) extrudadas e vegetação nas matas e áreas verdes. Edificações e vias são
+// geometrias únicas por material, e as árvores usam InstancedMesh, para manter o desempenho em 1,6 km.
+// Área militar: só dados de fontes públicas, sem nomes de edificações.
 import * as THREE from 'three';
-import { P, nat } from '../dominio/geometria.js';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { P } from '../dominio/geometria.js';
+import { obraDeLocal } from '../dominio/local.js';
 import { rng } from '../dominio/util.js';
-import { wx, wy, mat, bx, info, C } from './base.js';
+import { wy, mat, mundoDeLocal } from './base.js';
 import { cena } from './renderizador.js';
+import { cotaNoLocal } from './terreno.js';
 import { comDias, NUNCA, diasPorInstancia } from './dias.js';
-import { M } from '../estado.js';
+import { M, D } from '../estado.js';
 
-// faixa que acompanha o terreno natural. pts: [[s, z], ...]
-export function ribbon(pts, w, m, lift = 0.06) {
-  const geo = new THREE.BufferGeometry(),
-    pos = [],
-    idx = [];
+// ---------- vias ----------
+const COR_VIA = {
+  asfalto: 0x55595a,
+  concreto: 0x9c9a94,
+  bloco: 0x8a817a,
+  terra: 0x9a8566,
+  pedestre: 0xb9b5aa
+};
+function corDaVia(v) {
+  if (['footway', 'steps', 'pedestrian'].includes(v.tipo)) return 'pedestre';
+  if (v.tipo === 'bridleway') return 'terra';
+  const sf = v.superficie || '';
+  if (/concrete/.test(sf) || v.tipo === 'busway') return 'concreto';
+  if (/paving|stones|sett/.test(sf)) return 'bloco';
+  if (/unpaved|dirt|ground|gravel|sand/.test(sf)) return 'terra';
+  return 'asfalto';
+}
+// o trecho da via que coincide com a obra é desenhado pela faixa do eixo (terreno.js) e pelo pavimento
+function cobertoPelaObra(v, x, y) {
+  const o = obraDeLocal(x, y, true);
+  if (!o) return false;
+  if (v.eixo_obra) return o.s > -40 && o.s < P.L + 40 && Math.abs(o.z) < 24;
+  return o.s > -2 && o.s < P.L + 2 && Math.abs(o.z) < P.Z_VIA + 2.2;
+}
+// faixa da via sobre o relevo, reamostrada a cada 4 m
+function faixaDaVia(v, pos, idx) {
+  const pts = [];
+  for (let i = 0; i < v.pts.length - 1; i++) {
+    const [x0, y0] = v.pts[i],
+      [x1, y1] = v.pts[i + 1],
+      n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) / 4));
+    for (let k = 0; k < n; k++) pts.push([x0 + ((x1 - x0) * k) / n, y0 + ((y1 - y0) * k) / n]);
+  }
+  pts.push(v.pts[v.pts.length - 1]);
+  const w = v.largura / 2,
+    ergue = v.tipo === 'footway' ? 0.05 : 0.07;
+  let ant = null;
   for (let i = 0; i < pts.length; i++) {
-    const [s, z] = pts[i],
-      [s2, z2] = pts[Math.min(i + 1, pts.length - 1)],
-      [s0, z0] = pts[Math.max(i - 1, 0)];
-    const dx = s2 - s0,
-      dz = z2 - z0;
-    const l = Math.hypot(dx, dz) || 1;
-    const nx = ((-dz / l) * w) / 2,
-      nz = ((dx / l) * w) / 2;
-    for (const sg_ of [-1, 1]) {
-      const ps = s + nx * sg_,
-        pz = z + nz * sg_;
-      pos.push(wx(ps), wy(nat(ps, pz)) + lift, pz);
+    const [x, y] = pts[i],
+      [xa, ya] = pts[Math.max(0, i - 1)],
+      [xb, yb] = pts[Math.min(pts.length - 1, i + 1)];
+    const l = Math.hypot(xb - xa, yb - ya) || 1,
+      nx = -(yb - ya) / l,
+      ny = (xb - xa) / l;
+    const base = pos.length / 3;
+    for (const sd of [-1, 1]) {
+      const px = x + nx * w * sd,
+        py = y + ny * w * sd,
+        m = mundoDeLocal(px, py);
+      pos.push(m.x, wy(cotaNoLocal(px, py)) + ergue, m.z);
     }
-    if (i < pts.length - 1) {
-      const a = i * 2;
-      idx.push(a, a + 2, a + 1, a + 1, a + 2, a + 3);
+    const cob = cobertoPelaObra(v, x, y);
+    if (ant != null && !cob && !ant.cob) idx.push(ant.base, ant.base + 1, base, base, ant.base + 1, base + 1);
+    ant = { base, cob };
+  }
+}
+function construirVias(LAY) {
+  const grupos = {};
+  for (const v of D.local.vias) {
+    const k = corDaVia(v);
+    grupos[k] = grupos[k] || { pos: [], idx: [] };
+    faixaDaVia(v, grupos[k].pos, grupos[k].idx);
+  }
+  for (const [k, g] of Object.entries(grupos)) {
+    if (!g.idx.length) continue;
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(g.pos, 3));
+    geo.setIndex(g.idx);
+    geo.computeVertexNormals();
+    const o = new THREE.Mesh(geo, mat(COR_VIA[k], { roughness: 0.95, polygonOffset: true, polygonOffsetFactor: -2, side: THREE.DoubleSide }));
+    o.receiveShadow = true;
+    o.userData.info = {
+      t: k === 'pedestre' ? 'Caminho de pedestres existente' : 'Via existente',
+      d: { Fonte: '© colaboradores do OpenStreetMap (ODbL)', Situação: 'Fora da obra' }
+    };
+    LAY.entorno.add(o);
+  }
+}
+
+// ---------- edificações ----------
+const COR_EDIF = {
+  edificação: 0xe0d5bb,
+  construção: 0xd2c8b0,
+  galpão: 0xb8bcb8,
+  telheiro: 0xa9aaa4,
+  'casa de máquinas': 0xc8c4ba,
+  reservatório: 0xc9c7c0,
+  marquise: 0xbfbcb2
+};
+function geometriaDoPredio(e) {
+  // contorno no mundo (sentido anti-horário visto de cima), base no ponto mais baixo do terreno
+  let pts = e.c.map(([x, y]) => [x, y]);
+  let area = 0;
+  for (let i = 0; i < pts.length; i++) {
+    const [x0, y0] = pts[i],
+      [x1, y1] = pts[(i + 1) % pts.length];
+    area += x0 * y1 - x1 * y0;
+  }
+  if (area < 0) pts = pts.reverse();
+  const cotas = pts.map(([x, y]) => cotaNoLocal(x, y));
+  const y0 = wy(Math.min(...cotas)) - 0.3,
+    y1 = wy(Math.min(...cotas)) + Math.max(2.5, e.h);
+  const W = pts.map(([x, y]) => mundoDeLocal(x, y));
+  const pos = [],
+    idx = [];
+  // paredes
+  for (let i = 0; i < W.length; i++) {
+    const a = W[i],
+      b = W[(i + 1) % W.length],
+      k = pos.length / 3;
+    pos.push(a.x, y0, a.z, b.x, y0, b.z, b.x, y1, b.z, a.x, y1, a.z);
+    idx.push(k, k + 2, k + 1, k, k + 3, k + 2);
+  }
+  // cobertura plana
+  const tri = THREE.ShapeUtils.triangulateShape(
+    pts.map(([x, y]) => new THREE.Vector2(x, y)),
+    []
+  );
+  const k = pos.length / 3;
+  for (const w of W) pos.push(w.x, y1, w.z);
+  for (const [a, b, c] of tri) idx.push(k + a, k + c, k + b);
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setIndex(idx);
+  return g.toNonIndexed();
+}
+function construirEdificacoes(LAY) {
+  const porUso = {};
+  for (const e of D.local.edificacoes) {
+    if (e.c.length < 3) continue;
+    (porUso[e.uso] = porUso[e.uso] || []).push(geometriaDoPredio(e));
+  }
+  for (const [uso, geos] of Object.entries(porUso)) {
+    const g = mergeGeometries(geos);
+    g.computeVertexNormals();
+    // faces dos dois lados: o sentido do contorno se inverte no mundo (z = −y)
+    const o = new THREE.Mesh(g, mat(COR_EDIF[uso] || COR_EDIF.edificação, { roughness: 0.9, side: THREE.DoubleSide }));
+    o.castShadow = o.receiveShadow = true;
+    o.userData.info = {
+      t: 'Edificação existente',
+      d: {
+        Uso: uso,
+        Fonte:
+          'Prefeitura da Cidade do Rio de Janeiro – Instituto Pereira Passos (Edificações 2019, altura do Lidar); complemento © colaboradores do OpenStreetMap (ODbL)',
+        Interferência: 'Nenhuma; fora da faixa da obra'
+      }
+    };
+    LAY.entorno.add(o);
+  }
+}
+
+// ---------- vegetação ----------
+function pontosNasAreas(R) {
+  const out = [];
+  const densidade = { mata: 1 / 45, verde: 1 / 260, campo: 1 / 900 };
+  for (const a of D.local.areas) {
+    const d = densidade[a.tipo];
+    if (!d) continue;
+    const xs = a.pts.map(p => p[0]),
+      ys = a.pts.map(p => p[1]);
+    const bb = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+    let area = 0;
+    for (let i = 0; i < a.pts.length; i++) {
+      const [x0, y0] = a.pts[i],
+        [x1, y1] = a.pts[(i + 1) % a.pts.length];
+      area += (x0 * y1 - x1 * y0) / 2;
+    }
+    const n = Math.min(900, Math.round(Math.abs(area) * d));
+    for (let k = 0, t = 0; k < n && t < n * 6; t++) {
+      const x = bb[0] + R() * (bb[1] - bb[0]),
+        y = bb[2] + R() * (bb[3] - bb[2]);
+      if (!dentroPoligono(a.pts, x, y)) continue;
+      out.push([x, y]);
+      k++;
     }
   }
-  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  geo.setIndex(idx);
-  geo.computeVertexNormals();
-  const o = new THREE.Mesh(geo, m);
-  o.receiveShadow = true;
-  return o;
+  return out;
 }
-
-// edificação simples: volume, faixas de janelas por pavimento e telhado de duas águas
-function predio(w, d, floors) {
-  const g = new THREE.Group();
-  const h = floors * 3.2;
-  g.add(bx(w, h, d, mat(C.cream), 0, h / 2, 0));
-  for (let f = 0; f < floors; f++)
-    for (const sd of [-1, 1]) {
-      const j = bx(w - 2.4, 1.2, 0.06, mat(0x6d5a44), 0, 1.8 + f * 3.2, sd * (d / 2 + 0.02));
-      j.castShadow = false;
-      g.add(j);
-    }
-  const sh = new THREE.Shape();
-  sh.moveTo(-d / 2 - 0.5, 0);
-  sh.lineTo(0, 2.6);
-  sh.lineTo(d / 2 + 0.5, 0);
-  sh.lineTo(-d / 2 - 0.5, 0);
-  const rg = new THREE.ExtrudeGeometry(sh, { depth: w + 1, bevelEnabled: false });
-  rg.translate(0, 0, -(w + 1) / 2);
-  const r = new THREE.Mesh(rg, mat(C.roof));
-  r.rotation.y = Math.PI / 2;
-  r.position.y = h;
-  r.castShadow = true;
-  g.add(r);
-  return g;
+function dentroPoligono(pts, x, y) {
+  let r = false;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    const [xi, yi] = pts[i],
+      [xj, yj] = pts[j];
+    if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) r = !r;
+  }
+  return r;
 }
-
-// ruas existentes (estacas); calculadas depois de configurar a geometria
-export const RUAS = () => [-30, 500, 1000, P.L + 32];
-const livreDeRua = (s, folga) => RUAS().every(r => Math.abs(s - r) > folga);
-
-export function buildSurroundings() {
-  const LAY = cena.LAY;
-  const asf = mat(0x55595a, { roughness: 0.92 }),
-    dash = mat(0xe8c34a, { roughness: 0.6 });
-  // avenida no início, ruas transversais e rua no fim do trecho (só fora da caixa da obra)
-  RUAS().forEach((sx, i) => {
-    for (const lado of [-1, 1]) {
-      const pts = [];
-      const z0 = lado < 0 ? -150 : P.W_CX / 2 + 2.5,
-        z1 = lado < 0 ? -(P.W_CX / 2 + 2.5) : 90;
-      for (let z = z0; z <= z1; z += 3) pts.push([sx, z]);
-      if (pts.length < 2) continue;
-      LAY.entorno.add(
-        info(ribbon(pts, 9, asf), i === 0 ? 'Avenida existente da Vila Militar' : 'Rua transversal existente', {
-          Uso: i === 0 ? 'Acesso ao canteiro e à usina' : 'Via existente, fora da obra',
-          Pavimento: 'CBUQ existente'
-        })
-      );
-      for (let z = z0 + 4; z <= z1 - 4; z += 8) {
-        const d = bx(0.15, 0.03, 4, dash, wx(sx), wy(nat(sx, z)) + 0.09, z);
-        d.castShadow = false;
-        LAY.entorno.add(d);
+// grade de ocupação (edificações e vias) para não plantar árvores sobre elas
+function ocupacao() {
+  const cel = 3,
+    set = new Set();
+  const marca = (x, y) => set.add(Math.floor(x / cel) * 100003 + Math.floor(y / cel));
+  for (const e of D.local.edificacoes) {
+    const xs = e.c.map(p => p[0]),
+      ys = e.c.map(p => p[1]);
+    for (let x = Math.min(...xs) - 2; x <= Math.max(...xs) + 2; x += cel) for (let y = Math.min(...ys) - 2; y <= Math.max(...ys) + 2; y += cel) marca(x, y);
+  }
+  for (const v of D.local.vias)
+    for (let i = 0; i < v.pts.length - 1; i++) {
+      const [x0, y0] = v.pts[i],
+        [x1, y1] = v.pts[i + 1],
+        n = Math.ceil(Math.hypot(x1 - x0, y1 - y0) / 1.5) + 1;
+      for (let k = 0; k <= n; k++) {
+        const x = x0 + ((x1 - x0) * k) / n,
+          y = y0 + ((y1 - y0) * k) / n;
+        for (let dx = -v.largura / 2 - 1.5; dx <= v.largura / 2 + 1.5; dx += cel)
+          for (let dy = -v.largura / 2 - 1.5; dy <= v.largura / 2 + 1.5; dy += cel) marca(x + dx, y + dy);
       }
     }
-  });
-  // acesso do canteiro à avenida
-  const ac = [];
-  for (let s = -30; s <= 6; s += 2) ac.push([s, -86]);
-  LAY.entorno.add(ribbon(ac, 8, mat(0x8b8577, { roughness: 1 }), 0.05));
-  // edificações dos dois lados, fora do canteiro e das ruas
-  const R = rng(9);
-  const blds = [];
-  for (let s = 30; s < P.L + 60; s += 64) {
-    for (const lado of [1, -1]) {
-      const z = lado * (34 + R() * 16);
-      const c = P.CANT;
-      if (lado < 0 && s > c.s0 - 30 && s < c.s1 + 30) continue;
-      if (!livreDeRua(s, 24)) continue;
-      const w = 26 + R() * 12,
-        d = 12 + R() * 2,
-        f = R() < 0.3 ? 1 : 2;
-      blds.push([s, z, w, d]);
-      const b = predio(w, d, f);
-      b.position.set(wx(s), wy(nat(s, z)), z);
-      LAY.entorno.add(
-        info(b, 'Edificação existente da Vila Militar', { Uso: 'Instalações militares e residências', Interferência: 'Nenhuma; fora da faixa da obra' })
-      );
-    }
-  }
-  // vegetação instanciada (troncos e copas); as árvores na faixa do desvio saem com a limpeza
-  const RT = rng(31);
+  return (x, y) => set.has(Math.floor(x / cel) * 100003 + Math.floor(y / cel));
+}
+function construirVegetacao(LAY) {
+  const R = rng(31);
+  const ocupado = ocupacao();
+  const c = P.CANT;
   const lista = [];
-  for (let i = 0; i < 900; i++) {
-    const s = -120 + RT() * (P.L + 240),
-      z = -145 + RT() * 230;
-    if (!livreDeRua(s, 8)) continue;
-    const c = P.CANT;
-    if (s > c.s0 - 8 && s < c.s1 + 8 && z > c.z0 - 8 && z < c.z1 + 8) continue;
-    if (blds.some(([bs, bz, w, d]) => Math.abs(s - bs) < w / 2 + 4 && Math.abs(z - bz) < d / 2 + 4)) continue;
-    if (Math.abs(z + 86) < 6 && s < 10 && s > -30) continue;
-    if (Math.abs(z) < P.W_CX / 2 + 3) continue;
-    const naFaixaDoDesvio = z < -5 && z > -12 && s > -30 && s < P.L + 30;
-    lista.push({ s, z, h: 6 + RT() * 7, rot: RT() * 6, palma: RT() < 0.22, cor: RT() < 0.5, naFaixaDoDesvio });
+  for (const [x, y] of pontosNasAreas(R)) {
+    if (ocupado(x, y)) continue;
+    const o = obraDeLocal(x, y, true);
+    if (o && o.s > -40 && o.s < P.L + 40 && Math.abs(o.z) < P.Z_VIA + 3) continue;
+    const oc = obraDeLocal(x, y);
+    if (oc.s > c.s0 - 8 && oc.s < c.s1 + 8 && oc.z > c.z0 - 8 && oc.z < c.z1 + 8) continue;
+    // árvores na faixa do desvio provisório saem com a limpeza
+    const naFaixaDoDesvio = !!o && o.z < -5 && o.z > -12 && o.s > -30 && o.s < P.L + 30;
+    lista.push({ x, y, h: 6 + R() * 7, rot: R() * 6, palma: R() < 0.15, cor: R() < 0.5, naFaixaDoDesvio });
   }
   const limpeza = M.svc.find(x => x.meta && x.meta.representacao === 'limpeza');
   const fimLimpeza = limpeza ? limpeza.b : NUNCA;
-  const o = new THREE.Object3D();
+  const ob = new THREE.Object3D();
   const montar = (geo, material, itens, f, nome) => {
+    if (!itens.length) return null;
     const m = new THREE.InstancedMesh(geo, comDias(material), itens.length);
     itens.forEach((t, i) => {
-      f(t, o);
-      o.updateMatrix();
-      m.setMatrixAt(i, o.matrix);
+      const w = mundoDeLocal(t.x, t.y);
+      f(t, ob, w, wy(cotaNoLocal(t.x, t.y)) - 0.1);
+      ob.updateMatrix();
+      m.setMatrixAt(i, ob.matrix);
     });
     diasPorInstancia(
       m,
@@ -154,17 +261,20 @@ export function buildSurroundings() {
     LAY.entorno.add(m);
     return m;
   };
-  const info_ = { t: 'Vegetação existente', d: { Situação: 'Preservada; só as árvores da faixa de desvio são removidas na limpeza' } };
+  const info_ = {
+    t: 'Vegetação existente',
+    d: { Situação: 'Preservada; só as árvores da faixa de desvio são removidas na limpeza', Posição: 'Ilustrativa, nas matas e áreas verdes do OpenStreetMap' }
+  };
   const tronco = new THREE.CylinderGeometry(0.18, 0.28, 1, 7);
   tronco.translate(0, 0.5, 0);
   montar(
     tronco,
     mat(0x5b4632).clone(),
     lista,
-    (t, ob) => {
-      ob.position.set(wx(t.s), wy(nat(t.s, t.z)) - 0.1, t.z);
-      ob.rotation.set(0, t.rot, 0);
-      ob.scale.set(t.palma ? 0.7 : 1, t.h * (t.palma ? 0.9 : 0.45), t.palma ? 0.7 : 1);
+    (t, o, w, y) => {
+      o.position.set(w.x, y, w.z);
+      o.rotation.set(0, t.rot, 0);
+      o.scale.set(t.palma ? 0.7 : 1, t.h * (t.palma ? 0.9 : 0.45), t.palma ? 0.7 : 1);
     },
     info_
   );
@@ -175,10 +285,10 @@ export function buildSurroundings() {
       copa,
       mat(cor ? 0x4c6e35 : 0x5a7d3c, { flatShading: true }).clone(),
       redondas.filter(t => t.cor === cor),
-      (t, ob) => {
-        ob.position.set(wx(t.s), wy(nat(t.s, t.z)) - 0.1 + t.h * 0.7, t.z);
-        ob.rotation.set(0, t.rot, 0);
-        ob.scale.set(t.h * 0.38, t.h * 0.32, t.h * 0.38);
+      (t, o, w, y) => {
+        o.position.set(w.x, y + t.h * 0.7, w.z);
+        o.rotation.set(0, t.rot, 0);
+        o.scale.set(t.h * 0.38, t.h * 0.32, t.h * 0.38);
       },
       info_
     );
@@ -189,13 +299,22 @@ export function buildSurroundings() {
     folha,
     mat(0x4f7a3a).clone(),
     palmas,
-    (t, ob) => {
-      ob.position.set(wx(t.s), wy(nat(t.s, t.z)) - 0.1 + t.h * 0.9, t.z);
-      ob.rotation.set(0, -t.k + t.rot, -0.35);
-      ob.scale.set(1, 1, 1);
+    (t, o, w, y) => {
+      o.position.set(w.x, y + t.h * 0.9, w.z);
+      o.rotation.set(0, -t.k + t.rot, -0.35);
+      o.scale.set(1, 1, 1);
     },
     info_
   );
+}
+
+export function buildSurroundings() {
+  // sem os dados do local (modo de reserva) não há entorno: só o terreno fictício
+  if (!D.local) return;
+  const LAY = cena.LAY;
+  construirVias(LAY);
+  construirEdificacoes(LAY);
+  construirVegetacao(LAY);
 }
 
 export function updateTrees() {}

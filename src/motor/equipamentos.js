@@ -1,11 +1,11 @@
 // Equipamentos: cada equipe tem as suas máquinas, que vão para a frente ativa do serviço que a equipe executa
 // e voltam ao pátio do canteiro quando ela está parada. O serviço é localizado pela "representacao" (dados/servicos.json).
 import * as THREE from 'three';
-import { P, gr, bocasDeLobo, pocosDeVisita } from '../dominio/geometria.js';
+import { P, gr, bocasDeLobo, pocosDeVisita, noCanteiro, acessoDoCanteiro } from '../dominio/geometria.js';
 import { clamp, lerp } from '../dominio/util.js';
 import { trechosRuins } from '../dominio/quantitativos.js';
 import { ST, D } from '../estado.js';
-import { wx, wy, mat, C, info } from './base.js';
+import { wy, mat, C, info, mundo, rumo, girar } from './base.js';
 import {
   mkTruck,
   mkExcavator,
@@ -82,11 +82,16 @@ export const repsDaEquipe = k => (EQUIPES[k] ? EQUIPES[k].reps || [k] : []);
 const TIME = {};
 for (const k of Object.keys(EQUIPES)) TIME[k] = [];
 
-// vagas do pátio de máquinas no canteiro (início do trecho)
+// vagas do pátio de máquinas no canteiro (início do trecho), no arranjo de referência do canteiro
 const PARK = [];
-for (const z of [-46, -56, -66]) for (let s = 30; s <= 132; s += 6.5) PARK.push([s, z]);
 
 export function buildEquipment() {
+  PARK.length = 0;
+  for (const z of [-46, -56, -66])
+    for (let s = 30; s <= 132; s += 6.5) {
+      const c = noCanteiro(s, z);
+      PARK.push([c.s, c.z]);
+    }
   let vaga = 0;
   for (const [k, e] of Object.entries(EQUIPES)) {
     for (const tipo of e.maq) {
@@ -147,10 +152,13 @@ function pathPose(pts, u) {
     }
   return { s: pts[0].s, z: pts[0].z, h: 0 };
 }
+// h: rumo da máquina no referencial da obra (0 = sentido do estaqueamento); no mundo soma o rumo do eixo
 function setPose(e, s, z, h, d, yOff = 0) {
-  const y = superficie(s, z, d);
-  e.o.position.set(wx(s), wy(y) + yOff, z);
+  const y = superficie(s, z, d),
+    p = mundo(s, z);
+  e.o.position.set(p.x, wy(y) + yOff, p.z);
   if (h != null) {
+    h += rumo(s);
     let dh = h - e.o.rotation.y;
     dh = Math.atan2(Math.sin(dh), Math.cos(dh));
     // mudança de sentido maior que 120°: a máquina anda de ré em vez de girar no lugar
@@ -186,18 +194,31 @@ function cycleTruck(put, e, pts, u, color, tarp, tiltMax = 0.9) {
 }
 // ida e volta entre a frente e um ponto do canteiro (ou do bota-fora), pelo desvio lateral
 const ZD = -8.5;
+// saída do canteiro: pátio interno, portão e vias existentes até a avenida (faixa do desvio)
+function portao(saindo) {
+  const a = noCanteiro(22, -44),
+    ac = acessoDoCanteiro(),
+    g = ac[0],
+    fim = ac[ac.length - 1];
+  const pts = [{ s: a.s, z: a.z }, { s: g.s, z: a.z }, ...ac.map(p => ({ s: p.s, z: p.z })), { s: fim.s, z: ZD }];
+  return saindo ? pts : pts.reverse();
+}
+// bota-fora e jazida: fora da área, pela avenida no sentido oposto ao trecho
+const foraDaArea = () => Math.min(-60, P.CANT.s0 - 60);
+// destino: [s, z] no arranjo de referência do canteiro, ou 'fora' (bota-fora ou jazida)
 function rota(sF, zF, destino, carregaNaFrente) {
-  const ida = [
-    { s: sF, z: zF, stop: 5, tag: carregaNaFrente ? 'load' : 'dump', h: 0 },
+  const naFrente = { s: sF, z: zF, stop: 5, tag: carregaNaFrente ? 'load' : 'dump', h: 0 };
+  const tagDestino = carregaNaFrente ? 'dump' : 'load';
+  if (destino === 'fora') return [naFrente, { s: sF + 6, z: ZD }, { s: foraDaArea(), z: ZD, stop: 4, tag: tagDestino, h: Math.PI }, { s: sF - 6, z: ZD }];
+  const c = noCanteiro(destino[0], destino[1]);
+  return [
+    naFrente,
     { s: sF + 6, z: ZD },
-    { s: 22, z: ZD },
-    { s: 22, z: -44 },
-    { s: destino[0], z: destino[1], stop: 4, tag: carregaNaFrente ? 'dump' : 'load', h: Math.PI / 2 },
-    { s: 22, z: -44 },
-    { s: 22, z: ZD },
+    ...portao(false),
+    { s: c.s, z: c.z, stop: 4, tag: tagDestino, h: Math.PI / 2 },
+    ...portao(true),
     { s: sF - 6, z: ZD }
   ];
-  return ida;
 }
 function escavar(ex, clk) {
   const cyc = frac(clk / 7);
@@ -216,7 +237,7 @@ export function updateEquipment(st, clk) {
   const used = new Set();
   const put = (e, s, z, h, yo) => {
     used.add(e);
-    setPose(e, clamp(s, -60, P.L + 60), z, h, d, yo);
+    setPose(e, clamp(s, Math.min(-60, P.CANT.s0 - 80), P.L + 60), z, h, d, yo);
     return e;
   };
   const T = k => TIME[k];
@@ -247,7 +268,7 @@ export function updateEquipment(st, clk) {
   if (limp && d >= limp.a && d < limp.b) {
     const t = (d - limp.a) / (limp.b - limp.a);
     put(T('limpeza')[0], t * P.L, -8.5 + 1.5 * Math.sin(clk * 0.7), 0);
-    cycleTruck(put, T('limpeza')[1], rota(t * P.L - 12, -8.5, [-25, -130], true), clk / 60, 0x6d5636, false, 0.6);
+    cycleTruck(put, T('limpeza')[1], rota(t * P.L - 12, -8.5, 'fora', true), clk / 60, 0x6d5636, false, 0.6);
   }
   // fresagem: fresadora com a esteira carregando o basculante à frente
   for (const a of at('fresagem').slice(0, 1)) {
@@ -267,7 +288,10 @@ export function updateEquipment(st, clk) {
     void a;
   }
   // estoque de fresado: pá carregadeira na baia do canteiro
-  if (at('estoqueFresado').length) put(T('estoqueFresado')[0], 26 + 4 * Math.sin(clk * 0.6), -96 + 3 * tri(clk / 5), Math.PI / 2);
+  if (at('estoqueFresado').length) {
+    const c = noCanteiro(26 + 4 * Math.sin(clk * 0.6), -96 + 3 * tri(clk / 5));
+    put(T('estoqueFresado')[0], c.s, c.z, Math.PI / 2);
+  }
   // rede de drenagem: escavação na frente, assentamento atrás e compactação do reaterro
   for (const a of at('vala').slice(0, 1)) {
     const w = a.w,
@@ -308,7 +332,7 @@ export function updateEquipment(st, clk) {
     const [ex, ...bs] = T('remocao');
     put(ex, a.s + 3, 0, 0);
     escavar(ex, clk);
-    bs.forEach((b, i) => cycleTruck(put, b, rota(a.s - 5, i % 2 ? -2.4 : 2.4, [-25, -130], true), clk / 80 + i / 3, CL.solo, false));
+    bs.forEach((b, i) => cycleTruck(put, b, rota(a.s - 5, i % 2 ? -2.4 : 2.4, 'fora', true), clk / 80 + i / 3, CL.solo, false));
   }
   // substituição de solo no trecho de solo mole
   for (const a of at('substituicao').slice(0, 1)) {
@@ -319,7 +343,7 @@ export function updateEquipment(st, clk) {
     put(ex, s + 4, -2, 0);
     escavar(ex, clk);
     put(pe, s - 6 - 8 * tri(clk / 7), 1.6, 0);
-    cycleTruck(put, b, rota(s - 2, 2.4, [-25, -130], false), clk / 80, CL.jaz, false);
+    cycleTruck(put, b, rota(s - 2, 2.4, 'fora', false), clk / 80, CL.jaz, false);
   }
   // regularização do subleito
   for (const a of at('regularizacao').slice(0, 1)) {
@@ -388,16 +412,14 @@ export function updateEquipment(st, clk) {
       const pts = [
         { s: si, z: sz, stop: 5, tag: 'load', h: Math.PI },
         { s: si - 20, z: sz },
-        { s: 22, z: -44 },
-        { s: 22, z: ZD },
+        ...portao(true),
         { s: f + 22, z: ZD },
         { s: f + 27, z: zf },
         { s: f + 9.2, z, rev: 1, stop: 4, tag: 'dump', h: 0 },
         { s: f + 26, z: zf },
         { s: f + 22, z: ZD },
-        { s: 22, z: ZD },
-        { s: 22, z: -44 },
-        { s: si + 22, z: -60 },
+        ...portao(false),
+        { s: si + 22, z: noCanteiro(0, -60).z },
         { s: si + 28, z: sz }
       ];
       cycleTruck(put, b, pts, clk / 90 + i / 4, 0x1d1d1d, true, 0.75);
@@ -413,17 +435,20 @@ export function updateEquipment(st, clk) {
     return s && d >= s.a && d < s.b;
   };
   const [loaderU, munckU] = T('canteiro');
-  if (paving || ativoG('dosagem')) put(loaderU, USI.siloS + 34 + 3 * Math.sin(clk * 0.8), -66 + 4 * tri(clk / 4), Math.PI / 2);
-  else if (ativoG('mobilizacao') || ativoG('desmobilizacao')) put(loaderU, 30 + 6 * Math.sin(clk * 0.5), -66, Math.PI / 2);
-  if (ativoG('mobilizacao') || ativoG('usina') || ativoG('desmobilizacao'))
-    put(munckU, ativoG('usina') ? 54 + 10 * tri(clk / 14) : 24, ativoG('usina') ? -66 : -64, 0);
+  const z66 = noCanteiro(0, -66).z;
+  if (paving || ativoG('dosagem')) put(loaderU, USI.siloS + 34 + 3 * Math.sin(clk * 0.8), z66 + 4 * tri(clk / 4), Math.PI / 2);
+  else if (ativoG('mobilizacao') || ativoG('desmobilizacao')) put(loaderU, noCanteiro(30 + 6 * Math.sin(clk * 0.5), 0).s, z66, Math.PI / 2);
+  if (ativoG('mobilizacao') || ativoG('usina') || ativoG('desmobilizacao')) {
+    const c = noCanteiro(ativoG('usina') ? 54 + 10 * tri(clk / 14) : 24, ativoG('usina') ? -66 : -64);
+    put(munckU, c.s, c.z, 0);
+  }
 
   // máquinas paradas no pátio; giroflex, tambores e vassouras
   for (const e of EQ) {
     e.o.visible = ST.lay.equip !== false && (e.tipo !== 'tripod' || used.has(e));
     if (!used.has(e)) {
       setPose(e, e.park[0], e.park[1], Math.PI / 2, d);
-      e.o.rotation.y = Math.PI / 2;
+      e.o.rotation.y = Math.PI / 2 + rumo(e.park[0]);
       tilt(e, 0);
       truckLoad(e, 0, 0x777777);
       if (e.mk.up) e.mk.up.rotation.y = 0;
@@ -451,15 +476,17 @@ export function updateEquipment(st, clk) {
   };
   if (on)
     for (let i = 0; i < 8; i++) {
-      const v = USI.parts.chimney;
-      puff(USI.g.position.x + v.x, USI.g.position.y + v.y, USI.g.position.z + v.z, 1.3, i / 8);
+      const v = USI.parts.chimney,
+        g = girar(USI.siloS, v.x, v.z);
+      puff(USI.g.position.x + g.x, USI.g.position.y + v.y, USI.g.position.z + g.z, 1.3, i / 8);
     }
   if (paving) {
     const z = paving.faixa === 'BD' ? 1.75 : -1.75,
       f = paving.s;
     for (let i = 0; i < 12; i++) {
-      const ss = f - 2 - (i / 12) * 26;
-      puff(wx(ss), wy(gr(Math.max(0, ss))) + 0.3, z + ((i % 3) - 1) * 1.1, 0.9, i * 0.37);
+      const ss = f - 2 - (i / 12) * 26,
+        p = mundo(ss, z + ((i % 3) - 1) * 1.1);
+      puff(p.x, wy(gr(Math.max(0, ss))) + 0.3, p.z, 0.9, i * 0.37);
     }
   }
   for (; si < steam.length; si++) steam[si].visible = false;

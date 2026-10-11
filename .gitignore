@@ -10,3 +10,9 @@ coverage/
 playwright-report/
 test-results/
 .vite/
+
+# Pipeline geo (Fase 3)
+scripts/geo/.venv/
+__pycache__/
+geo/brutos/
+geo/tmp/

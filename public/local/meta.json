@@ -1,0 +1,98 @@
+{
+  "aviso": "Entorno a partir de dados abertos (OSM e IPP). Terreno, quantidades e ensaios da obra são ilustrativos.",
+  "sistema": {
+    "crs": "EPSG:31983",
+    "origem_utm": [
+      663339.851,
+      7470121.678
+    ],
+    "rotacao_graus": 27.9165,
+    "azimute_eixo_x_graus": 62.08,
+    "convencao": "x local na direção início->fim; y local à esquerda; no app x=x, z=-y, y=cota"
+  },
+  "inicio": {
+    "lat": -22.868801,
+    "lon": -43.407832
+  },
+  "fim": {
+    "lat": -22.861972,
+    "lon": -43.394281
+  },
+  "via": "Avenida Duque de Caxias",
+  "extensao_medida_m": 1582.8,
+  "via_existente": {
+    "nome": "Avenida Duque de Caxias",
+    "largura_m": 13.2,
+    "faixas": 4,
+    "superficie": "asphalt",
+    "fonte": "OSM (largura estimada pelo número de faixas)"
+  },
+  "terreno": {
+    "arquivo": "terreno.bin",
+    "formato": "Uint16 LE, cm acima de zmin, linhas de y0 para cima",
+    "nx": 1056,
+    "ny": 451,
+    "x0": -260.0,
+    "y0": -450.0,
+    "passo": 2.0,
+    "zmin": 18.0,
+    "fonte": "IPP, Modelo Digital de Terreno Lidar 2019 (5 m), 5302 amostras a cada 25 m (10 m na faixa do eixo), mais a cota da base das edificações IPP 2019",
+    "precisao": "MDT Lidar reamostrado a 5 m, escala 1:10.000; amostragem a cada 10 a 25 m (precisão da ordem de 0,5 m na faixa do eixo)"
+  },
+  "canteiro": {
+    "centro": [
+      -215.0,
+      235.0
+    ],
+    "dimensoes_m": [
+      135.0,
+      72.0
+    ],
+    "rotacao_graus": 0.0,
+    "centro_geo": [
+      -22.867864,
+      -43.410767
+    ],
+    "acesso": "pela via local ao lado do canteiro até a Av. Duque de Caxias",
+    "acesso_pts": [
+      [
+        -147.5,
+        199.0
+      ],
+      [
+        -141.2,
+        198.9
+      ],
+      [
+        -143.0,
+        49.1
+      ],
+      [
+        -142.8,
+        27.7
+      ]
+    ],
+    "confirmado": "opção 2 (noroeste), confirmada pelo usuário na Fase 3"
+  },
+  "ortofoto": "Não usada: a licença dos mosaicos de ortofoto do IPP não está declarada no serviço. Terreno com cores por uso do solo.",
+  "creditos": [
+    {
+      "fonte": "OpenStreetMap",
+      "texto": "© colaboradores do OpenStreetMap (ODbL)",
+      "uso": "vias, áreas verdes, quadras, edificações complementares e traçado do eixo",
+      "url": "https://www.openstreetmap.org/copyright"
+    },
+    {
+      "fonte": "IPP",
+      "texto": "Prefeitura da Cidade do Rio de Janeiro – Instituto Pereira Passos",
+      "uso": "Edificações 2019 (contorno, altura) e Modelo Digital de Terreno Lidar 2019",
+      "url": "https://pgeo3.rio.rj.gov.br/arcgis/rest/services"
+    }
+  ],
+  "contagens": {
+    "vias": 216,
+    "areas": 51,
+    "edificacoes_ipp": 806,
+    "edificacoes_osm": 12
+  }
+}

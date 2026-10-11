@@ -3,7 +3,7 @@
 import * as THREE from 'three';
 import { sg } from '../dominio/geometria.js';
 import { M, ST } from '../estado.js';
-import { wx, wy, mat, css } from './base.js';
+import { wy, mat, css, mundo } from './base.js';
 import { cena } from './renderizador.js';
 import { comDias, NUNCA, diasPorInstancia } from './dias.js';
 
@@ -37,7 +37,8 @@ export function buildMarkers() {
   const o = new THREE.Object3D();
   posicoes = [];
   lista.forEach((t, i) => {
-    o.position.set(wx(t.s), wy(cotaExibida(t)), t.z);
+    const p = mundo(t.s, t.z);
+    o.position.set(p.x, wy(cotaExibida(t)), p.z);
     o.updateMatrix();
     posicoes.push(o.position.clone());
     hastes.setMatrixAt(i, o.matrix);

@@ -99,3 +99,27 @@
 .gantt-tools .legend {
   margin: 0;
 }
+
+/* créditos das fontes do local real sobre o modelo 3D (Fase 3) */
+.creditos3d {
+  position: absolute;
+  right: 14px;
+  top: 52px;
+  max-width: min(520px, calc(100% - 28px));
+  margin: 0;
+  padding: 4px 10px;
+  font: 10.5px/1.35 var(--f-mono);
+  color: var(--ink-2);
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  text-align: right;
+  pointer-events: none;
+}
+@media (max-width: 620px) {
+  .creditos3d {
+    top: 14px;
+  }
+}

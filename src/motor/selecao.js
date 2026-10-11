@@ -8,6 +8,7 @@ import { activeSvc } from '../dominio/cronograma.js';
 import { diaDoServico, frenteDaEstaca, estadoDoDesvio } from '../dominio/frentes.js';
 import { M, ST, D, emit } from '../estado.js';
 import { cena } from './renderizador.js';
+import { obraDoMundo } from './base.js';
 import { setFollow } from './camera.js';
 import { repsDaEquipe } from './equipamentos.js';
 
@@ -74,8 +75,8 @@ function pick(e) {
     infoEquipamento(p.userData.eq);
     return;
   }
-  const s = h.point.x + P.L / 2;
-  if (o.userData.terrain || (o.userData.info && s >= 0 && s <= P.L && Math.abs(h.point.z) <= P.W_CX / 2 && o.userData.dias)) {
+  const { s, z } = obraDoMundo(h.point.x, h.point.z);
+  if (o.userData.terrain || (o.userData.info && s >= 0 && s <= P.L && Math.abs(z) <= P.W_CX / 2 && o.userData.dias)) {
     infoEstaca(h.point, o.userData.info);
     return;
   }
@@ -84,12 +85,12 @@ function pick(e) {
 
 // situação da estaca clicada: frente, desvio e serviços já executados ali
 function infoEstaca(pt, camada) {
-  const s = pt.x + P.L / 2,
-    z = pt.z,
+  const { s, z } = obraDoMundo(pt.x, pt.z),
     d = ST.day;
   const dados = { Estaca: s >= 0 && s <= P.L ? estStr(s) : 'fora do trecho', Afastamento: nf(z, 1) + ' m' };
   if (s < 0 || s > P.L || Math.abs(z) > P.W_CX / 2 + 3) {
     dados['Cota do terreno'] = nf(nat(s, z), 2) + ' m';
+    if (D.local) dados.Fonte = 'MDT Lidar 2019 (IPP), suavizado';
     emit('info', 'Terreno natural', dados);
     return;
   }

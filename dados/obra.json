@@ -5,7 +5,7 @@
     "om": "Organização Militar de Engenharia executora (ilustrativa)",
     "trafego": "viaturas operacionais, ônibus e caminhões de abastecimento (N = 3 × 10⁶)",
     "iscProjeto": 9,
-    "aviso": "Quantitativos, produtividades (teóricas de referência, caso ideal das composições do SICRO, sem interferências, chuva, perdas ou esperas), terreno e resultados de ensaio são ilustrativos."
+    "aviso": "Quantitativos, produtividades (teóricas de referência, caso ideal das composições do SICRO, sem interferências, chuva, perdas ou esperas), resultados de ensaio e cotas do terreno são ilustrativos. O terreno e o entorno vêm de dados abertos (OpenStreetMap e IPP) e têm precisão limitada."
   },
   "calendario": {
     "inicio": "2027-05-03",
@@ -14,7 +14,8 @@
     "prazoContratualDias": 110
   },
   "trecho": {
-    "extensao": 1600,
+    "extensao": 1582.8,
+    "notaExtensao": "Extensão medida sobre o eixo da Av. Duque de Caxias (OpenStreetMap, Fase 3). O greide acompanha a via existente sobre o relevo real (MDT Lidar 2019, IPP); cotaGreideInicio e rampaGreide valem só sem os dados do local.",
     "estaca": 20,
     "cotaReferencia": 18,
     "cotaGreideInicio": 24.5,
@@ -62,7 +63,7 @@
     "primeiraBocaDeLobo": 20,
     "espacamentoBocasDeLobo": 40,
     "espacamentoPocosDeVisita": 80,
-    "desagueNaEstaca": 1600
+    "desagueNaEstaca": 1582.8
   },
   "empolamento": {
     "fresado": 1.25,

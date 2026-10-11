@@ -1,6 +1,39 @@
 // Aba "Contexto e normas": obra militar, cadeia de liberação e normas utilizadas.
 import { D } from '../../estado.js';
 import { esc } from '../dom.js';
+import { P } from '../../dominio/geometria.js';
+import { nf } from '../../dominio/util.js';
+
+// local real (Fase 3): via, extensão medida, canteiro e fontes dos dados abertos
+function local() {
+  const L = D.local;
+  if (!L)
+    return `<h3 class="h3">Local</h3><p class="note">Os arquivos do local real (public/local/) não foram carregados: o modelo usa o eixo reto e o terreno fictício.</p>`;
+  const m = L.meta;
+  const linhas = [
+    ['Via', m.via],
+    [
+      'Extensão medida no eixo',
+      nf(P.L, 1) +
+        ' m (' +
+        nf(L.eixo.trechos.length, 0) +
+        ' trecho' +
+        (L.eixo.trechos.length > 1 ? 's' : '') +
+        ' do OpenStreetMap; ' +
+        nf(m.extensao_medida_m, 1) +
+        ' m)'
+    ],
+    ['Pista existente', `${nf(m.via_existente.largura_m, 1)} m (${m.via_existente.faixas} faixas, ${m.via_existente.fonte})`],
+    ['Canteiro e usina', `${m.canteiro.dimensoes_m.map(v => nf(v, 0)).join(' × ')} m, a noroeste do início do trecho, ${m.canteiro.acesso}`],
+    ['Relevo', m.terreno.fonte + '. Precisão: ' + m.terreno.precisao],
+    ['Ortofoto', m.ortofoto]
+  ];
+  return `<h3 class="h3">Local e fontes de dados</h3><div class="tbl"><table><tbody>${linhas.map(([a, b]) => `<tr><th>${esc(a)}</th><td>${esc(b)}</td></tr>`).join('')}</tbody></table></div>
+  <div class="tbl"><table><thead><tr><th>Fonte</th><th>Crédito</th><th>Uso no modelo</th></tr></thead><tbody>${m.creditos
+    .map(c => `<tr><td>${esc(c.fonte)}</td><td>${esc(c.texto)}</td><td>${esc(c.uso)}</td></tr>`)
+    .join('')}</tbody></table></div>
+  <p class="note">${esc(m.aviso)} Área militar: o modelo usa apenas dados de fontes públicas e não identifica edificações internas.</p>`;
+}
 
 export function tabCtx() {
   const OBRA = D.obra.obra;
@@ -16,5 +49,6 @@ export function tabCtx() {
   <div class="flow">${flow.map((f, i) => `<div class="fstep${i === 3 ? ' warn' : ''}"><b>${i + 1}</b>${esc(f)}</div>`).join('<span class="farr">→</span>')}</div>
   <div class="masonry">${D.obra.contexto.map(c => `<div class="ccard"><h4>${esc(c.titulo)}</h4><p class="csub">${esc(c.texto)}</p></div>`).join('')}</div>
   <h3 class="h3">Normas utilizadas</h3><div class="tbl"><table><thead><tr><th>Norma</th><th>Título</th><th>Aplicação no modelo</th></tr></thead><tbody>${D.normas.referencias.map(n => `<tr><td class="m">${n.norma}</td><td>${esc(n.titulo)}</td><td>${esc(n.aplicacao)}</td></tr>`).join('')}</tbody></table></div>
+  ${local()}
   <p class="note">Modelo didático. Terreno, quantidades e resultados de ensaio são ilustrativos, gerados de forma coerente com os critérios das especificações citadas. Não substituem o projeto executivo nem o plano de controle da obra real. Confirme sempre a revisão vigente de cada norma na coletânea do DNIT.</p>`;
 }

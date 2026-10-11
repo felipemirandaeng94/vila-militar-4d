@@ -1,6 +1,7 @@
 // Interface pública do motor 3D para o controlador.
 import { ST } from '../estado.js';
 import { cena, iniciarRenderizador, applyTheme, renderizar } from './renderizador.js';
+import { centrarMundo } from './base.js';
 import { buildTerrain } from './terreno.js';
 import { buildSurroundings } from './entorno.js';
 import { buildPavement, superficie } from './pavimento.js';
@@ -27,6 +28,7 @@ function construirObra() {
 }
 
 export function montarMotor(vp) {
+  centrarMundo();
   iniciarRenderizador(vp);
   buildTerrain();
   buildSurroundings();

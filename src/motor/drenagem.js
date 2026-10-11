@@ -1,7 +1,7 @@
 // Elementos repetidos da drenagem com InstancedMesh: tubos de concreto, escoramento, bocas de lobo, ramais e poços de visita.
 import * as THREE from 'three';
 import { P, sg, diametroRede, larguraVala, profundidadeVala, bocasDeLobo, pocosDeVisita } from '../dominio/geometria.js';
-import { wx, wy, mat } from './base.js';
+import { wy, mat, mundo, rumo } from './base.js';
 import { cena } from './renderizador.js';
 import { comDias, NUNCA, finito, diasPorInstancia } from './dias.js';
 import { CAMADAS, alturas, diasDaVala, diaRep, servicoRep } from './pavimento.js';
@@ -25,10 +25,12 @@ function instancias(geo, material, lista, info, sombra = false) {
   grupo.add(m);
   return m;
 }
-const matriz = (x, y, z, rx = 0, ry = 0, rz = 0, sx = 1, sy = 1, sz = 1) => {
+// matriz de uma instância na estaca s, altura y (mundo) e afastamento z; rotações relativas ao eixo (ordem YXZ: o rumo por último)
+const matriz = (s, y, z, rx = 0, ry = 0, rz = 0, sx = 1, sy = 1, sz = 1) => {
   const o = new THREE.Object3D();
-  o.position.set(x, y, z);
-  o.rotation.set(rx, ry, rz);
+  const p = mundo(s, z);
+  o.position.set(p.x, y, p.z);
+  o.rotation.set(rx, ry + rumo(s), rz, 'YXZ');
   o.scale.set(sx, sy, sz);
   o.updateMatrix();
   return o.matrix.clone();
@@ -49,7 +51,7 @@ export function buildDrenagem() {
     const v = diasDaVala(s);
     tubos.push({
       s,
-      matrix: matriz(wx(s), wy(fundo + P.DRN.berco + D / 2 + 0.06), zr, 0, 0, Math.PI / 2, (D / 2 + 0.06) / 0.5, passo * 0.98, (D / 2 + 0.06) / 0.5),
+      matrix: matriz(s, wy(fundo + P.DRN.berco + D / 2 + 0.06), zr, 0, 0, Math.PI / 2, (D / 2 + 0.06) / 0.5, passo * 0.98, (D / 2 + 0.06) / 0.5),
       dias: [finito(v.tubo), NUNCA],
       D
     });
@@ -70,7 +72,7 @@ export function buildDrenagem() {
     for (const sd of [-1, 1])
       esc.push({
         s,
-        matrix: matriz(wx(s), wy((topo + 0.35 + fundo) / 2), zr + (sd * w) / 2, 0, 0, 0, 1.9, topo + 0.35 - fundo, 0.06),
+        matrix: matriz(s, wy((topo + 0.35 + fundo) / 2), zr + (sd * w) / 2, 0, 0, 0, 1.9, topo + 0.35 - fundo, 0.06),
         dias: [finito(v.esc), finito(v.reat)]
       });
   }
@@ -85,7 +87,7 @@ export function buildDrenagem() {
     return {
       s: b.s,
       lado: b.lado,
-      matrix: matriz(wx(b.s), wy(h.top - prof / 2), b.z, 0, 0, 0, 1.0, prof, 0.9),
+      matrix: matriz(b.s, wy(h.top - prof / 2), b.z, 0, 0, 0, 1.0, prof, 0.9),
       dias: [finito(diaRep('bocasDeLobo', b.s)), NUNCA]
     };
   });
@@ -95,7 +97,7 @@ export function buildDrenagem() {
   });
   const grelhas = bl.map(b => ({
     s: b.s,
-    matrix: matriz(wx(b.s), wy(alturas(b.s).top + 0.01), b.lado === 'BD' ? P.Z_SAR : -P.Z_SAR, 0, 0, 0, 0.9, 0.04, 0.6),
+    matrix: matriz(b.s, wy(alturas(b.s).top + 0.01), b.lado === 'BD' ? P.Z_SAR : -P.Z_SAR, 0, 0, 0, 0.9, 0.04, 0.6),
     dias: b.dias
   }));
   instancias(new THREE.BoxGeometry(1, 1, 1), mat(0x2b2d2f, { metalness: 0.6, roughness: 0.4 }).clone(), grelhas, {
@@ -109,7 +111,7 @@ export function buildDrenagem() {
       zc = (z0 + zr) / 2;
     const y = sg(b.s) - (profundidadeVala(P.DRN.diametroRamal) - P.E_EX) * 0.8;
     const d = finito(diaRep('bocasDeLobo', b.s));
-    return { s: b.s, matrix: matriz(wx(b.s), wy(y), zc, Math.PI / 2, 0, 0, 0.45, L, 0.45), dias: [d, d + 0.3] };
+    return { s: b.s, matrix: matriz(b.s, wy(y), zc, Math.PI / 2, 0, 0, 0.45, L, 0.45), dias: [d, d + 0.3] };
   });
   instancias(new THREE.CylinderGeometry(0.5, 0.5, 1, 10, 1, true), mat(0xa9a69c, { side: THREE.DoubleSide }).clone(), ramais, {
     t: 'Ramal da boca de lobo',
@@ -122,7 +124,7 @@ export function buildDrenagem() {
     const topo = alturas(p.s).top;
     return {
       s: p.s,
-      matrix: matriz(wx(p.s), wy((topo + fundo) / 2), zr, 0, 0, 0, 1.3, topo - fundo, 1.3),
+      matrix: matriz(p.s, wy((topo + fundo) / 2), zr, 0, 0, 0, 1.3, topo - fundo, 1.3),
       dias: [finito(diaRep('pocosDeVisita', p.s)), NUNCA]
     };
   });
@@ -130,7 +132,7 @@ export function buildDrenagem() {
     t: 'Poço de visita',
     d: { Serviço: nome('pocosDeVisita'), Norma: 'DNIT 030/2004-ES (a confirmar)', Espaçamento: '80 m' }
   });
-  const tampas = pv.map(p => ({ s: p.s, matrix: matriz(wx(p.s), wy(alturas(p.s).top + 0.01), zr, 0, 0, 0, 0.75, 0.03, 0.75), dias: p.dias }));
+  const tampas = pv.map(p => ({ s: p.s, matrix: matriz(p.s, wy(alturas(p.s).top + 0.01), zr, 0, 0, 0, 0.75, 0.03, 0.75), dias: p.dias }));
   instancias(new THREE.CylinderGeometry(0.5, 0.5, 1, 18), mat(0x2b2d2f, { metalness: 0.6 }).clone(), tampas, {
     t: 'Tampão do poço de visita',
     d: { Serviço: nome('pocosDeVisita') }
@@ -139,7 +141,7 @@ export function buildDrenagem() {
   const marcas = [];
   for (let s = 5; s < P.L; s += 10) {
     const d = finito(diaRep('interferencias', s));
-    marcas.push({ s, matrix: matriz(wx(s), wy(alturas(s).exTop + 0.01), zr, 0, 0, 0, 3, 0.02, 0.12), dias: [d, finito(diaRep('fresagem', s))] });
+    marcas.push({ s, matrix: matriz(s, wy(alturas(s).exTop + 0.01), zr, 0, 0, 0, 3, 0.02, 0.12), dias: [d, finito(diaRep('fresagem', s))] });
   }
   instancias(new THREE.BoxGeometry(1, 1, 1), mat(0xf0c419, { roughness: 0.6 }).clone(), marcas, {
     t: 'Marcação de interferências e do eixo da rede',

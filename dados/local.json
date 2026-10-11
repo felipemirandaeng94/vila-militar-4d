@@ -1,11 +1,18 @@
 {
-  "via": "a confirmar (identificar pelo OpenStreetMap na Fase 3)",
-  "inicio": { "lat": -22.868801, "lon": -43.407832 },
-  "fim": { "lat": -22.861972, "lon": -43.394281 },
+  "via": "Avenida Duque de Caxias",
+  "inicio": {
+    "lat": -22.868801,
+    "lon": -43.407832
+  },
+  "fim": {
+    "lat": -22.861972,
+    "lon": -43.394281
+  },
   "largura_pista_m": 7.0,
   "canteiro_e_usina": "no início do trecho",
   "extensao": "trecho inteiro, cerca de 1,6 km, seguindo o traçado da via existente",
   "distancia_linha_reta_m": 1582,
   "azimute_inicio_fim_graus": 61.3,
-  "observacoes": "Distância em linha reta pela fórmula de Haversine (raio médio 6.371.009 m). A extensão real será medida sobre o eixo da via existente na Fase 3."
+  "observacoes": "Distância em linha reta pela fórmula de Haversine (raio médio 6.371.009 m). Extensão medida sobre o eixo da via existente (OpenStreetMap, Fase 3): 1582.8 m.",
+  "extensao_medida_m": 1582.8
 }

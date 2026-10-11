@@ -32,12 +32,25 @@ Arquivos JSON editáveis. Nada aqui é código.
 | `decisoes.json` | Decisões da missão, alternativas, efeitos, consequências e regras de pontuação. |
 | `manual.json` | Procedimento de cada serviço (onde, como executar, o que conferir). |
 | `normas.json` | Códigos dos métodos de ensaio (usados como `@chave` nos ensaios) e a tabela de normas da aba de contexto. |
-| `local.json` | Coordenadas do trecho real (usadas a partir da Fase 3). |
+| `local.json` | Coordenadas do trecho real, via identificada e extensão medida (Fase 3). |
+
+### `public/local/` (Fase 3)
+Arquivos do local real, gerados pelo pipeline Python de `scripts/geo/` (veja `scripts/geo/README.md`) e carregados por `src/carregarLocal.js` antes de iniciar o app (em `dados.local`). Sem eles, o app usa o eixo reto e o terreno fictício e avisa na tela.
+
+| Arquivo | Conteúdo |
+|---|---|
+| `eixo.json` | Polilinha do eixo da obra (Av. Duque de Caxias, OSM) a cada 2 m em coordenadas locais, estacas a cada 20 m, extensão medida e curvas. |
+| `terreno.bin` | Relevo em grade de 2 m (Uint16, centímetros acima de `zmin`), do MDT Lidar 2019 do IPP. |
+| `vias.json`, `areas.json` | Vias existentes (largura estimada) e uso do solo (verde, mata, quadra, campo, água), do OSM. |
+| `edificacoes.json` | Contorno, altura, cota da base e uso (IPP 2019; OSM onde o IPP não cobre). |
+| `meta.json` | Sistema local (EPSG:31983, origem, rotação), grade do terreno, pista existente, canteiro confirmado com o acesso pelas vias e créditos. |
 
 `src/dados.js` importa os JSON e chama `validarDados` (`src/dominio/validacao.js`). Se houver erro, o app não inicia. A tela mostra a lista de problemas com o arquivo e o campo, por exemplo `servicos.json.servicos[3].janelas[0]: o início (5) é posterior ao fim (2)`.
 
 ### `src/dominio/`
-Funções puras, testadas com Vitest. Recebem os dados por parâmetro ou por funções de configuração (`configurarGeometria`, `configurarCalendario`).
+Funções puras, testadas com Vitest. Recebem os dados por parâmetro ou por funções de configuração (`configurarGeometria`, `configurarLocalReal`, `configurarCalendario`).
+
+`local.js` (Fase 3) guarda o eixo real e o terreno: `localDeObra(s, z)` e `obraDeLocal(x, y)` convertem entre as coordenadas da obra (estaca s, afastamento z, + à direita) e as locais; `cotaTerreno(x, y)` amostra o relevo; o greide da obra (`gr`) acompanha a via existente (média móvel de ±20 m da cota do terreno no eixo), pois a obra é uma reconstrução, sem corte e aterro. `geometria.js` usa esses dados em `gr`, `nat` (relevo real, com a plataforma da via existente junto à caixa) e no canteiro (`P.CANT` vem de `meta.json`; `noCanteiro(s, z)` translada o arranjo interno de referência para a área confirmada; `acessoDoCanteiro()` dá o caminho até a avenida).
 
 | Módulo | Responsabilidade |
 |---|---|
@@ -63,9 +76,11 @@ Funções puras, testadas com Vitest. Recebem os dados por parâmetro ou por fun
 ### `src/motor/`
 Só Three.js. Lê `M` e `ST` e não mexe nos painéis.
 - `renderizador.js`: cena, câmera, luzes e controles.
-- `base.js`: materiais e formas.
+- `base.js`: materiais, formas e a conversão para o mundo 3D: `mundo(s, z)` segue o eixo curvo, `rumo(s)` dá a orientação do eixo e `colocar(o, s, z, y, rot)` posiciona e orienta objetos. Faixas do pavimento, instâncias (tubos, caixas, meio-fio, cones, placas), máquinas e rótulos passam por elas, então acompanham as curvas.
 - `modelos.js`: equipamentos e construções.
 - `usina.js`, `terreno.js`, `entorno.js`, `pavimento.js`, `canteiro.js` e `equipamentos.js`.
+- `terreno.js`: grade de 4 m sobre o relevo real, com cores pelo uso do solo, e uma malha fina ao longo do eixo com a pista existente, os passeios e a caixa do pavimento.
+- `entorno.js`: vias do OSM sobre o relevo, edificações extrudadas pela altura do Lidar e vegetação nas matas e áreas verdes.
 - `marcadores.js`: pontos de ensaio.
 - `rotulos.js`: rótulos 2D.
 - `camera.js`: vistas, perfil e seguir a frente.
@@ -131,8 +146,8 @@ O motor não refaz geometria a cada quadro:
 
 ## Fluxo de dados
 
-1. `main.js` carrega e valida `dados/`. Com dados válidos, chama `iniciar`.
-2. O controlador configura o domínio (geometria e calendário) e calcula os quantitativos uma vez.
+1. `main.js` carrega e valida `dados/` e carrega `public/local/` (local real). Com dados válidos, chama `iniciar`.
+2. O controlador configura o domínio (geometria, local real e calendário) e calcula os quantitativos uma vez, com a extensão medida.
 3. `montarModelo` calcula cronograma, frentes, ensaios e liberações com as opções em vigor (cenário escolhido ou decisões da missão). O resultado vai para `M`.
 4. A cada quadro, `stateAt(M.frentes, ST.day)` dá a posição de cada frente. O motor atualiza terreno, pavimento, canteiro, equipamentos e marcadores, e a interface atualiza os painéis.
 5. Trocar de cenário ou tomar uma decisão com retrabalho chama `acoes.reconstruir()`, que refaz o passo 3.

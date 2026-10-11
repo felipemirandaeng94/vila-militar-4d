@@ -1,10 +1,39 @@
 // Materiais, cores e formas básicas do modelo 3D; conversão das coordenadas da obra para o mundo 3D.
 import * as THREE from 'three';
 import { P } from '../dominio/geometria.js';
+import { localDeObra, obraDeLocal, tangente } from '../dominio/local.js';
 
-// Mundo 3D: X = s − L/2, Y = cota − Y0, Z = z
-export const wx = s => s - P.L / 2;
+// Mundo 3D: X = x local − xc, Y = cota − Y0, Z = −(y local − yc), com (xc, yc) no meio do eixo.
+// Coordenadas da obra (s, z) seguem o eixo curvo: o ponto é o do eixo na estaca s, deslocado z para a direita.
+let C0 = [0, 0];
+export function centrarMundo() {
+  C0 = localDeObra(P.L / 2);
+}
 export const wy = c => c - P.Y0;
+export const mundoDeLocal = (x, y) => ({ x: x - C0[0], z: -(y - C0[1]) });
+export const localDoMundo = (X, Z) => [X + C0[0], -Z + C0[1]];
+export const mundo = (s, z = 0) => mundoDeLocal(...localDeObra(s, z));
+// estaca e afastamento de um ponto do mundo (perto = true: null longe do eixo)
+export const obraDoMundo = (X, Z, perto) => obraDeLocal(...localDoMundo(X, Z), perto);
+// rumo do eixo na estaca s (rotação em Y de um objeto alinhado com o eixo)
+export const rumo = s => {
+  const t = tangente(s);
+  return Math.atan2(t.ty, t.tx);
+};
+// posiciona o objeto na estaca s, afastamento z e altura y (mundo), com a rotação rot relativa ao eixo
+export function colocar(o, s, z, y, rot = 0) {
+  const p = mundo(s, z);
+  o.position.set(p.x, y, p.z);
+  o.rotation.y = rot + rumo(s);
+  return o;
+}
+// rotaciona um vetor (x, z) do referencial da obra para o mundo, na estaca s
+export function girar(s, dx, dz) {
+  const r = rumo(s),
+    c = Math.cos(r),
+    n = Math.sin(r);
+  return { x: dx * c + dz * n, z: -dx * n + dz * c };
+}
 
 export const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 

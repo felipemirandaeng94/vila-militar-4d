@@ -1,9 +1,9 @@
 // Canteiro de obras e usina: contêineres, bandeira, placa, baias de agregados e montagem da usina ao longo do tempo.
 import * as THREE from 'three';
-import { P, nat } from '../dominio/geometria.js';
+import { P, nat, noCanteiro } from '../dominio/geometria.js';
 import { winProg } from '../dominio/cronograma.js';
 import { M, D } from '../estado.js';
-import { wx, wy, mat, C, bx, info, mkPile } from './base.js';
+import { wy, mat, C, bx, info, mkPile, colocar } from './base.js';
 import { mkContainer, mkFlag } from './modelos.js';
 import { mkUsina } from './usina.js';
 import { cena } from './renderizador.js';
@@ -12,10 +12,10 @@ export const SITE = {};
 // usina montada (g, parts) e posição do silo de massa em coordenadas da obra (siloS, siloZ)
 export const USI = {};
 
-export function placeOn(o, s, z, rot = 0) {
-  o.position.set(wx(s), wy(nat(s, z)), z);
-  o.rotation.y = rot;
-  return o;
+// posiciona no canteiro: (s, z) do arranjo de referência, transladado para a área confirmada (meta.json)
+export function placeOn(o, s, z, rot = 0, y) {
+  const c = noCanteiro(s, z);
+  return colocar(o, c.s, c.z, y != null ? y : wy(nat(c.s, c.z)), rot);
 }
 
 export function buildCanteiro() {
@@ -60,7 +60,7 @@ export function buildCanteiro() {
   pl.add(bx(4.2, 2.2, 0.08, mat(0xf4f1e8), 0, 3.0, 0));
   pl.add(bx(4.2, 0.5, 0.09, mat(0x2f5c3a), 0, 3.85, 0));
   placeOn(pl, -6, -41, Math.PI / 2);
-  info(pl, 'Placa da obra', { Obra: 'Implantação de via interna em CBUQ', Local: 'Vila Militar, Deodoro (RJ)', Execução: D.obra.obra.om });
+  info(pl, 'Placa da obra', { Obra: D.obra.obra.titulo, Local: D.obra.obra.local, Execução: D.obra.obra.om });
   pl.userData.mob = 0.8;
   LAY.canteiro.add(pl);
   // baias de agregados (alimentação da usina)
@@ -82,13 +82,13 @@ export function buildCanteiro() {
     LAY.canteiro.add(p);
   });
   for (let i = 0; i < 4; i++) {
-    const w = bx(0.4, 1.6, 12, mat(C.conc), wx(94 + i * 12), wy(P.CANT.cota) + 0.8, -100);
+    const w = placeOn(bx(0.4, 1.6, 12, mat(C.conc)), 94 + i * 12, -100, 0, wy(P.CANT.cota) + 0.8);
     w.userData.mob = 0.84;
     LAY.canteiro.add(w);
   }
   // usina
   Object.assign(USI, mkUsina());
-  USI.g.position.set(wx(60), wy(P.CANT.cota), -80);
+  placeOn(USI.g, 60, -80, 0, wy(P.CANT.cota));
   LAY.usina.add(
     info(USI.g, 'Usina de CBUQ contínua (tambor secador-misturador)', {
       Produção: '60 t/h',
@@ -106,11 +106,12 @@ export function buildCanteiro() {
   USI.g.children.forEach((c, i) => {
     if (i < 4) part(c, 'Silo dosador frio ' + (i + 1), { Material: ['Brita 1', 'Brita 0', 'Pó de pedra', 'Areia média'][i], Função: usinaTxt[0].descricao });
   });
-  USI.siloS = 60 + USI.parts.siloPos.x;
-  USI.siloZ = -80 + USI.parts.siloPos.z;
+  const cu = noCanteiro(60, -80);
+  USI.siloS = cu.s + USI.parts.siloPos.x;
+  USI.siloZ = cu.z + USI.parts.siloPos.z;
   // pátio de estacionamento
   for (let i = 0; i < 8; i++) {
-    const l = bx(0.12, 0.02, 5, mat(0xf2f0e6), wx(64 + i * 5), wy(P.CANT.cota) + 0.04, -52);
+    const l = placeOn(bx(0.12, 0.02, 5, mat(0xf2f0e6)), 64 + i * 5, -52, 0, wy(P.CANT.cota) + 0.04);
     l.castShadow = false;
     LAY.canteiro.add(l);
   }

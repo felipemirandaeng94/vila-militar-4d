@@ -2,7 +2,7 @@
 
 Modelo 4D interativo da reconstrução de cerca de 1,6 km de uma via da Vila Militar (Deodoro, Rio de Janeiro/RJ), com fresagem, drenagem nova, pavimento em CBUQ, frentes de serviço com desvio de tráfego, usina de CBUQ no canteiro, controle tecnológico conforme as normas do DNIT, diário de obra e a missão de decisões do engenheiro residente.
 
-Terreno, quantidades, produtividades (teóricas de referência) e resultados de ensaio são ilustrativos. O escopo está em `docs/ESCOPO.md`.
+O trecho segue a Av. Duque de Caxias (1.582,8 m medidos no OpenStreetMap), com o entorno real a partir de dados abertos (OpenStreetMap e IPP). Quantidades, produtividades (teóricas de referência), cotas do terreno e resultados de ensaio são ilustrativos. O escopo está em `docs/ESCOPO.md` e os créditos em `assets/CREDITOS.md`.
 
 ## Requisitos
 
@@ -53,7 +53,9 @@ Roda os testes das regras da obra (Vitest) em `tests/`.
 - `src/interface/`: painéis, abas, gráficos e diário de obra.
 - `src/jogo/`: missão do engenheiro residente.
 - `src/estado.js` e `src/controlador.js`: estado central e ligação entre as camadas.
-- `tests/`: testes do domínio.
+- `public/local/`: local real (eixo, terreno, vias, edificações e metadados), gerado por `scripts/geo/` (pipeline Python, veja `scripts/geo/README.md`).
+- `assets/CREDITOS.md`: origem e licença dos recursos externos.
+- `tests/`: testes do domínio e do local real.
 - `src-legado/`: código original (HTML único), mantido como referência até o fim da Fase 2.
 - `Vila_Militar_4D_Terraplenagem_Pavimentacao.html`: HTML de referência.
 - `docs/`: plano (`PLANO.md`), escopo (`ESCOPO.md`), arquitetura (`ARQUITETURA.md`) e prompts de cada fase.

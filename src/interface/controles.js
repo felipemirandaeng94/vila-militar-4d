@@ -25,6 +25,10 @@ export function initUI() {
   $('meta').textContent =
     `Reconstrução de ${nf(P.L, 0)} m em ${M.frentes.length} frentes · drenagem nova · pista de ${nf(P.W_RV, 1)} m · CBUQ 5 cm sobre base de 15 cm e sub-base de 20 cm · ${nf(M.fim, 0)} dias úteis a partir de ${fmtDate(0)}`;
   $('aviso').textContent = D.obra.obra.aviso;
+  // créditos das fontes do local real sobre o modelo 3D
+  $('creditos3d').textContent = D.local
+    ? 'Entorno: ' + D.local.meta.creditos.map(c => c.texto).join(' · ')
+    : 'Local real indisponível: eixo reto e terreno fictício.';
   // vistas
   document.querySelectorAll('[data-view]').forEach(
     b =>

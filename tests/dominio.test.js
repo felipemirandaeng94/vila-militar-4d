@@ -1,4 +1,4 @@
-// Testes das regras da obra (camada de domínio) para a reconstrução de 1,6 km por frentes de serviço.
+// Testes das regras da obra (camada de domínio) para a reconstrução de 1,6 km (1.582,8 m medidos) por frentes de serviço.
 import { describe, it, expect, beforeAll } from 'vitest';
 import { carregarDados } from '../src/dados.js';
 import { configurarDominio, montarModelo } from '../src/dominio/modelo.js';
@@ -61,14 +61,17 @@ describe('frentes de serviço', () => {
     expect(F).toHaveLength(5);
     expect(F.map(f => f.s1 - f.s0)).toEqual([350, 350, 350, 350, 200]);
   });
-  it('o modelo usa o tamanho de frente do JSON (4 frentes de 400 m) a partir do canteiro, no início do trecho', () => {
+  it('o modelo usa o tamanho de frente do JSON (frentes de 400 m) sobre a extensão medida, a partir do canteiro', () => {
     const m = modelo();
+    expect(P.L).toBe(1582.8);
     expect(m.frentes.map(f => [f.s0, f.s1])).toEqual([
       [0, 400],
       [400, 800],
       [800, 1200],
-      [1200, 1600]
+      [1200, 1582.8]
     ]);
+    // todas as frentes entre 300 e 400 m
+    for (const f of m.frentes) expect(f.s1 - f.s0).toBeGreaterThanOrEqual(300);
     expect(P.CANT.s0).toBe(0);
   });
   it('as frentes avançam em sequência: cada frente abre e é liberada depois da anterior', () => {
@@ -176,7 +179,7 @@ describe('cronograma', () => {
   it('sem não conformidade a obra termina dentro do prazo contratual', () => {
     const m = modelo();
     expect(m.fim).toBeLessThanOrEqual(dados.obra.calendario.prazoContratualDias);
-    expect(m.fim).toBeGreaterThan(dados.obra.calendario.prazoContratualDias - 1);
+    expect(m.fim).toBeGreaterThan(dados.obra.calendario.prazoContratualDias - 3);
   });
   it('retrabalho da base (frente 2): atrasa a frente 2 e as que dependem dela, sem mexer na frente 1', () => {
     const a = modelo(),
@@ -213,31 +216,32 @@ describe('cronograma', () => {
 
 describe('quantitativos', () => {
   it('área de pista = extensão × 7,0 m; meio-fio e sarjeta = 2 × extensão; CBUQ = área × espessura × densidade', () => {
-    const t = q.total;
-    expect(t.areaFresagem).toBeCloseTo(1600 * 7.0, 6);
-    expect(t.areaImprimacao).toBeCloseTo(1600 * 7.0, 6);
-    expect(t.extMeioFio).toBeCloseTo(2 * 1600, 6);
-    expect(t.extSarjeta).toBeCloseTo(2 * 1600, 6);
-    expect(t.toneladasCBUQ).toBeCloseTo(1600 * 7.0 * 0.05 * 2.42, 6);
-    expect(t.toneladasCBUQ).toBeCloseTo(1355.2, 6);
+    const t = q.total,
+      L = 1582.8;
+    expect(t.areaFresagem).toBeCloseTo(L * 7.0, 6);
+    expect(t.areaImprimacao).toBeCloseTo(L * 7.0, 6);
+    expect(t.extMeioFio).toBeCloseTo(2 * L, 6);
+    expect(t.extSarjeta).toBeCloseTo(2 * L, 6);
+    expect(t.toneladasCBUQ).toBeCloseTo(L * 7.0 * 0.05 * 2.42, 6);
+    expect(t.toneladasCBUQ).toBeCloseTo(1340.6316, 6);
   });
   it('bocas de lobo e poços de visita conforme o espaçamento', () => {
     // bocas de lobo a cada 40 m (a partir da est. 1), dos dois lados; poços de visita a cada 80 m, do início ao fim
     expect(q.total.nBocasDeLobo).toBe(2 * 40);
-    expect(q.total.nPocosDeVisita).toBe(1600 / 80 + 1);
-    expect(q.frentes.map(f => f.nPocosDeVisita)).toEqual([5, 5, 5, 6]);
+    expect(q.total.nPocosDeVisita).toBe(Math.floor(1582.8 / 80) + 1);
+    expect(q.frentes.map(f => f.nPocosDeVisita)).toEqual([5, 5, 5, 5]);
     const d = copia(dados);
     d.obra.drenagem.espacamentoPocosDeVisita = 100;
-    expect(configurarDominio(d).total.nPocosDeVisita).toBe(17);
+    expect(configurarDominio(d).total.nPocosDeVisita).toBe(16);
     configurarDominio(dados);
   });
   it('demolição, drenagem e subleito', () => {
     const t = q.total;
-    expect(t.volFresado).toBeCloseTo(11200 * 0.05, 6);
-    expect(t.volFresadoSolto).toBeCloseTo(560 * 1.25, 6);
-    expect(t.volRemocao).toBeCloseTo(1600 * 8.1 * 0.35, 6);
+    expect(t.volFresado).toBeCloseTo(1582.8 * 7.0 * 0.05, 6);
+    expect(t.volFresadoSolto).toBeCloseTo(1582.8 * 7.0 * 0.05 * 1.25, 6);
+    expect(t.volRemocao).toBeCloseTo(1582.8 * 8.1 * 0.35, 6);
     expect(t.tubos['0,40'] + t.tubos['0,60']).toBeCloseTo(t.extVala, 6);
-    expect(t.tubos['0,60']).toBeCloseTo(800, 6);
+    expect(t.tubos['0,60']).toBeCloseTo(782.8, 6);
     expect(t.volReaterro).toBeLessThan(t.volEscavacaoVala);
     expect(t.volSubstituicao).toBeCloseTo(80 * 8.1 * 0.6, 6);
   });
@@ -258,7 +262,8 @@ describe('ensaios', () => {
       expect(por(/^Caimento longitudinal da sarjeta/, f)).toBe(4);
       expect(por(/^Resistência do concreto/, f)).toBe(3);
       expect(por(/^GC regularização/, f)).toBe(5);
-      expect(por(/^Deflexão na base/, f)).toBe(20);
+      // deflexão a cada 20 m: a última frente tem 382,8 m
+      expect(por(/^Deflexão na base/, f)).toBe(f === 3 ? 19 : 20);
     }
   });
   it('dia dos ensaios novos acompanha a passagem do serviço pela estaca', () => {

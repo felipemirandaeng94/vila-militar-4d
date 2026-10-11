@@ -11,6 +11,7 @@ import './estilos/extra.css';
 import './estilos/correcoes.css';
 import './estilos/interface.css';
 import { carregarDados, ErroDeDados } from './dados.js';
+import { carregarLocal } from './carregarLocal.js';
 import { iniciar } from './controlador.js';
 import { esc } from './interface/dom.js';
 
@@ -27,9 +28,11 @@ function mostrarErro(e) {
   } else el.innerHTML = 'Não foi possível montar o modelo<small>' + esc(e.message) + '</small>';
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
   try {
-    iniciar(carregarDados());
+    const dados = carregarDados();
+    dados.local = await carregarLocal();
+    iniciar(dados);
   } catch (e) {
     mostrarErro(e);
   }

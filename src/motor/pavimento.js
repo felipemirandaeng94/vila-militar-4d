@@ -7,7 +7,7 @@ import { diaDoServico, janela } from '../dominio/frentes.js';
 import { trechosRuins } from '../dominio/quantitativos.js';
 import { rng } from '../dominio/util.js';
 import { M, ST, D } from '../estado.js';
-import { wx, wy, mat } from './base.js';
+import { wy, mat, mundo, colocar } from './base.js';
 import { cena } from './renderizador.js';
 import { comDias, NUNCA, finito, diasPorInstancia } from './dias.js';
 
@@ -56,18 +56,22 @@ function faixa({ z0, z1, bot, top, dias, cor, opts = {}, nome, info, s0 = 0, s1 
     T = f(top);
   const pos = [],
     dd = [],
+    sz = [],
     idx = [];
   const ss = [];
   for (let s = s0; s < s1 - 1e-6; s += passo) ss.push(s);
   ss.push(s1);
   ss.forEach(s => {
     const [a, d] = dias(s);
-    const x = wx(s),
-      t = wy(T(s)),
+    const t = wy(T(s)),
       bt = wy(B(s)),
       za = Z0(s),
       zb = Z1(s);
-    pos.push(x, t, za, x, t, zb, x, bt, zb, x, bt, za);
+    // vértices sobre o eixo curvo: bordos za e zb da faixa na estaca s
+    const pa = mundo(s, za),
+      pb = mundo(s, zb);
+    pos.push(pa.x, t, pa.z, pb.x, t, pb.z, pb.x, bt, pb.z, pa.x, bt, pa.z);
+    sz.push(s, za, s, zb, s, zb, s, za);
     for (let k = 0; k < 4; k++) dd.push(finito(a), finito(d));
   });
   for (let i = 0; i < ss.length - 1; i++) {
@@ -96,6 +100,7 @@ function faixa({ z0, z1, bot, top, dias, cor, opts = {}, nome, info, s0 = 0, s1 
   o.name = nome;
   o.userData.info = info;
   o.userData.dias = dias;
+  o.userData.sz = sz;
   CAMADAS.push(o);
   cena.LAY.pavimento.add(o);
   return o;
@@ -140,13 +145,13 @@ function textura(tipo) {
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
   return t;
 }
-// coordenadas de textura em planta (x, z) para as faixas com textura
+// coordenadas de textura em planta, ao longo do eixo (s) e transversais (z), para as faixas com textura
 function uvPlanta(o, escala) {
-  const p = o.geometry.attributes.position.array,
-    uv = new Float32Array((p.length / 3) * 2);
-  for (let i = 0; i < p.length / 3; i++) {
-    uv[i * 2] = p[i * 3] / escala;
-    uv[i * 2 + 1] = p[i * 3 + 2] / (escala / 4);
+  const p = o.userData.sz,
+    uv = new Float32Array(p.length);
+  for (let i = 0; i < p.length / 2; i++) {
+    uv[i * 2] = p[i * 2] / escala;
+    uv[i * 2 + 1] = p[i * 2 + 1] / (escala / 4);
   }
   o.geometry.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
 }
@@ -441,7 +446,7 @@ function buildMeioFio() {
       const s = i + 0.5,
         h = alturas(s);
       const alt = h.top + P.H_MF - h.b;
-      o.position.set(wx(s), wy(h.b + alt / 2), sd * P.Z_MF);
+      colocar(o, s, sd * P.Z_MF, wy(h.b + alt / 2));
       o.scale.set(1, alt, 1);
       o.updateMatrix();
       m.setMatrixAt(k++, o.matrix);
