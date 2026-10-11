@@ -22,7 +22,9 @@ function diarioData() {
       const L = w.b - w.a;
       const ov = Math.max(0, Math.min(b, w.b) - Math.max(a, w.a));
       const cura = w.cura && Math.min(b, w.cura[1]) > Math.max(a, w.cura[0]);
-      if (ov <= 0 && !cura) continue;
+      // no início do dia (ainda sem avanço), mostra o que está programado ou em andamento no dia
+      const programado = ov <= 0 && !cura && w.a < Dd + 1 && w.b > Dd && w.b > d;
+      if (ov <= 0 && !cura && !programado) continue;
       const frac = L > 0 ? ov / L : 0,
         fracAc = L > 0 ? clamp((d - w.a) / L, 0, 1) : 1;
       const q = quantidadeDaJanela(s, w, M.q);
@@ -31,8 +33,11 @@ function diarioData() {
       svcs.push({
         s,
         onde,
-        txt:
-          ov > 0 && q != null
+        txt: programado
+          ? w.a <= d
+            ? `em andamento, ${Math.round(clamp((d - w.a) / L, 0, 1) * 100)} % da frente`
+            : `programado a partir das ${fmtHour(w.a)}`
+          : ov > 0 && q != null
             ? `${nf(q * frac, q * frac < 10 ? 1 : 0)} ${di.unidade} de ${di.texto} no dia · ${Math.round(fracAc * 100)} % da frente`
             : ov > 0
               ? `${Math.round(fracAc * 100)} % concluído`
@@ -65,7 +70,7 @@ export function tabDiario() {
   <article class="diario"><header><div><h3>Diário de obra nº ${String(x.D + 1).padStart(3, '0')}</h3><div class="m">${esc(OBRA.titulo)} · ${esc(OBRA.local)}</div></div><div class="m">${fmtDate(x.D)}${x.parcial ? ` · parcial até ${fmtHour(x.d)}` : ''}<br>Efetivo no dia: ${x.efet} militares</div></header>
   <section><h4>Condições do tempo</h4><ul><li>${esc(x.tempo)}</li></ul></section>
   <section><h4>Tráfego nas frentes</h4><ul><li>${esc(x.desvio)}</li></ul></section>
-  <section><h4>Serviços executados</h4><ul>${x.svcs.length ? x.svcs.map(v => `<li><b>${v.s.id}</b>${v.onde ? ' <span class="tag">' + esc(v.onde) + '</span>' : ''} ${esc(v.s.nome)}: ${esc(v.txt)}</li>`).join('') : '<li>Sem frente de serviço neste dia.</li>'}</ul></section>
+  <section><h4>${x.parcial ? 'Serviços do dia (executados e programados)' : 'Serviços executados'}</h4><ul>${x.svcs.length ? x.svcs.map(v => `<li><b>${v.s.id}</b>${v.onde ? ' <span class="tag">' + esc(v.onde) + '</span>' : ''} ${esc(v.s.nome)}: ${esc(v.txt)}</li>`).join('') : '<li>Sem frente de serviço neste dia.</li>'}</ul></section>
   <section><h4>Equipamentos em operação</h4><ul>${
     Object.keys(x.eq).length
       ? Object.entries(x.eq)
@@ -95,7 +100,7 @@ export function diarioTexto() {
     'TRÁFEGO NAS FRENTES',
     x.desvio,
     '',
-    'SERVIÇOS EXECUTADOS'
+    x.parcial ? 'SERVIÇOS DO DIA (EXECUTADOS E PROGRAMADOS)' : 'SERVIÇOS EXECUTADOS'
   );
   x.svcs.forEach(v => L.push(`- ${v.s.id}${v.onde ? ' (' + v.onde + ')' : ''} ${v.s.nome}: ${v.txt}`));
   if (!x.svcs.length) L.push('- Sem frente de serviço.');

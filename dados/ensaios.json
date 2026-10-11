@@ -27,7 +27,7 @@
       "controle": "GC do reaterro da vala",
       "metodo": "Frasco de areia, DNER-ME 092/94",
       "frequencia": "1 a cada 50 m de vala, alternando as camadas (ilustrativo)",
-      "criterio": "GC ≥ 100 % (Proctor normal) · camadas ≤ 20 cm (projeto, ilustrativo)"
+      "criterio": "GC ≥ 95 % (Proctor normal) no corpo · ≥ 100 % na última camada sob o pavimento · camadas ≤ 20 cm (prática usual, ilustrativo)"
     },
     {
       "servico": "S12",
@@ -45,9 +45,9 @@
     },
     {
       "servico": "S15",
-      "controle": "ISC do subleito exposto",
-      "metodo": "DNER-ME 049/94",
-      "frequencia": "1 a cada 50 m por frente (ilustrativo)",
+      "controle": "Compactação · ISC do subleito exposto",
+      "metodo": "DNER-ME 129/94 · DNER-ME 049/94",
+      "frequencia": "Compactação a cada 200 m · ISC a cada 400 m · mín. 5 amostras por camada (DNIT 137/2010-ES)",
       "criterio": "ISC ≥ 9 % (projeto); abaixo disso, substituição de solo (S16)"
     },
     {
@@ -83,7 +83,7 @@
       "controle": "Caimento da sarjeta · resistência do concreto",
       "metodo": "Nivelamento · ABNT NBR 5739",
       "frequencia": "Caimento a cada 100 m · 1 série de corpos de prova por frente (ilustrativo)",
-      "criterio": "Caimento ≥ 0,30 % sem pontos baixos · fc,7 ≥ 15 MPa (projeto, ilustrativo)"
+      "criterio": "Caimento ≥ 0,5 % (referência; 0,3 % só como exceção) · fc,7 ≥ 15 MPa (projeto, ilustrativo)"
     },
     {
       "servico": "S20",
@@ -659,17 +659,20 @@
             "em": "inicio"
           },
           "valor": {
-            "media": 101.2,
-            "desvio": 0.7,
-            "piso": [100.1, 0.5],
-            "casas": 1
+            "media": 97.8,
+            "desvio": 1.1,
+            "piso": [95.2, 0.6],
+            "casas": 1,
+            "aprovacao": {
+              "minimo": 95
+            }
           },
           "umidade": {
             "media": 17.5,
             "desvio": 1
           },
           "unidade": "%",
-          "criterio": "GC ≥ 100 % (Proctor normal) · camadas ≤ 20 cm (projeto, ilustrativo)",
+          "criterio": "GC ≥ 95 % do Proctor normal no corpo do reaterro (prática usual, ilustrativo)",
           "falhas": [
             {
               "frente": 2,
@@ -687,7 +690,19 @@
                 "obs": "Reensaio após aeração e recompactação."
               }
             }
-          ]
+          ],
+          "ultimaCamada": {
+            "valor": {
+              "media": 101.2,
+              "desvio": 0.7,
+              "piso": [100.1, 0.5],
+              "casas": 1,
+              "aprovacao": {
+                "minimo": 100
+              }
+            },
+            "criterio": "GC ≥ 100 % do Proctor normal na última camada sob o pavimento (prática usual, ilustrativo)"
+          }
         },
         {
           "tipo": "lista",
@@ -740,12 +755,42 @@
           "servico": "S15",
           "categoria": "campo",
           "camada": "sl",
+          "nome": "Compactação (Proctor normal) do subleito exposto",
+          "norma": "@comp",
+          "estacas": {
+            "porFrente": {
+              "passo": 200,
+              "minimo": 5
+            }
+          },
+          "z": [2.4],
+          "dia": {
+            "frente": "S15",
+            "mais": 1
+          },
+          "ate": {
+            "servico": "S20",
+            "em": "inicio"
+          },
+          "valor": {
+            "media": 1.72,
+            "desvio": 0.012,
+            "casas": 3
+          },
+          "unidade": "g/cm³",
+          "criterio": "Referência para o GC do subleito (hót ≈ 18 %)"
+        },
+        {
+          "tipo": "serie",
+          "servico": "S15",
+          "categoria": "campo",
+          "camada": "sl",
           "nome": "ISC do subleito exposto",
           "norma": "@isc",
           "estacas": {
             "porFrente": {
-              "passo": 50,
-              "minimo": 8
+              "passo": 400,
+              "minimo": 5
             }
           },
           "z": [0],
@@ -916,13 +961,16 @@
             "em": "fim"
           },
           "valor": {
-            "media": 0.4,
+            "media": 0.55,
             "desvio": 0.03,
-            "min": 0.32,
-            "casas": 2
+            "min": 0.47,
+            "casas": 2,
+            "aprovacao": {
+              "minimo": 0.3
+            }
           },
           "unidade": "%",
-          "criterio": "Caimento ≥ 0,30 % sem pontos baixos (projeto, ilustrativo)"
+          "criterio": "Caimento ≥ 0,5 % (referência); 0,3 % só como exceção justificada (ilustrativo)"
         },
         {
           "tipo": "lista",

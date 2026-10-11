@@ -193,7 +193,7 @@
         "falhaDeEnsaio": "^GC do reaterro da vala"
       },
       "titulo": "GC reprovado no reaterro da vala",
-      "contexto": "O frasco de areia na camada 4 do reaterro da frente 2 deu GC = 97,8 %. A umidade de campo está em 20,9 %, para ótima de 17,5 %. Os outros pontos da vala passaram com média de 101,2 %.",
+      "contexto": "O frasco de areia na camada 4 do reaterro da frente 2 deu GC = 97,8 %. A umidade de campo está em 20,9 %, para ótima de 17,5 %. É a última camada sob o pavimento, que exige GC ≥ 100 % (no corpo do reaterro o mínimo é 95 %). Os outros pontos dessa camada passaram com média de 101,2 %.",
       "dados": [
         {
           "rotulo": "GC medido",
@@ -204,7 +204,7 @@
           "valor": "20,9 % (hót + 3,4 %)"
         },
         {
-          "rotulo": "Média dos outros pontos",
+          "rotulo": "Média da última camada",
           "valor": "101,2 %"
         }
       ],

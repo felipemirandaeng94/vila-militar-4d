@@ -178,14 +178,17 @@ export function buildTests(cfg, normas, obra, svc, frentes, opt) {
     t.day = dBase + (e.diaMais || 0);
     if (e.ate) t.until = dia(e.ate, ctx, s, t.day);
     let ok = true;
-    if (e.valor) {
-      const r = numero(e.valor, s);
-      t.v = formata(e.valor, r.x);
+    // última camada de um ciclo de camadas (por exemplo, a camada do reaterro logo abaixo do pavimento)
+    const ultima = e.camadaCiclo && e.ultimaCamada && ctx.i % e.camadaCiclo === e.camadaCiclo - 1;
+    const valor = ultima ? e.ultimaCamada.valor : e.valor;
+    if (valor) {
+      const r = numero(valor, s);
+      t.v = formata(valor, r.x);
       if (r.ok != null) ok = r.ok;
       if (e.coletar) (coletas[e.coletar] = coletas[e.coletar] || []).push(Math.round(r.x));
     } else t.v = texto(e.valores[ctx.i], ctx);
     t.u = e.unidade;
-    t.crit = e.criterio;
+    t.crit = ultima ? e.ultimaCamada.criterio : e.criterio;
     t.ok = ok;
     if (e.obsPorPonto) t.obs = e.obsPorPonto[ctx.i];
     if (!ok && e.obsReprovado) t.obs = texto(e.obsReprovado, ctx);

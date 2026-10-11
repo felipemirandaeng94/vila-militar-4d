@@ -252,7 +252,9 @@ describe('ensaios', () => {
       expect(por(/^Fresado da frente/, f)).toBe(2);
       expect(por(/^Recebimento do lote de tubos/, f)).toBe(1);
       expect(por(/^GC do reaterro da vala/, f)).toBe(f === 1 ? 9 : 8); // frente 2 tem um reensaio
-      expect(por(/^ISC do subleito exposto/, f)).toBe(8);
+      // DNIT 137/2010-ES: compactação a cada 200 m e ISC a cada 400 m, com mínimo de 5 amostras por camada (frente de 400 m)
+      expect(por(/^ISC do subleito exposto/, f)).toBe(5);
+      expect(por(/^Compactação \(Proctor normal\) do subleito exposto/, f)).toBe(5);
       expect(por(/^Caimento longitudinal da sarjeta/, f)).toBe(4);
       expect(por(/^Resistência do concreto/, f)).toBe(3);
       expect(por(/^GC regularização/, f)).toBe(5);
@@ -268,7 +270,7 @@ describe('ensaios', () => {
   it('reprovação do ISC do subleito gera o serviço de substituição de solo na frente afetada', () => {
     const m = modelo();
     const ruins = m.ensaios.filter(t => /^ISC do subleito exposto/.test(t.nome) && !t.ok);
-    expect(ruins.map(t => t.f)).toEqual([1, 1]);
+    expect(ruins.map(t => t.f)).toEqual([1]);
     const s16 = m.svc.find(s => s.id === 'S16');
     expect(s16.jan.map(w => w.f)).toEqual([1]);
     expect(s16.jan[0].a).toBeGreaterThanOrEqual(Math.max(...ruins.map(t => t.day)));
@@ -284,6 +286,28 @@ describe('ensaios', () => {
     const m3 = modelo({}, d3);
     expect(m3.svc.find(s => s.id === 'S16').jan.map(w => w.f)).toEqual([2]);
     configurarDominio(dados);
+  });
+  it('reaterro: GC ≥ 95 % no corpo e ≥ 100 % na última camada sob o pavimento', () => {
+    const T = modelo().ensaios.filter(t => /^GC do reaterro da vala/.test(t.nome) && !t.re);
+    const ultima = T.filter(t => /camada 4$/.test(t.nome)),
+      corpo = T.filter(t => !/camada 4$/.test(t.nome));
+    expect(ultima.length).toBe(8);
+    expect(corpo.length).toBe(24);
+    for (const t of corpo) {
+      expect(t.crit).toMatch(/≥ 95 %.*prática usual/);
+      expect(parseFloat(t.v.replace(',', '.'))).toBeGreaterThanOrEqual(95);
+    }
+    for (const t of ultima) expect(t.crit).toMatch(/≥ 100 %.*última camada/);
+    // a reprovação da frente 2 está na última camada (97,8 % < 100 %)
+    expect(T.find(t => !t.ok).nome).toMatch(/camada 4$/);
+  });
+  it('sarjeta: caimento de referência 0,5 %, com 0,3 % como exceção', () => {
+    const T = modelo().ensaios.filter(t => /^Caimento longitudinal da sarjeta/.test(t.nome));
+    expect(T).toHaveLength(16);
+    for (const t of T) {
+      expect(t.crit).toMatch(/0,5 %.*0,3 %.*ilustrativo/);
+      expect(parseFloat(t.v.replace(',', '.'))).toBeGreaterThanOrEqual(0.3);
+    }
   });
   it('lote de tubos reprovado não é assentado: a drenagem da frente espera o novo lote aprovado', () => {
     const m = modelo({ failTubo: 1, rwTubo: 1 });

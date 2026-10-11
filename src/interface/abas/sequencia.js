@@ -44,7 +44,7 @@ export function tabSeq() {
     left = 300,
     top = 34,
     rh = 20,
-    H = top + linhas.length * rh + 58;
+    H = top + linhas.length * rh + 66;
   const x = d => left + (d / (END + 0.5)) * (W - left - 14);
   GX = x;
   let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Cronograma da obra"><defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--panel-2)"/><line x1="0" y1="0" x2="0" y2="6" stroke="var(--muted)" stroke-width="2"/></pattern></defs>`;
@@ -79,7 +79,7 @@ export function tabSeq() {
   M.liberacoes.forEach(g => {
     const xx = x(g.day),
       rotulo = g.tipo === 'LIB' || g.tipo === 'ACEITE';
-    s += `<g><title>${g.id} · ${esc(g.nome)} · ${fmtDate(g.day)}</title><path d="M${xx} ${gy + 4} l5 5 l-5 5 l-5 -5z" fill="${g.tipo === 'LIB' ? 'var(--ok)' : 'var(--accent)'}"/>${rotulo ? `<text x="${xx}" y="${gy + 30}" text-anchor="middle" style="font-size:9px;fill:var(--ink-2)">${g.tipo === 'LIB' ? 'LIB ' + M.frentes[g.f].nome : 'ACEITE'}</text>` : ''}</g>`;
+    s += `<g><title>${g.id} · ${esc(g.nome)} · ${fmtDate(g.day)}</title><path d="M${xx} ${gy + 4} l5 5 l-5 5 l-5 -5z" fill="${g.tipo === 'LIB' ? 'var(--ok)' : 'var(--accent)'}"/>${rotulo ? `<text x="${g.tipo === 'ACEITE' ? xx + 4 : xx}" y="${g.tipo === 'ACEITE' ? gy + 42 : gy + 30}" text-anchor="${g.tipo === 'ACEITE' ? 'start' : 'middle'}" style="font-size:9px;fill:var(--ink-2)">${g.tipo === 'LIB' ? 'LIB ' + M.frentes[g.f].nome : 'ACEITE'}</text>` : ''}</g>`;
   });
   s += `<line id="gNow" x1="${x(ST.day)}" x2="${x(ST.day)}" y1="${top - 6}" y2="${H - 6}" stroke="var(--brass)" stroke-width="2"/></svg>`;
   const legend =

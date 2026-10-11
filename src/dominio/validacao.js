@@ -263,6 +263,7 @@ const ENSAIO_SERIE = {
   '?obsPorPonto': ['lista', txt],
   '?obsReprovado': txt,
   '?camadaCiclo': num,
+  '?ultimaCamada': { valor: VALOR, criterio: txt },
   '?umidade': { media: num, desvio: num, '?casas': num },
   '?extras': ['lista', 'qualquer']
 };
