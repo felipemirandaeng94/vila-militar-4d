@@ -7,6 +7,7 @@ import { $, lsGet } from './dom.js';
 import { hideInfo, showInfo, selectTest } from './paineis.js';
 import { openTab } from './abas.js';
 import { cena, setView, trocarExagero, mostrarRotulos, camAt } from '../motor/index.js';
+import { initVisualizacao } from './visualizacao.js';
 import { GAME, briefing, finishGame, missaoAtiva, setMode } from '../jogo/missao.js';
 
 export function syncSpeed() {
@@ -26,9 +27,9 @@ export function initUI() {
     `Reconstrução de ${nf(P.L, 0)} m em ${M.frentes.length} frentes · drenagem nova · pista de ${nf(P.W_RV, 1)} m · CBUQ 5 cm sobre base de 15 cm e sub-base de 20 cm · ${nf(M.fim, 0)} dias úteis a partir de ${fmtDate(0)}`;
   $('aviso').textContent = D.obra.obra.aviso;
   // créditos das fontes do local real sobre o modelo 3D
-  $('creditos3d').textContent = D.local
-    ? 'Entorno: ' + D.local.meta.creditos.map(c => c.texto).join(' · ')
-    : 'Local real indisponível: eixo reto e terreno fictício.';
+  $('creditos3d').textContent =
+    (D.local ? 'Entorno: ' + D.local.meta.creditos.map(c => c.texto).join(' · ') : 'Local real indisponível: eixo reto e terreno fictício.') +
+    ' · Céu: Poly Haven (CC0)';
   // vistas
   document.querySelectorAll('[data-view]').forEach(
     b =>
@@ -95,6 +96,7 @@ export function initUI() {
     const ck = $('optFollow');
     if (ck) ck.checked = v;
   });
+  initVisualizacao();
   // eventos do motor
   on('info', (t, d) => showInfo(t, d));
   on('semSelecao', hideInfo);

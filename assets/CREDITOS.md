@@ -16,6 +16,12 @@ Não usados:
 - Imagens do Google Maps ou do Google Earth: os termos do Google proíbem a extração. Nenhum dado do Google foi baixado ou armazenado.
 - Copernicus GLO-30 (ESA): previsto em `scripts/geo/relevo.py` só como reserva, se o MDT do IPP ficar indisponível. Não foi usado nesta versão.
 
+## Céu e iluminação (Fase 4)
+
+| Recurso | Fonte | Licença | Uso no app | Arquivos |
+|---|---|---|---|---|
+| HDRI "Kloofendal 48d Partly Cloudy (Pure Sky)", de Greg Zaal e Jarod Guest | Poly Haven, https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky (API pública, download em 11/10/2026 por `scripts/assets/baixar_polyhaven.py`) | CC0 1.0 (domínio público); o crédito é cortesia | Fundo do céu, luz ambiente (PMREM), direção do sol e cor da névoa | `public/hdri/ceu_2k.hdr`, `public/hdri/ceu_4k.hdr`, `public/hdri/ceu.json` |
+
 ## Fontes tipográficas
 
 | Recurso | Licença |

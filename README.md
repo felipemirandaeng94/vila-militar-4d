@@ -53,6 +53,7 @@ Roda os testes das regras da obra (Vitest) em `tests/`.
 - `src/interface/`: painéis, abas, gráficos e diário de obra.
 - `src/jogo/`: missão do engenheiro residente.
 - `src/estado.js` e `src/controlador.js`: estado central e ligação entre as camadas.
+- `public/hdri/`: céu HDRI do Poly Haven (CC0) em 2K e 4K, baixado por `scripts/assets/baixar_polyhaven.py`.
 - `public/local/`: local real (eixo, terreno, vias, edificações e metadados), gerado por `scripts/geo/` (pipeline Python, veja `scripts/geo/README.md`).
 - `assets/CREDITOS.md`: origem e licença dos recursos externos.
 - `tests/`: testes do domínio e do local real.

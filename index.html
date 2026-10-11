@@ -57,7 +57,15 @@
         <summary>Camadas</summary>
         <div class="layers" id="layers"></div>
       </details>
-      <p class="help">Arraste para girar, use a roda ou a pinça para aproximar e o botão direito (ou dois dedos) para mover. Clique em um equipamento, em uma camada, no terreno ou em um ponto de ensaio para ver os detalhes. <b>Executar a obra</b> reproduz a sequência dia a dia; ◀ e ▶ saltam entre os inícios de serviço (setas do teclado e barra de espaço também funcionam).</p>
+      <details class="card">
+        <summary>Visualização</summary>
+        <div class="opts">
+          <div class="field"><label for="optQual">Qualidade gráfica</label><select id="optQual"><option value="auto">Automática</option><option value="baixa">Baixa</option><option value="media">Média</option><option value="alta">Alta</option></select><p class="cdesc" id="qualDesc"></p></div>
+          <div class="field"><div class="row"><label for="optExp">Exposição</label><b id="expVal"></b></div><input id="optExp" type="range" min="0.5" max="1.8" step="0.05" value="0.95"></div>
+          <label class="ck"><input type="checkbox" id="optFps"> Quadros por segundo (tecla F)</label>
+        </div>
+      </details>
+      <p class="help">Arraste para girar, use a roda ou a pinça para aproximar e o botão direito (ou dois dedos) para mover. Clique em um equipamento, em uma camada, no terreno ou em um ponto de ensaio para ver os detalhes. <b>Executar a obra</b> reproduz a sequência dia a dia; ◀ e ▶ saltam entre os inícios de serviço (setas do teclado e barra de espaço também funcionam). A tecla F mostra os quadros por segundo.</p>
     </aside>
 
     <section class="stage" aria-label="Modelo 3D da obra">
@@ -67,6 +75,7 @@
       <div class="hud" id="hud" hidden aria-live="polite"></div>
       <div class="gm" id="gm" hidden><div class="gmc" id="gmc" role="dialog" aria-modal="false" aria-label="Decisão da missão"></div></div>
       <p class="creditos3d" id="creditos3d"></p>
+      <p class="fps" id="fps" hidden></p>
       <div class="legend3d" aria-hidden="true"><span><i class="dot" style="--c:var(--ok)"></i>Ensaio conforme</span><span><i class="dot" style="--c:var(--bad)"></i>Não conforme</span></div>
       <div class="bar4d">
         <button id="prev" class="btn ghost" aria-label="Serviço anterior">◀ Serviço</button>

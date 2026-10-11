@@ -35,6 +35,21 @@ function local() {
   <p class="note">${esc(m.aviso)} Área militar: o modelo usa apenas dados de fontes públicas e não identifica edificações internas.</p>`;
 }
 
+// recursos visuais externos (Fase 4); a lista completa está em assets/CREDITOS.md
+const RECURSOS = [
+  [
+    'Céu HDRI',
+    'Kloofendal 48d Partly Cloudy (Pure Sky), de Greg Zaal e Jarod Guest, Poly Haven (polyhaven.com)',
+    'CC0 1.0 (domínio público)',
+    'Fundo do céu, luz ambiente e direção do sol'
+  ]
+];
+function recursos() {
+  return `<h3 class="h3">Recursos visuais</h3><div class="tbl"><table><thead><tr><th>Recurso</th><th>Origem</th><th>Licença</th><th>Uso no modelo</th></tr></thead><tbody>${RECURSOS.map(
+    r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`
+  ).join('')}</tbody></table></div>`;
+}
+
 export function tabCtx() {
   const OBRA = D.obra.obra;
   const flow = [
@@ -50,5 +65,6 @@ export function tabCtx() {
   <div class="masonry">${D.obra.contexto.map(c => `<div class="ccard"><h4>${esc(c.titulo)}</h4><p class="csub">${esc(c.texto)}</p></div>`).join('')}</div>
   <h3 class="h3">Normas utilizadas</h3><div class="tbl"><table><thead><tr><th>Norma</th><th>Título</th><th>Aplicação no modelo</th></tr></thead><tbody>${D.normas.referencias.map(n => `<tr><td class="m">${n.norma}</td><td>${esc(n.titulo)}</td><td>${esc(n.aplicacao)}</td></tr>`).join('')}</tbody></table></div>
   ${local()}
+  ${recursos()}
   <p class="note">Modelo didático. Terreno, quantidades e resultados de ensaio são ilustrativos, gerados de forma coerente com os critérios das especificações citadas. Não substituem o projeto executivo nem o plano de controle da obra real. Confirme sempre a revisão vigente de cada norma na coletânea do DNIT.</p>`;
 }

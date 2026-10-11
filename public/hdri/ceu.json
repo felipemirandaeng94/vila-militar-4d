@@ -1,0 +1,15 @@
+{
+  "id": "kloofendal_48d_partly_cloudy_puresky",
+  "nome": "Kloofendal 48d Partly Cloudy (Pure Sky)",
+  "autores": [
+    "Greg Zaal",
+    "Jarod Guest"
+  ],
+  "licenca": "CC0 1.0 (domínio público)",
+  "origem": "https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky",
+  "download": "2026-10-11",
+  "arquivos": {
+    "2k": "ceu_2k.hdr",
+    "4k": "ceu_4k.hdr"
+  }
+}

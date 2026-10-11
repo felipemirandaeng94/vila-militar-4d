@@ -1,6 +1,6 @@
 // Interface pública do motor 3D para o controlador.
 import { ST } from '../estado.js';
-import { cena, iniciarRenderizador, applyTheme, renderizar } from './renderizador.js';
+import { cena, iniciarRenderizador, applyTheme, renderizar, carregarCeu, visual, escolherQualidade, definirExposicao } from './renderizador.js';
 import { centrarMundo } from './base.js';
 import { buildTerrain } from './terreno.js';
 import { buildSurroundings } from './entorno.js';
@@ -14,8 +14,9 @@ import { buildLabels, updateLabels, mostrarRotulos } from './rotulos.js';
 import { setView, setProfileClip, frontPoint, seguirFrente, passoCamera, camAt, focarPonto } from './camera.js';
 import { iniciarSelecao } from './selecao.js';
 import { uDia } from './dias.js';
+import { ceu } from './ceu.js';
 
-export { cena, applyTheme, setView, setProfileClip, camAt, focarPonto, buildMarkers, mostrarRotulos, superficie };
+export { cena, visual, escolherQualidade, definirExposicao, applyTheme, setView, setProfileClip, camAt, focarPonto, buildMarkers, mostrarRotulos, superficie };
 
 // partes que dependem do cronograma (dias de execução de cada estaca)
 function construirObra() {
@@ -38,6 +39,9 @@ export function montarMotor(vp) {
   construirObra();
   setView('iso', true);
   iniciarSelecao();
+  carregarCeu();
+  // inspeção no console e nos testes de navegador, só no servidor de desenvolvimento
+  if (import.meta.env.DEV) window.__vm4d = { cena, visual, ceu, setView };
 }
 
 // troca de cenário ou decisão com retrabalho: o cronograma mudou

@@ -8,7 +8,7 @@ import { P } from '../dominio/geometria.js';
 import { obraDeLocal } from '../dominio/local.js';
 import { rng } from '../dominio/util.js';
 import { wy, mat, mundoDeLocal } from './base.js';
-import { cena } from './renderizador.js';
+import { cena, registrarVegetacao } from './renderizador.js';
 import { cotaNoLocal } from './terreno.js';
 import { comDias, NUNCA, diasPorInstancia } from './dias.js';
 import { M, D } from '../estado.js';
@@ -118,13 +118,14 @@ function geometriaDoPredio(e) {
   const W = pts.map(([x, y]) => mundoDeLocal(x, y));
   const pos = [],
     idx = [];
-  // paredes
+  // paredes e cobertura com as faces para fora (o contorno anti-horário no plano local fica horário no mundo, z = −y):
+  // as normais para fora são necessárias para o viés de normal da sombra
   for (let i = 0; i < W.length; i++) {
     const a = W[i],
       b = W[(i + 1) % W.length],
       k = pos.length / 3;
     pos.push(a.x, y0, a.z, b.x, y0, b.z, b.x, y1, b.z, a.x, y1, a.z);
-    idx.push(k, k + 2, k + 1, k, k + 3, k + 2);
+    idx.push(k, k + 1, k + 2, k, k + 2, k + 3);
   }
   // cobertura plana
   const tri = THREE.ShapeUtils.triangulateShape(
@@ -133,7 +134,7 @@ function geometriaDoPredio(e) {
   );
   const k = pos.length / 3;
   for (const w of W) pos.push(w.x, y1, w.z);
-  for (const [a, b, c] of tri) idx.push(k + a, k + c, k + b);
+  for (const [a, b, c] of tri) idx.push(k + a, k + b, k + c);
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   g.setIndex(idx);
@@ -148,8 +149,7 @@ function construirEdificacoes(LAY) {
   for (const [uso, geos] of Object.entries(porUso)) {
     const g = mergeGeometries(geos);
     g.computeVertexNormals();
-    // faces dos dois lados: o sentido do contorno se inverte no mundo (z = −y)
-    const o = new THREE.Mesh(g, mat(COR_EDIF[uso] || COR_EDIF.edificação, { roughness: 0.9, side: THREE.DoubleSide }));
+    const o = new THREE.Mesh(g, mat(COR_EDIF[uso] || COR_EDIF.edificação, { roughness: 0.9 }));
     o.castShadow = o.receiveShadow = true;
     o.userData.info = {
       t: 'Edificação existente',
@@ -225,7 +225,8 @@ function ocupacao() {
   return (x, y) => set.has(Math.floor(x / cel) * 100003 + Math.floor(y / cel));
 }
 function construirVegetacao(LAY) {
-  const R = rng(31);
+  const R = rng(31),
+    K = rng(77);
   const ocupado = ocupacao();
   const c = P.CANT;
   const lista = [];
@@ -237,8 +238,12 @@ function construirVegetacao(LAY) {
     if (oc.s > c.s0 - 8 && oc.s < c.s1 + 8 && oc.z > c.z0 - 8 && oc.z < c.z1 + 8) continue;
     // árvores na faixa do desvio provisório saem com a limpeza
     const naFaixaDoDesvio = !!o && o.z < -5 && o.z > -12 && o.s > -30 && o.s < P.L + 30;
-    lista.push({ x, y, h: 6 + R() * 7, rot: R() * 6, palma: R() < 0.15, cor: R() < 0.5, naFaixaDoDesvio });
+    lista.push({ x, y, h: 6 + R() * 7, rot: R() * 6, palma: R() < 0.15, cor: R() < 0.5, naFaixaDoDesvio, k: K() });
   }
+  // ordem aleatória (chave k): a densidade do perfil de qualidade desenha só o começo de cada malha, as árvores com k
+  // abaixo da fração, de modo que tronco, copa e folhas da mesma árvore aparecem juntos
+  lista.sort((a, b) => a.k - b.k);
+  const malhas = [];
   const limpeza = M.svc.find(x => x.meta && x.meta.representacao === 'limpeza');
   const fimLimpeza = limpeza ? limpeza.b : NUNCA;
   const ob = new THREE.Object3D();
@@ -258,7 +263,9 @@ function construirVegetacao(LAY) {
     m.castShadow = false;
     m.receiveShadow = true;
     m.userData.info = nome;
+    m.userData.chaves = itens.map(t => t.k);
     LAY.entorno.add(m);
+    malhas.push(m);
     return m;
   };
   const info_ = {
@@ -306,6 +313,15 @@ function construirVegetacao(LAY) {
     },
     info_
   );
+  registrarVegetacao((frac, sombra) => {
+    for (const m of malhas) {
+      const ch = m.userData.chaves;
+      let n = 0;
+      while (n < ch.length && ch[n] < frac) n++;
+      m.count = n;
+      m.castShadow = sombra;
+    }
+  });
 }
 
 export function buildSurroundings() {

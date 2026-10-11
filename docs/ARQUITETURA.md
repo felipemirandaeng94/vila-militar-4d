@@ -75,7 +75,10 @@ Funções puras, testadas com Vitest. Recebem os dados por parâmetro ou por fun
 
 ### `src/motor/`
 Só Three.js. Lê `M` e `ST` e não mexe nos painéis.
-- `renderizador.js`: cena, câmera, luzes e controles.
+- `renderizador.js`: cena, câmera, luzes, controles, sombra ajustada à câmera (quadrado em torno do alvo da órbita, alinhado à grade de texels, com viés proporcional ao texel), exposição e aplicação dos perfis de qualidade (Fase 4).
+- `ceu.js` e `ceuHdr.js` (Fase 4): céu HDRI de `public/hdri/` (Poly Haven, CC0). `ceuHdr.js` (sem WebGL, testado) acha o sol, a cor do horizonte e a radiância média do céu; `ceu.js` gera o ambiente por PMREM (com o disco do sol limitado, porque a luz direcional já faz o sol), o fundo (com o hemisfério de baixo na cor do horizonte) e a névoa exponencial. O HDRI é girado para o sol ficar a nordeste, como numa manhã de junho, usando o azimute do eixo de `meta.json`. Sem o HDRI, valem a luz hemisférica e o fundo do tema.
+- `posprocessamento.js` (Fase 4): EffectComposer com a cena em meio-float e textura de profundidade, GTAO (normais reconstruídas da profundidade, que respeita o descarte por dia e o corte em perfil), OutputPass (ACES e sRGB) e SMAA ou FXAA.
+- `qualidade.js` (Fase 4): perfis baixa, média e alta, escolha inicial pelo nome da GPU, medição da taxa de quadros nos primeiros segundos (desce um perfil abaixo de 45 quadros/s) e medidor do indicador de quadros (tecla F). A escolha manual e a exposição ficam no `localStorage` (`vm4d.qualidade`, `vm4d.exposicao`).
 - `base.js`: materiais, formas e a conversão para o mundo 3D: `mundo(s, z)` segue o eixo curvo, `rumo(s)` dá a orientação do eixo e `colocar(o, s, z, y, rot)` posiciona e orienta objetos. Faixas do pavimento, instâncias (tubos, caixas, meio-fio, cones, placas), máquinas e rótulos passam por elas, então acompanham as curvas.
 - `modelos.js`: equipamentos e construções.
 - `usina.js`, `terreno.js`, `entorno.js`, `pavimento.js`, `canteiro.js` e `equipamentos.js`.

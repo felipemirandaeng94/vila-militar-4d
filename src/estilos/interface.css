@@ -123,3 +123,24 @@
     top: 14px;
   }
 }
+
+/* indicador de quadros por segundo (Fase 4, tecla F) */
+.fps {
+  position: absolute;
+  left: 14px;
+  bottom: 76px;
+  margin: 0;
+  padding: 4px 10px;
+  font: 500 11.5px/1.35 var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  pointer-events: none;
+}
+.fps.lento {
+  color: var(--bad);
+}
