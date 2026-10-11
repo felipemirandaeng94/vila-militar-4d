@@ -5,11 +5,11 @@ import * as THREE from 'three';
 import { P, sg, nat, diametroRede, larguraVala, profundidadeVala } from '../dominio/geometria.js';
 import { diaDoServico, janela } from '../dominio/frentes.js';
 import { trechosRuins } from '../dominio/quantitativos.js';
-import { rng } from '../dominio/util.js';
 import { M, ST, D } from '../estado.js';
 import { wy, mat, mundo, colocar } from './base.js';
 import { cena } from './renderizador.js';
 import { comDias, NUNCA, finito, diasPorInstancia } from './dias.js';
+import { pbr } from './superficies.js';
 
 export const CAMADAS = []; // malhas com dias (para o corte em perfil e a seleção)
 
@@ -47,8 +47,8 @@ export function alturas(s) {
 const fundoDaVala = s => sg(s) - (profundidadeVala(diametroRede(s)) - P.E_EX);
 
 // ---------- construtor de faixas com dias por vértice ----------
-// z0, z1, bot, top: números ou funções da estaca; dias(s) -> [aparece, some]
-function faixa({ z0, z1, bot, top, dias, cor, opts = {}, nome, info, s0 = 0, s1 = P.L, passo = 2, tampa = true, fundo = false, lados = true }) {
+// z0, z1, bot, top: números ou funções da estaca; dias(s) -> [aparece, some]; sup: material PBR da camada (superficies.js)
+function faixa({ z0, z1, bot, top, dias, cor, opts = {}, sup, nome, info, s0 = 0, s1 = P.L, passo = 2, tampa = true, fundo = false, lados = true }) {
   const f = v => (typeof v === 'function' ? v : () => v);
   const Z0 = f(z0),
     Z1 = f(z1),
@@ -91,9 +91,11 @@ function faixa({ z0, z1, bot, top, dias, cor, opts = {}, nome, info, s0 = 0, s1 
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   geo.setAttribute('aDias', new THREE.Float32BufferAttribute(dd, 2));
+  geo.setAttribute('aSZ', new THREE.Float32BufferAttribute(sz, 2));
   geo.setIndex(idx);
   geo.computeVertexNormals();
   const m = comDias(new THREE.MeshStandardMaterial(Object.assign({ color: cor, roughness: 0.9, metalness: 0, side: THREE.DoubleSide }, opts)));
+  pbr(m, Object.assign({ sz: true, geometrica: true }, sup));
   const o = new THREE.Mesh(geo, m);
   o.castShadow = false;
   o.receiveShadow = true;
@@ -104,56 +106,6 @@ function faixa({ z0, z1, bot, top, dias, cor, opts = {}, nome, info, s0 = 0, s1 
   CAMADAS.push(o);
   cena.LAY.pavimento.add(o);
   return o;
-}
-
-// textura simples de pavimento desgastado e de superfície fresada (geradas em canvas)
-function textura(tipo) {
-  const rnd = rng(tipo === 'velho' ? 11 : 12);
-  const c = document.createElement('canvas');
-  c.width = 256;
-  c.height = 64;
-  const g = c.getContext('2d');
-  if (tipo === 'velho') {
-    g.fillStyle = '#5d6062';
-    g.fillRect(0, 0, 256, 64);
-    for (let i = 0; i < 900; i++) {
-      const v = 70 + Math.floor(rnd() * 40);
-      g.fillStyle = `rgb(${v},${v + 2},${v + 4})`;
-      g.fillRect(rnd() * 256, rnd() * 64, 2, 2);
-    }
-    g.strokeStyle = 'rgba(30,30,30,.55)';
-    for (let i = 0; i < 9; i++) {
-      g.beginPath();
-      let x = rnd() * 256,
-        y = rnd() * 64;
-      g.moveTo(x, y);
-      for (let k = 0; k < 6; k++) g.lineTo((x += (rnd() - 0.3) * 18), (y += (rnd() - 0.5) * 10));
-      g.stroke();
-    }
-    g.fillStyle = 'rgba(40,40,40,.35)';
-    for (let i = 0; i < 4; i++) g.fillRect(rnd() * 230, rnd() * 50, 18 + rnd() * 20, 8 + rnd() * 8);
-  } else {
-    g.fillStyle = '#4a4c4c';
-    g.fillRect(0, 0, 256, 64);
-    for (let y = 0; y < 64; y += 4) {
-      g.fillStyle = y % 8 ? '#3a3c3d' : '#5b5d5e';
-      g.fillRect(0, y, 256, 2);
-    }
-  }
-  const t = new THREE.CanvasTexture(c);
-  t.colorSpace = THREE.SRGBColorSpace;
-  t.wrapS = t.wrapT = THREE.RepeatWrapping;
-  return t;
-}
-// coordenadas de textura em planta, ao longo do eixo (s) e transversais (z), para as faixas com textura
-function uvPlanta(o, escala) {
-  const p = o.userData.sz,
-    uv = new Float32Array(p.length);
-  for (let i = 0; i < p.length / 2; i++) {
-    uv[i * 2] = p[i * 2] / escala;
-    uv[i * 2 + 1] = p[i * 2 + 1] / (escala / 4);
-  }
-  o.geometry.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
 }
 
 export function buildPavement() {
@@ -190,6 +142,7 @@ export function buildPavement() {
       top: s => h(s).exSb,
       dias: s => [-1, mn(rem(s), ateVala(s))],
       cor: 0xa08a68,
+      sup: { camada: 'solo' },
       nome: 'ex-subbase',
       info: exInfo('Sub-base existente', '20 cm')
     });
@@ -200,6 +153,7 @@ export function buildPavement() {
       top: s => h(s).exBa,
       dias: s => [-1, mn(rem(s), ateVala(s))],
       cor: 0x8f8e88,
+      sup: { camada: 'brita' },
       nome: 'ex-base',
       info: exInfo('Base existente', '15 cm')
     });
@@ -211,21 +165,21 @@ export function buildPavement() {
     [v1, hP, false]
   ];
   for (const [a, b, ehVala] of zi) {
-    const o = faixa({
+    faixa({
       z0: a,
       z1: b,
       bot: s => h(s).exBa,
       top: s => h(s).exTop,
       dias: s => [-1, mn(fre(s), rem(s), ehVala ? vala(s).esc : Infinity)],
-      cor: 0xffffff,
-      opts: { map: textura('velho'), roughness: 0.95 },
+      cor: 0x606366,
+      opts: { roughness: 1 },
+      sup: { camada: 'asfalto_usado' },
       nome: 'ex-revestimento',
       info: {
         t: 'Revestimento existente (CBUQ antigo)',
         d: { Situação: 'Desgastado, com trincas e remendos', Espessura: '5 cm', Serviço: nomeSvc('fresagem') }
       }
     });
-    uvPlanta(o, 24);
   }
   for (const sd of [-1, 1])
     faixa({
@@ -235,24 +189,26 @@ export function buildPavement() {
       top: s => h(s).exTop,
       dias: s => [-1, rem(s)].map(finito),
       cor: 0x9a9890,
+      sup: { camada: 'concreto' },
       nome: 'ex-borda',
       info: { t: 'Sarjeta e meio-fio antigos', d: { Situação: 'Removidos com a caixa do pavimento', Serviço: nomeSvc('remocao') } }
     });
   // superfície fresada (topo da base existente), fora e dentro da banda da vala
   for (const [a, b, ehVala] of zi) {
-    const o = faixa({
+    faixa({
       z0: a,
       z1: b,
       bot: s => h(s).exBa,
       top: s => h(s).exBa + 0.012,
       dias: s => [fre(s), mn(rem(s), ehVala ? vala(s).esc : Infinity)],
-      cor: 0xffffff,
-      opts: { map: textura('fresado'), roughness: 1 },
+      cor: 0x4a4d50,
+      opts: { roughness: 1 },
+      // sem as trincas do revestimento antigo: a fresagem expõe a mistura sã
+      sup: { camada: 'asfalto_novo', fresado: true },
       nome: 'fresada',
       lados: false,
       info: { t: 'Superfície fresada', d: { Serviço: nomeSvc('fresagem'), Norma: 'DNIT 159/2011-ES', Profundidade: '5 cm' } }
     });
-    uvPlanta(o, 6);
   }
   // vala aberta: paredes e fundo, do topo da base existente até o fundo da vala
   faixa({
@@ -264,6 +220,7 @@ export function buildPavement() {
     cor: 0x6b4a33,
     tampa: false,
     fundo: true,
+    sup: { camada: 'argila' },
     nome: 'vala',
     info: { t: 'Vala da rede de drenagem', d: { Serviço: nomeSvc('vala'), Norma: 'DNIT 023/2024-ES', Escoramento: 'Painéis metálicos' } }
   });
@@ -275,6 +232,7 @@ export function buildPavement() {
     top: s => h(s).b,
     dias: s => [vala(s).reat, NUNCA].map(finito),
     cor: 0x9b7a55,
+    sup: { camada: 'solo', molhar: true },
     nome: 'reaterro',
     info: { t: 'Reaterro compactado da vala', d: { Serviço: nomeSvc('vala'), Controle: 'GC por camada (frasco de areia)' } }
   });
@@ -285,6 +243,7 @@ export function buildPavement() {
     top: s => h(s).exBa + 0.02,
     dias: s => [vala(s).reat, rem(s)].map(finito),
     cor: 0x9b7a55,
+    sup: { camada: 'solo', molhar: true },
     nome: 'reaterro',
     info: { t: 'Reaterro compactado da vala', d: { Serviço: nomeSvc('vala') } }
   });
@@ -296,6 +255,7 @@ export function buildPavement() {
     top: s => h(s).b,
     dias: () => [-1, NUNCA],
     cor: 0xa4683e,
+    sup: { camada: 'argila' },
     nome: 'subleito',
     lados: false,
     info: { t: 'Subleito exposto', d: { Controle: 'ISC a cada 50 m (ilustrativo)' } }
@@ -312,6 +272,7 @@ export function buildPavement() {
       dias: s => [diaRep('substituicao', s), NUNCA].map(finito),
       cor: 0xb58a55,
       lados: false,
+      sup: { camada: 'solo', molhar: true, marcas: 'pneu' },
       nome: 'substituicao',
       info: { t: 'Substituição de solo (60 cm)', d: { Serviço: nomeSvc('substituicao'), Material: 'Solo de jazida, ISC 14 %' } }
     });
@@ -323,6 +284,7 @@ export function buildPavement() {
     dias: s => [diaRep('regularizacao', s), NUNCA].map(finito),
     cor: 0xc7a275,
     lados: false,
+    sup: { camada: 'solo', molhar: true, marcas: 'pneu' },
     nome: 'regularizacao',
     info: { t: 'Subleito regularizado', d: { Serviço: nomeSvc('regularizacao'), Norma: 'DNIT 137/2010-ES' } }
   });
@@ -335,6 +297,7 @@ export function buildPavement() {
       top: s => h(s).top - 0.02,
       dias: s => [diaRep('sarjeta', s), NUNCA].map(finito),
       cor: 0xbdbab2,
+      sup: { camada: 'concreto' },
       nome: 'sarjeta',
       info: { t: 'Sarjeta de concreto', d: { Serviço: nomeSvc('sarjeta'), Norma: 'DNIT 018/2023-ES', Largura: '0,40 m' } }
     });
@@ -347,6 +310,7 @@ export function buildPavement() {
     top: s => h(s).sb,
     dias: s => [diaRep('subBase', s), NUNCA].map(finito),
     cor: 0xb79a72,
+    sup: { camada: 'brita', molhar: true, marcas: 'pneu' },
     nome: 'subBase',
     info: sbInfo
   });
@@ -357,6 +321,7 @@ export function buildPavement() {
     top: s => h(s).ba,
     dias: s => [diaRep('base', s), NUNCA].map(finito),
     cor: 0x9d9d97,
+    sup: { camada: 'brita', molhar: true, marcas: 'pneu' },
     nome: 'base',
     info: { t: 'Base de brita graduada', d: { Espessura: '15 cm', Largura: '7,0 m', Norma: 'DNIT 141/2022-ES', 'GC mínimo': '100 %' } }
   });
@@ -371,9 +336,10 @@ export function buildPavement() {
       bot: s => h(s).ba,
       top: s => h(s).ba + film,
       dias: s => [diaRep('imprimacao', s, fx), NUNCA].map(finito),
-      cor: 0x5a3d26,
-      opts: { roughness: 0.5 },
+      cor: 0x5a3a22,
+      opts: { roughness: 0.3 },
       lados: false,
+      sup: { camada: 'brita' },
       nome: 'imprimacao',
       info: { t: `Imprimação com CM-30 (${fx})`, d: { Taxa: '1,20 L/m²', Norma: 'DNIT 144/2014-ES' } }
     });
@@ -383,9 +349,10 @@ export function buildPavement() {
       bot: s => h(s).ba,
       top: s => h(s).ba + film * 1.6,
       dias: s => [diaRep('pintura', s, fx), NUNCA].map(finito),
-      cor: 0x231d19,
-      opts: { roughness: 0.5 },
+      cor: 0x1c1816,
+      opts: { roughness: 0.45 },
       lados: false,
+      sup: { camada: 'brita' },
       nome: 'pintura',
       info: { t: `Pintura de ligação RR-1C (${fx})`, d: { Taxa: '0,90 L/m² diluída 1:1', Norma: 'DNIT 145/2012-ES' } }
     });
@@ -395,8 +362,9 @@ export function buildPavement() {
       bot: s => h(s).ba,
       top: s => h(s).top,
       dias: s => [diaRep('cbuq', s, fx), NUNCA].map(finito),
-      cor: 0x2e3133,
-      opts: { roughness: 0.78 },
+      cor: 0x26282a,
+      opts: { roughness: 1 },
+      sup: { camada: 'asfalto_novo', marcas: 'rolo', junta: true },
       nome: 'cbuq',
       info: {
         t: `Revestimento em CBUQ (faixa ${fx === 'BD' ? 'direita' : 'esquerda'})`,
@@ -420,7 +388,8 @@ export function buildPavement() {
       top: s => h(s).top + 0.004,
       dias: s => [fl.a + ((s - fl.s0) / L) * (fl.b - fl.a), fl.rem[0] + ((fl.s - s) / L) * (fl.rem[1] - fl.rem[0])],
       cor: 0x1a1a1a,
-      opts: { roughness: 0.4 },
+      opts: { roughness: 0.6 },
+      sup: { camada: 'asfalto_novo' },
       nome: 'cbuq-rejeitado',
       info: { t: 'CBUQ com teor fora da tolerância', d: { Situação: 'Fresado e refeito', Teor: '6,05 % (5,6 ± 0,3 %)' } }
     });
@@ -437,7 +406,7 @@ function buildMeioFio() {
   }
   const n = Math.floor(P.L);
   const geo = new THREE.BoxGeometry(0.98, 1, P.W_MF);
-  const m = new THREE.InstancedMesh(geo, comDias(mat(0xd6d3cb).clone()), n * 2);
+  const m = new THREE.InstancedMesh(geo, pbr(comDias(mat(0xd6d3cb).clone()), { camada: 'concreto' }), n * 2);
   const o = new THREE.Object3D(),
     dias = [];
   let k = 0;

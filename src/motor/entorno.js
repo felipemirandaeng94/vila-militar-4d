@@ -11,6 +11,7 @@ import { wy, mat, mundoDeLocal } from './base.js';
 import { cena, registrarVegetacao } from './renderizador.js';
 import { cotaNoLocal } from './terreno.js';
 import { comDias, NUNCA, diasPorInstancia } from './dias.js';
+import { pbr } from './superficies.js';
 import { M, D } from '../estado.js';
 
 // ---------- vias ----------
@@ -21,6 +22,8 @@ const COR_VIA = {
   terra: 0x9a8566,
   pedestre: 0xb9b5aa
 };
+// textura PBR de cada tipo de via (superficies.js)
+const TEX_VIA = { asfalto: 'asfalto_usado', concreto: 'concreto', bloco: 'concreto', terra: 'solo', pedestre: 'concreto' };
 function corDaVia(v) {
   if (['footway', 'steps', 'pedestrian'].includes(v.tipo)) return 'pedestre';
   if (v.tipo === 'bridleway') return 'terra';
@@ -82,7 +85,15 @@ function construirVias(LAY) {
     geo.setAttribute('position', new THREE.Float32BufferAttribute(g.pos, 3));
     geo.setIndex(g.idx);
     geo.computeVertexNormals();
-    const o = new THREE.Mesh(geo, mat(COR_VIA[k], { roughness: 0.95, polygonOffset: true, polygonOffsetFactor: -2, side: THREE.DoubleSide }));
+    const material = new THREE.MeshStandardMaterial({
+      color: COR_VIA[k],
+      roughness: 1,
+      metalness: 0,
+      polygonOffset: true,
+      polygonOffsetFactor: -2,
+      side: THREE.DoubleSide
+    });
+    const o = new THREE.Mesh(geo, pbr(material, { camada: TEX_VIA[k] }));
     o.receiveShadow = true;
     o.userData.info = {
       t: k === 'pedestre' ? 'Caminho de pedestres existente' : 'Via existente',

@@ -6,8 +6,14 @@ import * as THREE from 'three';
 export const uDia = { value: 0 };
 export const NUNCA = 1e6;
 
+// encadeia com um onBeforeCompile já existente (superfícies PBR, superficies.js); aplicar duas vezes não repete o efeito
 export function comDias(material, { crescer = false } = {}) {
-  material.onBeforeCompile = sh => {
+  if (material.userData.comDias) return material;
+  material.userData.comDias = true;
+  const anterior = material.onBeforeCompile,
+    chaveAnterior = material.customProgramCacheKey;
+  material.onBeforeCompile = function (sh, r) {
+    if (anterior) anterior.call(this, sh, r);
     sh.uniforms.uDia = uDia;
     sh.vertexShader =
       'attribute vec2 aDias;\nvarying vec2 vDias;\nuniform float uDia;\n' +
@@ -19,7 +25,9 @@ export function comDias(material, { crescer = false } = {}) {
       'uniform float uDia;\nvarying vec2 vDias;\n' +
       sh.fragmentShader.replace('void main() {', 'void main() {\n  if (uDia < vDias.x || uDia >= vDias.y) discard;');
   };
-  material.customProgramCacheKey = () => 'comDias' + (crescer ? 'C' : '');
+  material.customProgramCacheKey = function () {
+    return (chaveAnterior ? chaveAnterior.call(this) : '') + 'comDias' + (crescer ? 'C' : '');
+  };
   return material;
 }
 

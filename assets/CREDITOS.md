@@ -22,6 +22,20 @@ Não usados:
 |---|---|---|---|---|
 | HDRI "Kloofendal 48d Partly Cloudy (Pure Sky)", de Greg Zaal e Jarod Guest | Poly Haven, https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky (API pública, download em 11/10/2026 por `scripts/assets/baixar_polyhaven.py`) | CC0 1.0 (domínio público); o crédito é cortesia | Fundo do céu, luz ambiente (PMREM), direção do sol e cor da névoa | `public/hdri/ceu_2k.hdr`, `public/hdri/ceu_4k.hdr`, `public/hdri/ceu.json` |
 
+## Texturas PBR do terreno e do pavimento (Fase 5)
+
+Baixadas pela API pública do Poly Haven em 11/10/2026 por `scripts/assets/baixar_texturas.py` (1K e 2K; cor, normal OpenGL e ARM), convertidas para WebP. Manifesto com autores e tamanho real: `public/texturas/texturas.json`.
+
+| Recurso | Fonte | Licença | Uso no app | Arquivos |
+|---|---|---|---|---|
+| Textura "Cracked Red Ground", de Amal Kumar | Poly Haven, https://polyhaven.com/a/cracked_red_ground | CC0 1.0 | Subleito exposto, vala, quadras de saibro | `public/texturas/argila/` |
+| Textura "Dry Mud Field 001", de Rob Tuytel e Rico Cilliers | Poly Haven, https://polyhaven.com/a/dry_mud_field_001 | CC0 1.0 | Solo compactado: regularização, reaterro, substituição, sub-base existente, chão do entorno | `public/texturas/solo/` |
+| Textura "Gravel Floor 04", de Charlotte Baglioni | Poly Haven, https://polyhaven.com/a/gravel_floor_04 | CC0 1.0 | Brita graduada, solo-brita, imprimação e pintura de ligação (sobre a base), pátio do canteiro, faixa de desvio | `public/texturas/brita/` |
+| Textura "Asphalt Pit Lane", de Dimitrios Savva | Poly Haven, https://polyhaven.com/a/asphalt_pit_lane | CC0 1.0 | CBUQ novo, superfície fresada, tinta de demarcação | `public/texturas/asfalto_novo/` |
+| Textura "Asphalt 02", de Rob Tuytel | Poly Haven, https://polyhaven.com/a/asphalt_02 | CC0 1.0 | Revestimento existente e vias do entorno | `public/texturas/asfalto_usado/` |
+| Textura "Leafy Grass", de Charlotte Baglioni | Poly Haven, https://polyhaven.com/a/leafy_grass | CC0 1.0 | Gramados, campos e matas | `public/texturas/grama/` |
+| Textura "Concrete Floor 03", de Rob Tuytel e Matterfield | Poly Haven, https://polyhaven.com/a/concrete_floor_03 | CC0 1.0 | Passeios, sarjeta, meio-fio e vias de concreto | `public/texturas/concreto/` |
+
 ## Fontes tipográficas
 
 | Recurso | Licença |

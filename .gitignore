@@ -16,3 +16,4 @@ scripts/geo/.venv/
 __pycache__/
 geo/brutos/
 geo/tmp/
+assets/brutos/

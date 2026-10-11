@@ -7,6 +7,10 @@ import { wy, mat, mundo, rumo } from './base.js';
 import { cena } from './renderizador.js';
 import { comDias, NUNCA, finito, diasPorInstancia } from './dias.js';
 import { CAMADAS, alturas, diaRep, servicoRep } from './pavimento.js';
+import { pbr } from './superficies.js';
+
+// tinta de demarcação viária: cor da tinta sobre o relevo do CBUQ novo, um pouco menos rugosa que ele
+const tinta = cor => pbr(mat(cor, { roughness: 0.75 }).clone(), { camada: 'asfalto_novo' });
 
 const grupo = new THREE.Group();
 grupo.name = 'sinalizacao';
@@ -109,7 +113,7 @@ export function buildSinalizacao() {
     geo.setAttribute('aDias', new THREE.Float32BufferAttribute(dd, 2));
     geo.setIndex(idx);
     geo.computeVertexNormals();
-    const o = new THREE.Mesh(geo, comDias(new THREE.MeshStandardMaterial({ color: 0x8b8577, roughness: 1, side: THREE.DoubleSide })));
+    const o = new THREE.Mesh(geo, pbr(comDias(new THREE.MeshStandardMaterial({ color: 0x8b8577, roughness: 1, side: THREE.DoubleSide })), { camada: 'brita' }));
     o.receiveShadow = true;
     o.userData.info = {
       t: `Faixa de desvio provisória (${dv.f.nome})`,
@@ -124,7 +128,7 @@ export function buildSinalizacao() {
   const tracos = [];
   for (let s = 4; s < P.L; s += 12)
     tracos.push({ s, matrix: matriz(s, wy(topo(s)) + 0.012, 0, 0, 4, 0.02, 0.12), dias: [finito(diaRep('sinalizacaoHorizontal', s)), NUNCA] });
-  instancias(new THREE.BoxGeometry(1, 1, 1), mat(0xf5c400, { roughness: 0.6 }).clone(), tracos, {
+  instancias(new THREE.BoxGeometry(1, 1, 1), tinta(0xe8b400), tracos, {
     t: 'Faixa central tracejada',
     d: { Serviço: nomeSH, Norma: 'DNIT 100/2018-ES' }
   });
@@ -136,7 +140,7 @@ export function buildSinalizacao() {
         matrix: matriz(s, wy(topo(s)) + 0.012, sd * (P.W_RV / 2 - 0.15), 0, 2, 0.02, 0.1),
         dias: [finito(diaRep('sinalizacaoHorizontal', s)), NUNCA]
       });
-  instancias(new THREE.BoxGeometry(1, 1, 1), mat(0xf2f0e6, { roughness: 0.6 }).clone(), bordos, {
+  instancias(new THREE.BoxGeometry(1, 1, 1), tinta(0xeeece4), bordos, {
     t: 'Linha de bordo',
     d: { Serviço: nomeSH, Norma: 'DNIT 100/2018-ES' }
   });

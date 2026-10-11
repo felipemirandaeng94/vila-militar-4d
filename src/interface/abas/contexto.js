@@ -42,6 +42,33 @@ const RECURSOS = [
     'Kloofendal 48d Partly Cloudy (Pure Sky), de Greg Zaal e Jarod Guest, Poly Haven (polyhaven.com)',
     'CC0 1.0 (domínio público)',
     'Fundo do céu, luz ambiente e direção do sol'
+  ],
+  ['Textura PBR', 'Cracked Red Ground, de Amal Kumar, Poly Haven (polyhaven.com)', 'CC0 1.0 (domínio público)', 'Subleito exposto, vala, quadras de saibro'],
+  [
+    'Textura PBR',
+    'Dry Mud Field 001, de Rob Tuytel e Rico Cilliers, Poly Haven (polyhaven.com)',
+    'CC0 1.0 (domínio público)',
+    'Solo compactado: regularização, reaterro, substituição, sub-base existente, chão do entorno'
+  ],
+  [
+    'Textura PBR',
+    'Gravel Floor 04, de Charlotte Baglioni, Poly Haven (polyhaven.com)',
+    'CC0 1.0 (domínio público)',
+    'Brita graduada, solo-brita, imprimação e pintura de ligação (sobre a base), pátio do canteiro, faixa de desvio'
+  ],
+  [
+    'Textura PBR',
+    'Asphalt Pit Lane, de Dimitrios Savva, Poly Haven (polyhaven.com)',
+    'CC0 1.0 (domínio público)',
+    'CBUQ novo, superfície fresada, tinta de demarcação'
+  ],
+  ['Textura PBR', 'Asphalt 02, de Rob Tuytel, Poly Haven (polyhaven.com)', 'CC0 1.0 (domínio público)', 'Revestimento existente e vias do entorno'],
+  ['Textura PBR', 'Leafy Grass, de Charlotte Baglioni, Poly Haven (polyhaven.com)', 'CC0 1.0 (domínio público)', 'Gramados, campos e matas'],
+  [
+    'Textura PBR',
+    'Concrete Floor 03, de Rob Tuytel e Matterfield, Poly Haven (polyhaven.com)',
+    'CC0 1.0 (domínio público)',
+    'Passeios, sarjeta, meio-fio e vias de concreto'
   ]
 ];
 function recursos() {

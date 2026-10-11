@@ -1,0 +1,71 @@
+{
+  "licenca": "CC0 1.0 (domínio público)",
+  "download": "2026-10-11",
+  "materiais": {
+    "argila": {
+      "id": "cracked_red_ground",
+      "nome": "Cracked Red Ground",
+      "autores": [
+        "Amal Kumar"
+      ],
+      "tamanho_m": 2.0,
+      "origem": "https://polyhaven.com/a/cracked_red_ground"
+    },
+    "solo": {
+      "id": "dry_mud_field_001",
+      "nome": "Dry Mud Field 001",
+      "autores": [
+        "Rob Tuytel",
+        "Rico Cilliers"
+      ],
+      "tamanho_m": 3.0,
+      "origem": "https://polyhaven.com/a/dry_mud_field_001"
+    },
+    "brita": {
+      "id": "gravel_floor_04",
+      "nome": "Gravel Floor 04",
+      "autores": [
+        "Charlotte Baglioni"
+      ],
+      "tamanho_m": 2.46,
+      "origem": "https://polyhaven.com/a/gravel_floor_04"
+    },
+    "asfalto_novo": {
+      "id": "asphalt_pit_lane",
+      "nome": "Asphalt Pit Lane",
+      "autores": [
+        "Dimitrios Savva"
+      ],
+      "tamanho_m": 2.0,
+      "origem": "https://polyhaven.com/a/asphalt_pit_lane"
+    },
+    "asfalto_usado": {
+      "id": "asphalt_02",
+      "nome": "Asphalt 02",
+      "autores": [
+        "Rob Tuytel"
+      ],
+      "tamanho_m": 3.0,
+      "origem": "https://polyhaven.com/a/asphalt_02"
+    },
+    "grama": {
+      "id": "leafy_grass",
+      "nome": "Leafy Grass",
+      "autores": [
+        "Charlotte Baglioni"
+      ],
+      "tamanho_m": 2.0,
+      "origem": "https://polyhaven.com/a/leafy_grass"
+    },
+    "concreto": {
+      "id": "concrete_floor_03",
+      "nome": "Concrete Floor 03",
+      "autores": [
+        "Rob Tuytel",
+        "Matterfield"
+      ],
+      "tamanho_m": 2.5,
+      "origem": "https://polyhaven.com/a/concrete_floor_03"
+    }
+  }
+}

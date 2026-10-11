@@ -4,8 +4,9 @@
 /**
  * Cada perfil define: densidade de pixels máxima, lado do mapa de sombra e raio do filtro PCF, alcance máximo da sombra
  * em torno do alvo da câmera (m), pós-processamento (null = direto na tela com MSAA; ao = resolução do GTAO; aa = SMAA
- * ou FXAA), distância de desenho (plano distante da câmera, m), fração das árvores desenhadas, sombra das árvores e
- * resolução do céu de fundo.
+ * ou FXAA), distância de desenho (plano distante da câmera, m), fração das árvores desenhadas, sombra das árvores,
+ * resolução do céu de fundo, lado das texturas PBR do terreno e do pavimento (px) e relevo (mapas de normais e projeção
+ * triplanar nas faces inclinadas).
  */
 export const PERFIS = {
   baixa: {
@@ -18,7 +19,9 @@ export const PERFIS = {
     distancia: 3200,
     vegetacao: 0.35,
     sombraVegetacao: false,
-    ceu: '2k'
+    ceu: '2k',
+    texturas: 512,
+    relevo: false
   },
   media: {
     nome: 'Média',
@@ -30,7 +33,9 @@ export const PERFIS = {
     distancia: 4500,
     vegetacao: 0.7,
     sombraVegetacao: false,
-    ceu: '2k'
+    ceu: '2k',
+    texturas: 1024,
+    relevo: true
   },
   alta: {
     nome: 'Alta',
@@ -42,7 +47,9 @@ export const PERFIS = {
     distancia: 6000,
     vegetacao: 1,
     sombraVegetacao: true,
-    ceu: '4k'
+    ceu: '4k',
+    texturas: 2048,
+    relevo: true
   }
 };
 export const ORDEM = ['baixa', 'media', 'alta'];

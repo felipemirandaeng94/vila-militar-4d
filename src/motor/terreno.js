@@ -9,6 +9,7 @@ import { rng } from '../dominio/util.js';
 import { D } from '../estado.js';
 import { wy, C, mundo, mundoDeLocal } from './base.js';
 import { cena } from './renderizador.js';
+import { pbr, T } from './superficies.js';
 
 let terr = null;
 const malhas = [];
@@ -58,6 +59,19 @@ const COR = {
   passeio: [0.74, 0.72, 0.68],
   patio: C.pad
 };
+// textura PBR de cada uso do solo (superficies.js); a cor acima é a cor-alvo da textura
+const TEX = {
+  chao: 'solo',
+  verde: 'grama',
+  mata: 'grama',
+  quadra: 'argila',
+  campo: 'grama',
+  agua: 'solo',
+  estacionamento: 'asfalto_usado',
+  pista: 'asfalto_usado',
+  passeio: 'concreto',
+  patio: 'brita'
+};
 function preparoAreas(areas) {
   return areas.map(a => {
     const xs = a.pts.map(p => p[0]),
@@ -85,17 +99,29 @@ function usoNoPonto(areas, x, y) {
   }
   return melhor || 'chao';
 }
-function pintar(col, k, cc, ruido) {
+// cor-alvo (linear) e peso 1 na textura do uso; os pesos se misturam entre vértices vizinhos de usos diferentes
+function pintar(col, k, cc, ruido, uso) {
   const m = 0.05 * (ruido - 0.5);
+  const t = T[TEX[uso]];
+  (t < 4 ? col.pa : col.pb)[k * 4 + (t % 4)] = 1;
   col[k * 3] = Math.pow(Math.max(0, cc[0] + m), 2.2);
   col[k * 3 + 1] = Math.pow(Math.max(0, cc[1] + m), 2.2);
   col[k * 3 + 2] = Math.pow(Math.max(0, cc[2] + m), 2.2);
+}
+// cores (3 por vértice) e pesos das texturas (aPesoA e aPesoB, 4 + 4 por vértice)
+function cores(n) {
+  const c = new Float32Array(n * 3);
+  c.pa = new Float32Array(n * 4);
+  c.pb = new Float32Array(n * 4);
+  return c;
 }
 function malha(pos, col, idx, material) {
   const geo = new THREE.BufferGeometry();
   geo.setIndex(idx);
   geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
   geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  geo.setAttribute('aPesoA', new THREE.BufferAttribute(col.pa, 4));
+  geo.setAttribute('aPesoB', new THREE.BufferAttribute(col.pb, 4));
   geo.computeVertexNormals();
   const o = new THREE.Mesh(geo, material);
   o.receiveShadow = true;
@@ -118,7 +144,7 @@ function terrenoReal(material) {
     nx = Math.floor((T.nx - 1) / k) + 1,
     ny = Math.floor((T.ny - 1) / k) + 1;
   const pos = new Float32Array(nx * ny * 3),
-    col = new Float32Array(nx * ny * 3),
+    col = cores(nx * ny),
     oz = new Float32Array(nx * ny),
     os = new Float32Array(nx * ny);
   for (let j = 0; j < ny; j++)
@@ -135,12 +161,12 @@ function terrenoReal(material) {
       pos[v * 3] = w.x;
       pos[v * 3 + 1] = wy(h);
       pos[v * 3 + 2] = w.z;
-      let cc = COR[usoNoPonto(areas, x, y)];
+      let uso = usoNoPonto(areas, x, y);
       if (perto_do_canteiro(x, y)) {
         const c = obraDeLocal(x, y);
-        if (noCanteiroLocal(c.s, c.z)) cc = COR.patio;
+        if (noCanteiroLocal(c.s, c.z)) uso = 'patio';
       }
-      pintar(col, v, cc, R());
+      pintar(col, v, COR[uso], R(), uso);
     }
   const idx = [];
   for (let j = 0; j < ny - 1; j++)
@@ -171,7 +197,7 @@ function faixaDoEixo(material) {
   const nS = S.length,
     nZ = Z.length;
   const pos = new Float32Array(nS * nZ * 3),
-    col = new Float32Array(nS * nZ * 3);
+    col = cores(nS * nZ);
   for (let i = 0; i < nS; i++)
     for (let j = 0; j < nZ; j++) {
       const v = i * nZ + j,
@@ -183,11 +209,11 @@ function faixaDoEixo(material) {
       pos[v * 3] = p.x;
       pos[v * 3 + 1] = wy(naCaixa ? sg(s) - 1.3 : nat(s, z));
       pos[v * 3 + 2] = p.z;
-      let cc;
-      if (az <= zv + 0.01) cc = COR.pista;
-      else if (az <= zv + 2.2) cc = COR.passeio;
-      else cc = COR[usoNoPonto(areas, ...localDeObra(s, z))];
-      pintar(col, v, cc, R());
+      let uso;
+      if (az <= zv + 0.01) uso = 'pista';
+      else if (az <= zv + 2.2) uso = 'passeio';
+      else uso = usoNoPonto(areas, ...localDeObra(s, z));
+      pintar(col, v, COR[uso], R(), uso);
     }
   const idx = [];
   for (let i = 0; i < nS - 1; i++)
@@ -214,7 +240,7 @@ function terrenoFicticio(material) {
   const nS = G.S.length,
     nZ = G.Z.length;
   const pos = new Float32Array(nS * nZ * 3),
-    col = new Float32Array(nS * nZ * 3),
+    col = cores(nS * nZ),
     idx = [];
   const R = rng(77),
     hW = P.W_CX / 2;
@@ -229,11 +255,12 @@ function terrenoFicticio(material) {
       pos[k * 3 + 1] = wy(naCaixa ? sg(s) - 1.3 : nat(s, z));
       pos[k * 3 + 2] = p.z;
       const nz = R();
-      let cc = nz < 0.5 ? C.soilNat : C.grass2;
-      if (noCanteiroLocal(s, z)) cc = C.pad;
+      let cc = nz < 0.5 ? C.soilNat : C.grass2,
+        uso = nz < 0.5 ? 'chao' : 'verde';
+      if (noCanteiroLocal(s, z)) [cc, uso] = [C.pad, 'patio'];
       // passeios de concreto junto à via
-      if (Math.abs(z) > hW && Math.abs(z) < hW + 2.2 && s > -20 && s < P.L + 20) cc = COR.passeio;
-      pintar(col, k, cc, 0.5 + 1.2 * (nz - 0.5));
+      if (Math.abs(z) > hW && Math.abs(z) < hW + 2.2 && s > -20 && s < P.L + 20) [cc, uso] = [COR.passeio, 'passeio'];
+      pintar(col, k, cc, 0.5 + 1.2 * (nz - 0.5), uso);
     }
   for (let i = 0; i < nS - 1; i++)
     for (let j = 0; j < nZ - 1; j++) {
@@ -251,7 +278,8 @@ export function buildTerrain() {
   }
   malhas.length = 0;
   CBOX = null;
-  const material = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, metalness: 0 });
+  // rugosidade 1: a do mapa ARM de cada textura
+  const material = pbr(new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1, metalness: 0 }), { pesos: true });
   if (temTerreno() && D.local) {
     terrenoReal(material);
     terr = faixaDoEixo(material);

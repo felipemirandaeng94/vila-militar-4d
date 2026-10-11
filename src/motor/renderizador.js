@@ -5,6 +5,7 @@ import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
 import { css } from './base.js';
 import { ceu, iniciarCeu, fundoDoCeu, corDaNevoa, DENSIDADE_NEVOA } from './ceu.js';
 import { configurarPos, ajustarPos, renderizarPos } from './posprocessamento.js';
+import { carregarTexturas, definirRelevo } from './superficies.js';
 import { PERFIS, Medidor, perfilPelaGpu, ajustePelaTaxa, nomeDaGpu } from './qualidade.js';
 import { ST } from '../estado.js';
 
@@ -139,7 +140,11 @@ export function aplicarQualidade(nome) {
   configurarPos(renderer, scene, camera, p.pos);
   resize();
   if (ajusteVegetacao) ajusteVegetacao(p.vegetacao, p.sombraVegetacao);
-  if (ceu.pronto) carregando = trocarFundo();
+  // texturas PBR (superficies.js): resolução e relevo do perfil; a medição da taxa de quadros espera a carga
+  definirRelevo(p.relevo);
+  const cargas = [carregando, carregarTexturas(renderer, p.texturas)];
+  if (ceu.pronto) cargas.push(trocarFundo());
+  carregando = Promise.all(cargas);
   if (visual.aoMudar) visual.aoMudar();
 }
 
