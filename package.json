@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "modelos": "node scripts/otimizar-modelos.mjs"
   },
   "dependencies": {
     "@fontsource/hanken-grotesk": "^5.3.0",

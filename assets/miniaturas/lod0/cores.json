@@ -1,0 +1,642 @@
+{
+ "escavadeira": {
+  "media": "#68685c",
+  "amareloLaranja": 0,
+  "oliva": 0.198,
+  "verde": 0,
+  "escuro": 0.093,
+  "caixa": {
+   "min": [
+    -2.211,
+    0,
+    -4.75
+   ],
+   "max": [
+    2.211,
+    5.813,
+    4.75
+   ]
+  },
+  "mb": 0.93
+ },
+ "basculante": {
+  "media": "#6f705e",
+  "amareloLaranja": 0.002,
+  "oliva": 0.315,
+  "verde": 0.001,
+  "escuro": 0.068,
+  "caixa": {
+   "min": [
+    -1.728,
+    0,
+    -4.25
+   ],
+   "max": [
+    1.728,
+    3.944,
+    4.25
+   ]
+  },
+  "mb": 0.71
+ },
+ "basculante-carregado": {
+  "media": "#636c5d",
+  "amareloLaranja": 0.002,
+  "oliva": 0.254,
+  "verde": 0.088,
+  "escuro": 0.048,
+  "caixa": {
+   "min": [
+    -1.842,
+    0,
+    -4.25
+   ],
+   "max": [
+    1.842,
+    4.009,
+    4.25
+   ]
+  },
+  "mb": 0.73
+ },
+ "basculante-basculando": {
+  "media": "#636453",
+  "amareloLaranja": 0.001,
+  "oliva": 0.415,
+  "verde": 0,
+  "escuro": 0.119,
+  "caixa": {
+   "min": [
+    -1.524,
+    0,
+    -4.3
+   ],
+   "max": [
+    1.524,
+    4.266,
+    4.3
+   ]
+  },
+  "mb": 0.77
+ },
+ "caminhao-munck": {
+  "media": "#636454",
+  "amareloLaranja": 0.005,
+  "oliva": 0.281,
+  "verde": 0,
+  "escuro": 0.078,
+  "caixa": {
+   "min": [
+    -1.633,
+    0,
+    -4.5
+   ],
+   "max": [
+    1.633,
+    4.144,
+    4.5
+   ]
+  },
+  "mb": 0.81
+ },
+ "espargidor-cm30": {
+  "media": "#6a6a5d",
+  "amareloLaranja": 0.003,
+  "oliva": 0.235,
+  "verde": 0,
+  "escuro": 0.122,
+  "caixa": {
+   "min": [
+    -2.273,
+    0,
+    -4.25
+   ],
+   "max": [
+    2.273,
+    3.825,
+    4.25
+   ]
+  },
+  "mb": 0.81
+ },
+ "espargidor-rr": {
+  "media": "#4d4f4c",
+  "amareloLaranja": 0.001,
+  "oliva": 0.082,
+  "verde": 0,
+  "escuro": 0.246,
+  "caixa": {
+   "min": [
+    -2.374,
+    0,
+    -4.25
+   ],
+   "max": [
+    2.374,
+    4.05,
+    4.25
+   ]
+  },
+  "mb": 0.82
+ },
+ "pa-carregadeira": {
+  "media": "#636455",
+  "amareloLaranja": 0.004,
+  "oliva": 0.274,
+  "verde": 0.014,
+  "escuro": 0.081,
+  "caixa": {
+   "min": [
+    -1.683,
+    0,
+    -3.9
+   ],
+   "max": [
+    1.683,
+    4.385,
+    3.9
+   ]
+  },
+  "mb": 0.75
+ },
+ "motoniveladora": {
+  "media": "#59594e",
+  "amareloLaranja": 0.003,
+  "oliva": 0.26,
+  "verde": 0.001,
+  "escuro": 0.102,
+  "caixa": {
+   "min": [
+    -2.045,
+    0,
+    -4.9
+   ],
+   "max": [
+    2.045,
+    4.744,
+    4.9
+   ]
+  },
+  "mb": 0.78
+ },
+ "rolo-pe-de-carneiro": {
+  "media": "#726f5b",
+  "amareloLaranja": 0.006,
+  "oliva": 0.395,
+  "verde": 0,
+  "escuro": 0.058,
+  "caixa": {
+   "min": [
+    -1.485,
+    0,
+    -2.95
+   ],
+   "max": [
+    1.485,
+    3.908,
+    2.95
+   ]
+  },
+  "mb": 0.79
+ },
+ "rolo-liso": {
+  "media": "#6e6c55",
+  "amareloLaranja": 0.003,
+  "oliva": 0.455,
+  "verde": 0,
+  "escuro": 0.106,
+  "caixa": {
+   "min": [
+    -1.581,
+    0,
+    -2.95
+   ],
+   "max": [
+    1.581,
+    3.685,
+    2.95
+   ]
+  },
+  "mb": 0.69
+ },
+ "rolo-tandem": {
+  "media": "#6c6a52",
+  "amareloLaranja": 0.009,
+  "oliva": 0.465,
+  "verde": 0,
+  "escuro": 0.113,
+  "caixa": {
+   "min": [
+    -1.037,
+    0,
+    -2.25
+   ],
+   "max": [
+    1.037,
+    3.01,
+    2.25
+   ]
+  },
+  "mb": 0.69
+ },
+ "rolo-pneus": {
+  "media": "#6f6e5b",
+  "amareloLaranja": 0.007,
+  "oliva": 0.403,
+  "verde": 0,
+  "escuro": 0.086,
+  "caixa": {
+   "min": [
+    -1.341,
+    0,
+    -2.45
+   ],
+   "max": [
+    1.341,
+    3.288,
+    2.45
+   ]
+  },
+  "mb": 0.67
+ },
+ "vibroacabadora": {
+  "media": "#595950",
+  "amareloLaranja": 0.006,
+  "oliva": 0.12,
+  "verde": 0,
+  "escuro": 0.175,
+  "caixa": {
+   "min": [
+    -1.866,
+    0,
+    -3
+   ],
+   "max": [
+    1.866,
+    3.366,
+    3
+   ]
+  },
+  "mb": 0.81
+ },
+ "trator-esteiras": {
+  "media": "#585a49",
+  "amareloLaranja": 0,
+  "oliva": 0.449,
+  "verde": 0.004,
+  "escuro": 0.115,
+  "caixa": {
+   "min": [
+    -1.744,
+    0,
+    -3.3
+   ],
+   "max": [
+    1.744,
+    3.981,
+    3.3
+   ]
+  },
+  "mb": 0.77
+ },
+ "fresadora": {
+  "media": "#545549",
+  "amareloLaranja": 0.008,
+  "oliva": 0.242,
+  "verde": 0,
+  "escuro": 0.154,
+  "caixa": {
+   "min": [
+    -1.547,
+    0,
+    -6.25
+   ],
+   "max": [
+    1.547,
+    6.319,
+    6.25
+   ]
+  },
+  "mb": 0.75
+ },
+ "vassoura-mecanica": {
+  "media": "#4a5038",
+  "amareloLaranja": 0,
+  "oliva": 0.684,
+  "verde": 0,
+  "escuro": 0.209,
+  "caixa": {
+   "min": [
+    -1.482,
+    0,
+    -2
+   ],
+   "max": [
+    1.482,
+    2.153,
+    2
+   ]
+  },
+  "mb": 0.59
+ },
+ "retroescavadeira": {
+  "media": "#555a4a",
+  "amareloLaranja": 0.001,
+  "oliva": 0.339,
+  "verde": 0.005,
+  "escuro": 0.12,
+  "caixa": {
+   "min": [
+    -1.424,
+    0,
+    -3.5
+   ],
+   "max": [
+    1.424,
+    3.799,
+    3.5
+   ]
+  },
+  "mb": 0.77
+ },
+ "minicarregadeira": {
+  "media": "#585c49",
+  "amareloLaranja": 0,
+  "oliva": 0.523,
+  "verde": 0.004,
+  "escuro": 0.1,
+  "caixa": {
+   "min": [
+    -1.008,
+    0,
+    -1.75
+   ],
+   "max": [
+    1.008,
+    2.396,
+    1.75
+   ]
+  },
+  "mb": 0.8
+ },
+ "viatura-administrativa": {
+  "media": "#5b5c54",
+  "amareloLaranja": 0,
+  "oliva": 0.052,
+  "verde": 0,
+  "escuro": 0.074,
+  "caixa": {
+   "min": [
+    -1.204,
+    0,
+    -2.65
+   ],
+   "max": [
+    1.204,
+    2.197,
+    2.65
+   ]
+  },
+  "mb": 0.73
+ },
+ "comboio-combustivel": {
+  "media": "#636451",
+  "amareloLaranja": 0.002,
+  "oliva": 0.54,
+  "verde": 0,
+  "escuro": 0.048,
+  "caixa": {
+   "min": [
+    -1.475,
+    0,
+    -4
+   ],
+   "max": [
+    1.475,
+    3.306,
+    4
+   ]
+  },
+  "mb": 0.76
+ },
+ "gerador": {
+  "media": "#9f9f9f",
+  "amareloLaranja": 0.001,
+  "oliva": 0,
+  "verde": 0,
+  "escuro": 0.093,
+  "caixa": {
+   "min": [
+    -0.997,
+    0,
+    -2
+   ],
+   "max": [
+    0.997,
+    2.482,
+    2
+   ]
+  },
+  "mb": 0.69
+ },
+ "conteiner": {
+  "media": "#c3c2c0",
+  "amareloLaranja": 0,
+  "oliva": 0,
+  "verde": 0,
+  "escuro": 0,
+  "caixa": {
+   "min": [
+    -3.03,
+    0,
+    -1.376
+   ],
+   "max": [
+    3.03,
+    2.365,
+    1.376
+   ]
+  },
+  "mb": 0.33
+ },
+ "baia-brita": {
+  "media": "#bbb5ab",
+  "amareloLaranja": 0,
+  "oliva": 0,
+  "verde": 0,
+  "escuro": 0.001,
+  "caixa": {
+   "min": [
+    -3.611,
+    0,
+    -4
+   ],
+   "max": [
+    3.611,
+    3.71,
+    4
+   ]
+  },
+  "mb": 0.48
+ },
+ "usina-cbuq": {
+  "media": "#646355",
+  "amareloLaranja": 0,
+  "oliva": 0.182,
+  "verde": 0,
+  "escuro": 0.107,
+  "caixa": {
+   "min": [
+    -12,
+    0,
+    -9.012
+   ],
+   "max": [
+    12,
+    18.091,
+    9.012
+   ]
+  },
+  "mb": 1.15
+ },
+ "engenheiro": {
+  "media": "#8c5e40",
+  "amareloLaranja": 0.248,
+  "oliva": 0.204,
+  "verde": 0,
+  "escuro": 0.115,
+  "caixa": {
+   "min": [
+    -0.326,
+    0,
+    -0.295
+   ],
+   "max": [
+    0.326,
+    1.75,
+    0.295
+   ]
+  },
+  "mb": 0.37
+ },
+ "cone": {
+  "media": "#d8613f",
+  "amareloLaranja": 0.019,
+  "oliva": 0,
+  "verde": 0,
+  "escuro": 0.004,
+  "caixa": {
+   "min": [
+    -0.262,
+    0,
+    -0.262
+   ],
+   "max": [
+    0.262,
+    0.75,
+    0.262
+   ]
+  },
+  "mb": 0.09
+ },
+ "tambor-sinalizacao": {
+  "media": "#e6603a",
+  "amareloLaranja": 0.003,
+  "oliva": 0,
+  "verde": 0,
+  "escuro": 0,
+  "caixa": {
+   "min": [
+    -0.409,
+    0,
+    -0.419
+   ],
+   "max": [
+    0.409,
+    1.05,
+    0.419
+   ]
+  },
+  "mb": 0.09
+ },
+ "barreira-plastica": {
+  "media": "#e15629",
+  "amareloLaranja": 0.008,
+  "oliva": 0,
+  "verde": 0,
+  "escuro": 0.002,
+  "caixa": {
+   "min": [
+    -0.9,
+    0,
+    -0.232
+   ],
+   "max": [
+    0.9,
+    0.657,
+    0.232
+   ]
+  },
+  "mb": 0.1
+ },
+ "boca-de-lobo": {
+  "media": "#9f9b96",
+  "amareloLaranja": 0,
+  "oliva": 0,
+  "verde": 0,
+  "escuro": 0.016,
+  "caixa": {
+   "min": [
+    -0.6,
+    0,
+    -0.433
+   ],
+   "max": [
+    0.6,
+    0.622,
+    0.433
+   ]
+  },
+  "mb": 0.17
+ },
+ "tubo-concreto": {
+  "media": "#a5a5a3",
+  "amareloLaranja": 0,
+  "oliva": 0,
+  "verde": 0,
+  "escuro": 0.008,
+  "caixa": {
+   "min": [
+    -0.5,
+    0,
+    -0.3
+   ],
+   "max": [
+    0.5,
+    0.592,
+    0.3
+   ]
+  },
+  "mb": 0.16
+ },
+ "meio-fio": {
+  "media": "#a4a09d",
+  "amareloLaranja": 0,
+  "oliva": 0,
+  "verde": 0,
+  "escuro": 0.001,
+  "caixa": {
+   "min": [
+    -0.083,
+    0,
+    -0.5
+   ],
+   "max": [
+    0.083,
+    0.206,
+    0.5
+   ]
+  },
+  "mb": 0.13
+ }
+}
