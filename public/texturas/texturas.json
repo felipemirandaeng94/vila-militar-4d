@@ -8,7 +8,7 @@
       "autores": [
         "Felipe Miranda (ChatGPT, OpenAI)"
       ],
-      "tamanho_m": 1.0,
+      "tamanho_m": 2.0,
       "origem": "Gerada por IA (ChatGPT, OpenAI); preparada por scripts/assets/preparar-texturas.py",
       "licenca": "Geradas pelo autor com ChatGPT (OpenAI); pelos termos da OpenAI, o conteúdo gerado pertence ao usuário.",
       "ia": true,
@@ -92,6 +92,15 @@
       ],
       "tamanho_m": 2.5,
       "origem": "https://polyhaven.com/a/concrete_floor_03"
+    },
+    "saibro": {
+      "id": "cracked_red_ground",
+      "nome": "Cracked Red Ground",
+      "autores": [
+        "Amal Kumar"
+      ],
+      "tamanho_m": 2.0,
+      "origem": "https://polyhaven.com/a/cracked_red_ground"
     },
     "asfalto_solto": {
       "id": "Textura de Asfalto Fresco e Brilhante",

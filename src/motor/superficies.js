@@ -1,4 +1,4 @@
-// Materiais PBR do terreno e do pavimento (Fase 5). Oito texturas (Poly Haven, CC0, e as geradas por IA preparadas por
+// Materiais PBR do terreno e do pavimento (Fase 5). Nove texturas (Poly Haven, CC0, e as geradas por IA preparadas por
 // scripts/assets/preparar-texturas.py; origem de cada uma em public/texturas/texturas.json) ficam em três
 // arrays de textura (cor, normal e ARM = oclusão, rugosidade, metal), uma camada por material, compartilhados por todas
 // as superfícies. O shader (MeshStandardMaterial com onBeforeCompile) projeta as texturas pela posição no mundo,
@@ -10,10 +10,11 @@ import * as THREE from 'three';
 import { uDia } from './dias.js';
 
 // ordem das camadas nos arrays
-export const TEXTURAS = ['argila', 'solo', 'brita', 'asfalto_novo', 'asfalto_usado', 'grama', 'concreto', 'asfalto_solto'];
+// o terreno mistura até 8 camadas por vértice (aPesoA e aPesoB): as que ele usa ficam nas 8 primeiras posições
+export const TEXTURAS = ['argila', 'solo', 'brita', 'asfalto_novo', 'asfalto_usado', 'grama', 'concreto', 'saibro', 'asfalto_solto'];
 export const T = Object.fromEntries(TEXTURAS.map((n, i) => [n, i]));
 // lado real de cada textura (m), do manifesto public/texturas/texturas.json
-export const TAMANHO = { argila: 1, solo: 3, brita: 2.46, asfalto_novo: 1, asfalto_usado: 3, grama: 2, concreto: 2.5, asfalto_solto: 1 };
+export const TAMANHO = { argila: 2, solo: 3, brita: 2.46, asfalto_novo: 1, asfalto_usado: 3, grama: 2, concreto: 2.5, saibro: 2, asfalto_solto: 1 };
 // CBUQ solto (camada asfalto_solto) atrás da vibroacabadora: idade (dias) em que a rolagem começa a fechar a superfície
 // e em que ela fica com o aspecto do compactado
 export const SOLTO = [0.02, 0.06];
@@ -311,7 +312,7 @@ vec2 sAr = vec2(0.0);
   #ifdef PESOS
   float pesos[8] = float[8](vPesoA.x, vPesoA.y, vPesoA.z, vPesoA.w, vPesoB.x, vPesoB.y, vPesoB.z, vPesoB.w);
   float soma = 0.0;
-  for (int i = 0; i < ${TEXTURAS.length}; i++) {
+  for (int i = 0; i < 8; i++) {
     if (pesos[i] > 0.02) {
       amostra(float(i), vMundo, dpx, dpy, w, sCor, sDn, sAr, pesos[i]);
       soma += pesos[i];

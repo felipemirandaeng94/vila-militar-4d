@@ -28,13 +28,14 @@ Baixadas pela API pública do Poly Haven em 11/10/2026 por `scripts/assets/baixa
 
 | Recurso | Fonte | Licença | Uso no app | Arquivos |
 |---|---|---|---|---|
+| Textura "Cracked Red Ground", de Amal Kumar | Poly Haven, https://polyhaven.com/a/cracked_red_ground | CC0 1.0 | Quadras de saibro do entorno (cor-alvo 0xa4683e) | `public/texturas/saibro/` |
 | Textura "Dry Mud Field 001", de Rob Tuytel e Rico Cilliers | Poly Haven, https://polyhaven.com/a/dry_mud_field_001 | CC0 1.0 | Solo compactado: regularização, reaterro, substituição, sub-base existente, chão do entorno | `public/texturas/solo/` |
 | Textura "Gravel Floor 04", de Charlotte Baglioni | Poly Haven, https://polyhaven.com/a/gravel_floor_04 | CC0 1.0 | Brita graduada, solo-brita, imprimação e pintura de ligação (sobre a base), pátio do canteiro, faixa de desvio | `public/texturas/brita/` |
 | Textura "Asphalt 02", de Rob Tuytel | Poly Haven, https://polyhaven.com/a/asphalt_02 | CC0 1.0 | Revestimento existente e vias do entorno | `public/texturas/asfalto_usado/` |
 | Textura "Leafy Grass", de Charlotte Baglioni | Poly Haven, https://polyhaven.com/a/leafy_grass | CC0 1.0 | Gramados, campos e matas | `public/texturas/grama/` |
 | Textura "Concrete Floor 03", de Rob Tuytel e Matterfield | Poly Haven, https://polyhaven.com/a/concrete_floor_03 | CC0 1.0 | Passeios, sarjeta, meio-fio e vias de concreto | `public/texturas/concreto/` |
 
-As texturas "Cracked Red Ground" (Amal Kumar) e "Asphalt Pit Lane" (Dimitrios Savva), usadas até 11/10/2026 no subleito e no CBUQ, foram substituídas pelas texturas geradas por IA abaixo e não são mais distribuídas com o app.
+As texturas "Cracked Red Ground" (Amal Kumar) e "Asphalt Pit Lane" (Dimitrios Savva), usadas até 11/10/2026 no subleito e no CBUQ, foram substituídas pelas texturas geradas por IA abaixo. A "Cracked Red Ground" voltou em 12/10/2026 só para as quadras de saibro; a "Asphalt Pit Lane" não é mais distribuída com o app.
 
 ### Texturas geradas por IA
 
@@ -42,7 +43,7 @@ Geradas pelo autor com ChatGPT (OpenAI); pelos termos da OpenAI, o conteúdo ger
 
 | Recurso | Arquivo de origem | Tratamento | Uso no app | Arquivos |
 |---|---|---|---|---|
-| Subleito argiloso compactado, de Felipe Miranda (ChatGPT) | Textura de Terra Vermelha Compactada.png | Saturação reduzida, tom vermelho-amarronzado (argila do RJ), faixas horizontais de rolo atenuadas | Subleito exposto, vala, quadras de saibro | `public/texturas/argila/` |
+| Subleito argiloso compactado, de Felipe Miranda (ChatGPT) | Textura de Terra Vermelha Compactada.png | Saturação reduzida, tom vermelho-amarronzado (argila do RJ), faixas horizontais de rolo atenuadas; aplicada com 2 m de lado | Subleito exposto e vala | `public/texturas/argila/` |
 | CBUQ compactado, de Felipe Miranda (ChatGPT) | Textura Asfáltica Escura e Granular.png | Emenda e mapas | CBUQ novo, superfície fresada, tinta de demarcação | `public/texturas/asfalto_novo/` |
 | CBUQ solto, de Felipe Miranda (ChatGPT) | Textura de Asfalto Fresco e Brilhante.png | Emenda e mapas (rugosidade baixa: massa quente e brilhante) | CBUQ recém-espalhado, antes da rolagem | `public/texturas/asfalto_solto/` |
 

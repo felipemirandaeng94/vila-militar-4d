@@ -49,7 +49,7 @@ const RECURSOS = [
     'Textura PBR',
     'Subleito argiloso compactado, de Felipe Miranda (ChatGPT, OpenAI); emenda, cor e mapas tratados para o app',
     'Geradas pelo autor com ChatGPT (OpenAI); pelos termos da OpenAI, o conteúdo gerado pertence ao usuário',
-    'Subleito exposto, vala, quadras de saibro'
+    'Subleito exposto e vala'
   ],
   [
     'Textura PBR',
@@ -63,6 +63,7 @@ const RECURSOS = [
     'Geradas pelo autor com ChatGPT (OpenAI); pelos termos da OpenAI, o conteúdo gerado pertence ao usuário',
     'CBUQ recém-espalhado, antes da rolagem'
   ],
+  ['Textura PBR', 'Cracked Red Ground, de Amal Kumar, Poly Haven (polyhaven.com)', 'CC0 1.0 (domínio público)', 'Quadras de saibro do entorno'],
   [
     'Textura PBR',
     'Dry Mud Field 001, de Rob Tuytel e Rico Cilliers, Poly Haven (polyhaven.com)',

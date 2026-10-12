@@ -6,6 +6,9 @@ import { estStr } from '../../dominio/calendario.js';
 import { esc } from '../dom.js';
 import { chart, card, lg } from '../graficos.js';
 
+// cor do subleito no modelo 3D (pavimento.js): argila vermelho-amarronzada
+const COR_SUBLEITO = '#8a4f36';
+
 const LINHAS = [
   ['Demolição'],
   ['Fresagem do revestimento existente', 'areaFresagem', 'm²', 'DNIT 159/2011-ES'],
@@ -64,13 +67,13 @@ export function tabQuant() {
     yl: 'Cota (m)',
     lines: [
       { pts: q.rows.map(r => [r.s, r.gr]), c: 'var(--ink)', w: 2.4 },
-      { pts: q.rows.map(r => [r.s, r.sg]), c: 'var(--muted)', dash: '5 4' }
+      { pts: q.rows.map(r => [r.s, r.sg]), c: COR_SUBLEITO, dash: '5 4' }
     ]
   });
   return `<div class="pane-head"><h2>Quantitativos</h2><p>Reconstrução de ${nf(P.L / 1000, 1)} km da via existente, com pista de ${nf(P.W_RV, 1)} m e caixa do pavimento de ${nf(P.W_CX, 1)} m (pista, sarjetas e meios-fios). ${esc(D.obra.obra.aviso)}</p></div>
   <div class="kpis"><div class="kpi"><b>${nf(T.areaFresagem, 0)} m²</b><span>Pista fresada e reconstruída</span></div><div class="kpi"><b>${nf(T.extVala, 0)} m</b><span>Vala com tubo de concreto</span></div><div class="kpi"><b>${T.nBocasDeLobo} · ${T.nPocosDeVisita}</b><span>Bocas de lobo · poços de visita</span></div><div class="kpi"><b>${nf(T.extMeioFio, 0)} m</b><span>Meio-fio e sarjeta (cada)</span></div><div class="kpi"><b>${nf(T.toneladasCBUQ, 0)} t</b><span>CBUQ (${nf(T.volCBUQ, 1)} m³ × ${nf(D.obra.taxas.densidadeCBUQ, 2)} t/m³)</span></div></div>
   <h3 class="h3">Quantidades por frente</h3><div class="tbl"><table><thead>${cab}</thead><tbody>${corpo}</tbody></table></div>
-  <div class="cols"><div>${card('Perfil longitudinal', 'Greide do pavimento (existente e novo) e fundo da caixa (subleito), 40 cm abaixo. Terreno fictício; o relevo real entra na Fase 3.', prof, lg('var(--ink)', 'Greide do pavimento') + lg('var(--muted)', 'Subleito'))}</div>
+  <div class="cols"><div>${card('Perfil longitudinal', 'Greide do pavimento (existente e novo) e fundo da caixa (subleito), 40 cm abaixo. Terreno fictício; o relevo real entra na Fase 3.', prof, lg('var(--ink)', 'Greide do pavimento') + lg(COR_SUBLEITO, 'Subleito'))}</div>
   <div>${card('Seção-tipo do pavimento novo', 'Espessuras fora de escala; abaulamento de 2 %. A sarjeta e o meio-fio ficam nos bordos da caixa.', secaoTipo())}
   <h3 class="h3">Tubos e fresado</h3><div class="tbl"><table><thead><tr><th>Item</th><th class="n">Quantidade</th><th>Referência</th></tr></thead><tbody>${tubos}${fres}</tbody></table></div></div></div>`;
 }
@@ -88,8 +91,8 @@ function secaoTipo() {
   const hp = (P.W_RV / 2) * sc,
     hc = (P.W_CX / 2) * sc;
   let s = `<svg viewBox="0 0 ${W + 160} ${H}" class="chart secao" role="img" aria-label="Seção-tipo do pavimento">`;
-  s += `<polygon points="${cx - hc - 60},${H - 20} ${cx - hc},${ys.sg} ${cx + hc},${ys.sg} ${cx + hc + 60},${H - 20}" fill="#b5784a" opacity=".55"/>`;
-  s += `<text x="${cx}" y="${H - 34}" text-anchor="middle" class="lt">Subleito regularizado (ISC ≥ 9 %)</text>`;
+  s += `<polygon points="${cx - hc - 60},${H - 20} ${cx - hc},${ys.sg} ${cx + hc},${ys.sg} ${cx + hc + 60},${H - 20}" fill="${COR_SUBLEITO}" opacity=".85"/>`;
+  s += `<text x="${cx}" y="${H - 34}" text-anchor="middle" class="lt" style="fill:#f6efe8">Subleito regularizado (ISC ≥ 9 %)</text>`;
   s += lay(P.W_SB, ys.sb, ys.sg, '#b79a72', 'Sub-base solo-brita', '20 cm');
   s += lay(P.W_BA, ys.ba, ys.sb, '#9d9d97', 'Base brita graduada', '15 cm');
   s += `<line x1="${cx - hp}" x2="${cx + hp}" y1="${ys.ba - 0.5}" y2="${ys.ba - 0.5}" stroke="#5a3d26" stroke-width="2"/>`;

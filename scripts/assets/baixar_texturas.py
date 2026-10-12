@@ -42,13 +42,14 @@ CABECALHO = {"User-Agent": "vila-militar-4d/0.1 (modelo didatico; scripts/assets
 
 # material do app -> textura do Poly Haven
 MATERIAIS = {
-    "argila": "cracked_red_ground",  # solo argiloso vermelho (subleito, vala)
+    "argila": "cracked_red_ground",  # subleito e vala (substituída pela textura gerada por IA, mantida)
     "solo": "dry_mud_field_001",  # solo compactado (reaterro, regularização, pátio)
     "brita": "gravel_floor_04",  # cascalho e brita graduada
     "asfalto_novo": "asphalt_pit_lane",  # CBUQ novo
     "asfalto_usado": "asphalt_02",  # revestimento existente e vias do entorno
     "grama": "leafy_grass",
     "concreto": "concrete_floor_03",  # passeios, sarjeta e meio-fio
+    "saibro": "cracked_red_ground",  # quadras de saibro do entorno
 }
 
 

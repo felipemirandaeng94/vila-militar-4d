@@ -51,7 +51,7 @@ const COR = {
   chao: [0.62, 0.6, 0.5],
   verde: [0.45, 0.56, 0.31],
   mata: [0.3, 0.42, 0.22],
-  quadra: [0.72, 0.6, 0.42],
+  quadra: [0.643, 0.408, 0.243], // 0xa4683e, saibro alaranjado
   campo: [0.5, 0.6, 0.34],
   agua: [0.35, 0.5, 0.58],
   estacionamento: [0.55, 0.55, 0.53],
@@ -64,7 +64,7 @@ const TEX = {
   chao: 'solo',
   verde: 'grama',
   mata: 'grama',
-  quadra: 'argila',
+  quadra: 'saibro',
   campo: 'grama',
   agua: 'solo',
   estacionamento: 'asfalto_usado',

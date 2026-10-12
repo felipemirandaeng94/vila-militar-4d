@@ -254,7 +254,8 @@ export function buildPavement() {
     bot: s => h(s).b - 1.2,
     top: s => h(s).b,
     dias: () => [-1, NUNCA],
-    cor: 0xa4683e,
+    // argila vermelho-amarronzada do Rio (as quadras de saibro do entorno ficam com o alaranjado 0xa4683e)
+    cor: 0x8a4f36,
     sup: { camada: 'argila' },
     nome: 'subleito',
     lados: false,

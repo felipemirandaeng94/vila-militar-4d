@@ -47,7 +47,8 @@ TEXTURAS = {
     "argila": {
         "arquivo": "Textura de Terra Vermelha Compactada.png",
         "nome": "Subleito argiloso compactado",
-        "tamanho_m": 1.0,
+        # gerada para 1 m; aplicada com 2 m de lado (entre 1,5, 1,75 e 2 m, a que menos repete de longe)
+        "tamanho_m": 2.0,
         "relevo": 5.0,
         "rug": (0.93, 0.05),
         "achatar": 0.7,

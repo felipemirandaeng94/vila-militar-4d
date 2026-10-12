@@ -8,6 +8,8 @@
 //   node scripts/assets/miniaturas-modelos.mjs                      originais de assets/brutos/modelos -> assets/miniaturas/originais
 //   node scripts/assets/miniaturas-modelos.mjs --lod0 id1 id2 ...    public/modelos/<id>_lod0.glb -> assets/miniaturas/lod0
 // Saída: <slug>_34.webp, <slug>_z.webp, <slug>_x.webp, <slug>.webp (as três lado a lado) e cores.json.
+// as funções passadas a pg.evaluate rodam na página do navegador
+/* global window, document */
 import { createServer } from 'node:http';
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { resolve, dirname, extname, relative } from 'node:path';
