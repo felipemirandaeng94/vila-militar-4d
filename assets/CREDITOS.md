@@ -100,6 +100,8 @@ Autoria: imagens criadas por Felipe Miranda (ChatGPT) e modelos 3D gerados por F
 | Topógrafo operando estação total sobre tripé, com a maleta | topografia estacao total.glb | Equipamento ou objeto do 4D (terraplenagem) | public/modelos/topografo-estacao-total_lod0.glb, _lod1.glb |
 | Auxiliar de topografia com bastão e prisma | aux topografia.glb | Equipamento ou objeto do 4D (terraplenagem) | public/modelos/auxiliar-prisma_lod0.glb, _lod1.glb |
 | Tripé com base nivelante (ponto de ré) | tripe seco.glb | Equipamento ou objeto do 4D (terraplenagem) | public/modelos/tripe-re_lod0.glb, _lod1.glb |
+| Militar executor com colete refletivo e capacete branco | executor.glb | Operador da placa vibratória no reaterro da vala. | public/modelos/executor_lod0.glb, _lod1.glb |
+| Sargento encarregado com rádio, colete refletivo e capacete azul | encarregado.glb | Na frente de serviço principal, ao lado do engenheiro residente. | public/modelos/encarregado_lod0.glb, _lod1.glb |
 
 Não usados (rejeitados na varredura): 4 silos.glb, ARVORE GRANDE.glb, ARVORE PQN.glb. Motivos em dados/modelos.json.
 
