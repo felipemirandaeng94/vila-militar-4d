@@ -142,7 +142,27 @@ function vestirUsina() {
   USI.glb.userData.stage = 0.88;
   USI.glb.userData.manter = true;
   USI.parts.chimneyGlb = new THREE.Vector3(...m.pontos.chamine).applyAxisAngle(eixo, rot).add(pos);
+  // tanques de CAP (GLB) no centro da bacia procedural, com os tanques ao longo de x como os cilindros
+  if (CATALOGO['tanques-cap'])
+    vestir(USI.parts.tanques, 'tanques-cap', {
+      rot: 0,
+      pos: USI.parts.tanquesPos.toArray(),
+      info: { t: 'Tanques de CAP aquecidos', d: { Ligante: 'CAP 50/70', Função: 'Armazenar e manter aquecido o ligante dosado no tambor' } }
+    });
+  // silo de filer atrás da usina, perto do filtro de mangas (de onde vem o filer recuperado), com o elevador voltado
+  // para fora
+  if (CATALOGO['silo-filer'])
+    vestir(USI.parts.siloFiler, 'silo-filer', {
+      rot: SILO_FILER.rot,
+      pos: SILO_FILER.pos,
+      info: {
+        t: 'Silo de filer',
+        d: { Material: 'Filer recuperado no filtro de mangas e filer de aporte', Função: 'Dosar o filer na mistura (relação filer/betume)' }
+      }
+    });
 }
+// posição do silo de filer no referencial da usina procedural
+const SILO_FILER = { pos: [-14, 0, -21], rot: Math.PI };
 // chaminé em uso (para a fumaça): a do GLB quando ele está na cena
 export const chamineDaUsina = () => (USI.glb && USI.glb.userData.pronto && USI.glb.visible ? USI.parts.chimneyGlb : USI.parts.chimney);
 
@@ -223,6 +243,18 @@ function buildArredores(LAY) {
     [64, -105, 0, 0],
     [66, -103, 0, 0]
   ]);
+  // betoneira de obra ao lado dos estoques da drenagem
+  if (CATALOGO['betoneira-obra']) {
+    const b = new THREE.Group();
+    b.add(new THREE.Object3D());
+    placeOn(b, 69, -104, Math.PI / 2, y0);
+    vestir(b, 'betoneira-obra', {
+      rot: 0,
+      info: { t: 'Betoneira de obra 400 L', d: { Uso: 'Argamassa e concreto de pequenos volumes da drenagem (caixas, berços e rejuntes)' } }
+    });
+    b.userData.mob = 0.9;
+    LAY.canteiro.add(b);
+  }
 }
 
 // monte de fresado na baia do canteiro, que cresce com a fresagem das frentes: monte procedural com a textura de

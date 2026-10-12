@@ -104,9 +104,15 @@ Autoria: imagens criadas por Felipe Miranda (ChatGPT) e modelos 3D gerados por F
 | Auxiliar de topografia com bastão e prisma | aux topografia.glb | Equipamento ou objeto do 4D (terraplenagem) | public/modelos/auxiliar-prisma_lod0.glb, _lod1.glb |
 | Tripé com base nivelante (ponto de ré) | tripe seco.glb | Equipamento ou objeto do 4D (terraplenagem) | public/modelos/tripe-re_lod0.glb, _lod1.glb |
 | Militar executor com colete refletivo e capacete branco | executor.glb | Operador da placa vibratória no reaterro da vala. | public/modelos/executor_lod0.glb, _lod1.glb |
-| Sargento encarregado com rádio, colete refletivo e capacete azul | encarregado.glb | Na frente de serviço principal, ao lado do engenheiro residente. | public/modelos/encarregado_lod0.glb, _lod1.glb |
+| Sargento encarregado com rádio, colete refletivo amarelo e capacete azul | construction worker blue helmet - Tripo 3d4b5745 compat.glb | Na frente de serviço principal, ao lado do engenheiro residente (substitui encarregado.glb em 12/10/2026). | public/modelos/encarregado_lod0.glb, _lod1.glb |
+| Soldado com colete refletivo laranja, capacete branco, óculos e bolsa de ferramentas | construction worker 3d model - Tripo compat.glb | Dois soldados do efetivo na frente de serviço principal. | public/modelos/soldado_lod0.glb, _lod1.glb |
+| Tanques de CAP 50/70 aquecidos sobre bacia de contenção, com passarela e bomba | industrial tanks - Tripo 5c246368 compat.glb | Ao lado da usina, no lugar dos tanques procedurais. | public/modelos/tanques-cap_lod0.glb, _lod1.glb |
+| Silo de filer com elevador inclinado e rosca dosadora | industrial silo - Tripo 62c18ab6 compat.glb | Atrás da usina, perto do filtro de mangas. | public/modelos/silo-filer_lod0.glb, _lod1.glb |
+| Betoneira de obra de 400 L | betoneira cement mixer - Tripo compat.glb | No canteiro, junto aos estoques da drenagem. | public/modelos/betoneira-obra_lod0.glb, _lod1.glb |
+| Conjunto do frasco de areia | powder dispenser - Tripo c9082c30 compat.glb | Ao lado dos pontos de ensaio de grau de compactação (DNER-ME 092/94), no dia do ensaio. | public/modelos/frasco-areia_lod0.glb, _lod1.glb |
+| Viga Benkelman | precision linear stage - Tripo 8e96e470 compat.glb | Atrás do caminhão de prova, no lugar da viga procedural. | public/modelos/viga-benkelman_lod0.glb, _lod1.glb |
 
-Não usados (rejeitados na varredura): 4 silos.glb, ARVORE GRANDE.glb, ARVORE PQN.glb. Motivos em dados/modelos.json.
+Não usados (rejeitados na varredura): 4 silos.glb, ARVORE GRANDE.glb, ARVORE PQN.glb e encarregado.glb (substituído). Motivos em dados/modelos.json.
 
 ## Som ambiente (Fase 8)
 

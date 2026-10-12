@@ -898,5 +898,145 @@
    ]
   },
   "mb": 24.74
+ },
+ "betoneira-cement-mixer-tripo-compat": {
+  "media": "#5f5f46",
+  "amareloLaranja": 0,
+  "oliva": 0.648,
+  "verde": 0.001,
+  "escuro": 0.049,
+  "caixa": {
+   "min": [
+    -0.278,
+    -0.316,
+    -0.5
+   ],
+   "max": [
+    0.278,
+    0.314,
+    0.5
+   ]
+  },
+  "mb": 65.65
+ },
+ "construction-worker-3d-model-tripo-compat": {
+  "media": "#6e573f",
+  "amareloLaranja": 0.177,
+  "oliva": 0.405,
+  "verde": 0,
+  "escuro": 0.166,
+  "caixa": {
+   "min": [
+    -0.121,
+    -0.499,
+    -0.476
+   ],
+   "max": [
+    0.113,
+    0.5,
+    0.475
+   ]
+  },
+  "mb": 27.79
+ },
+ "construction-worker-blue-helmet-tripo-3d4b5745-compat": {
+  "media": "#616644",
+  "amareloLaranja": 0.047,
+  "oliva": 0.467,
+  "verde": 0,
+  "escuro": 0.123,
+  "caixa": {
+   "min": [
+    -0.113,
+    -0.5,
+    -0.482
+   ],
+   "max": [
+    0.113,
+    0.5,
+    0.482
+   ]
+  },
+  "mb": 27.87
+ },
+ "industrial-silo-tripo-62c18ab6-compat": {
+  "media": "#68694b",
+  "amareloLaranja": 0.037,
+  "oliva": 0.712,
+  "verde": 0,
+  "escuro": 0.038,
+  "caixa": {
+   "min": [
+    -0.145,
+    -0.5,
+    -0.393
+   ],
+   "max": [
+    0.145,
+    0.499,
+    0.398
+   ]
+  },
+  "mb": 38.74
+ },
+ "industrial-tanks-tripo-5c246368-compat": {
+  "media": "#7b7456",
+  "amareloLaranja": 0.146,
+  "oliva": 0.301,
+  "verde": 0,
+  "escuro": 0.032,
+  "caixa": {
+   "min": [
+    -0.418,
+    -0.278,
+    -0.5
+   ],
+   "max": [
+    0.418,
+    0.278,
+    0.5
+   ]
+  },
+  "mb": 60.23
+ },
+ "powder-dispenser-tripo-c9082c30-compat": {
+  "media": "#9b978d",
+  "amareloLaranja": 0.004,
+  "oliva": 0,
+  "verde": 0,
+  "escuro": 0.009,
+  "caixa": {
+   "min": [
+    -0.361,
+    -0.5,
+    -0.372
+   ],
+   "max": [
+    0.361,
+    0.498,
+    0.371
+   ]
+  },
+  "mb": 50.63
+ },
+ "precision-linear-stage-tripo-8e96e470-compat": {
+  "media": "#8e8e8e",
+  "amareloLaranja": 0,
+  "oliva": 0,
+  "verde": 0,
+  "escuro": 0.287,
+  "caixa": {
+   "min": [
+    -0.043,
+    -0.088,
+    -0.5
+   ],
+   "max": [
+    0.043,
+    0.032,
+    0.5
+   ]
+  },
+  "mb": 6.4
  }
 }

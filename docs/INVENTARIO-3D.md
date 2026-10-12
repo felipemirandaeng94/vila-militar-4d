@@ -75,7 +75,7 @@ Implementação: P simples (caixas e cilindros), P detalhado (malha ou shader el
 | EQ-08 | Munck com guindauto móvel | S01, S05, S11, S12, S13, S18, S28 | médio | GLB peças | Sim: coluna (giro), lanças, patolas, gancho | média | Mega 15; içamento de tubos, caixas e anéis |
 | EQ-09 | Trator de pneus que reboca a vassoura | S09, S22, S23 | baixo | GLB IA | Não | média | Novo 60; hoje procedural ao lado de GLB detalhados |
 | EQ-10 | Caminhão de apoio com cones, cavaletes e placas | S07, S27 | baixo | GLB IA | Não | média | Novo 61; hoje é o munck recolorido |
-| EQ-11 | Betoneira de obra 400 L | S12, S18 | não existe | GLB IA | Tambor (opcional) | média | Novo 62; pendência 1 do relatório da Fase 7 |
+| EQ-11 | Betoneira de obra 400 L | S12, S18 | GLB (12/10/2026, betoneira-obra; no canteiro) | GLB IA | Tambor (opcional) | média | Novo 62; pendência 1 do relatório da Fase 7 |
 | EQ-12 | Caminhão-tanque de CAP | S24 (abastece os tanques da usina) | não existe | GLB IA | Não | baixa | Novo 63 |
 | EQ-13 | Cavalo mecânico com prancha | S01, S28 (chegada e saída das máquinas) | não existe | GLB IA | Não | média | Novo 64; a máquina transportada vai como filho |
 | EQ-14 | Caminhão militar de transporte de tropa | Efetivo chegando às frentes, S01 | não existe | GLB IA | Não | média | Novo 65 |
@@ -88,13 +88,13 @@ Implementação: P simples (caixas e cilindros), P detalhado (malha ou shader el
 
 | Nº | Objeto | Finalidade no app | Situação atual | Forma de obtenção | Precisa de partes móveis? (quais) | Prioridade | Observações |
 |---|---|---|---|---|---|---|---|
-| US-01 | Tanques de CAP aquecidos com bacia | S05, S24 | baixo | GLB IA | Não | alta | Mega 27 |
+| US-01 | Tanques de CAP aquecidos com bacia | S05, S24 | GLB (12/10/2026, tanques-cap) | GLB IA | Não | alta | Mega 27 |
 | US-02 | Cabine de comando da usina | S05, S06, S24 | baixo | GLB IA | Não | média | Mega 28 |
 | US-03 | Montagem da usina por módulos | S05 (etapas de 0 a 88 %) | baixo | GLB IA por módulo | Sim: módulos entram em ordem, içados pelo munck | média | Mega 23 (já existe: "4 silos.glb", rejeitado na Fase 7, serve aqui), 24, 25 e 26 |
 | US-04 | Tambor secador girando | S24 com a usina em operação | médio | GLB peças | Sim: tambor | média | Separar no GLB da usina ou usar o Mega 24 isolado |
 | US-05 | Aquecedor de fluido térmico | S05, S24 | não existe | GLB IA | Não | média | Novo 69 |
 | US-06 | Cobertura do estoque de fresado | S10 ("protegido da chuva" é critério de liberação) | não existe | GLB IA + lona procedural | Não | média | Novo 72 |
-| US-07 | Silo de filler (cal) | S24 (dosagem) | não existe | GLB IA | Não | baixa | Novo 70; só se o projeto de mistura usar filler |
+| US-07 | Silo de filler (cal) | S24 (dosagem) | GLB (12/10/2026, silo-filer; filer recuperado e de aporte) | GLB IA | Não | baixa | Novo 70; só se o projeto de mistura usar filler |
 | US-08 | Tanques de emulsão e de CM-30 | S22, S23 (abastecimento dos espargidores) | não existe | GLB IA | Não | baixa | Novo 71 |
 | US-09 | Peneira móvel de triagem do fresado | S10 ("estoque e triagem") | não existe | GLB IA | Não | baixa | Novo 73 |
 | US-10 | Balança rodoviária | S24 (pesagem das cargas) | não existe | Procedural | Não | baixa | Plataforma de concreto com guarda-rodas |
@@ -164,8 +164,8 @@ Implementação: P simples (caixas e cilindros), P detalhado (malha ou shader el
 
 | Nº | Objeto | Finalidade no app | Situação atual | Forma de obtenção | Precisa de partes móveis? (quais) | Prioridade | Observações |
 |---|---|---|---|---|---|---|---|
-| EN-01 | Conjunto do frasco de areia | GC de S11, S16, S17, S20, S21 (o ensaio de campo mais frequente) | não existe | GLB IA | Não | alta | Mega 51; aparece com o laboratorista (PE-03) no ponto do ensaio |
-| EN-02 | Viga Benkelman | S21, S25 | baixo | GLB IA | Não | alta | Mega 50 |
+| EN-01 | Conjunto do frasco de areia | GC de S11, S16, S17, S20, S21 (o ensaio de campo mais frequente) | GLB (12/10/2026, frasco-areia; sem o laboratorista) | GLB IA | Não | alta | Mega 51; aparece com o laboratorista (PE-03) no ponto do ensaio |
+| EN-02 | Viga Benkelman | S21, S25 | GLB (12/10/2026, viga-benkelman) | GLB IA | Não | alta | Mega 50 |
 | EN-03 | Extratora de corpos de prova | S24 (GC e espessura) | não existe | GLB IA | Coroa desce (opcional) | alta | Novo 87 |
 | EN-04 | Speedy | S17, S20, S21 | não existe | GLB IA | Não | média | Novo 88 |
 | EN-05 | Pêndulo britânico | S25 | não existe | GLB IA | Pêndulo (opcional) | média | Novo 89 |
@@ -188,13 +188,13 @@ Implementação: P simples (caixas e cilindros), P detalhado (malha ou shader el
 
 | Nº | Objeto | Finalidade no app | Situação atual | Forma de obtenção | Precisa de partes móveis? (quais) | Prioridade | Observações |
 |---|---|---|---|---|---|---|---|
-| PE-01 | Soldados com EPI em 6 poses (pá, enxada, rastelo de CBUQ, carrinho de mão, carregando cone, em pé) | Efetivo de todos os serviços (de 2 a 6 Sd por frente) | não existe | GLB IA, uma por pose | Não (pose fixa, balanço leve no código) | alta | Novos 101 a 106; instanciados |
+| PE-01 | Soldados com EPI em 6 poses (pá, enxada, rastelo de CBUQ, carrinho de mão, carregando cone, em pé) | Efetivo de todos os serviços (de 2 a 6 Sd por frente) | parcial: GLB em pé (12/10/2026, soldado; 2 na frente principal) | GLB IA, uma por pose | Não (pose fixa, balanço leve no código) | alta | Novos 101 a 106; instanciados |
 | PE-02 | Sinaleiro com placa PARE/SIGA | S07 (meia pista) | não existe | GLB IA | Placa gira (opcional) | alta | Mega 53 |
 | PE-03 | Laboratorista agachado | EN-01, EN-04 | não existe | GLB IA | Não | alta | Mega 54 |
 | PE-04 | Operador sentado | Cabines de todas as máquinas | não existe | GLB IA | Não | média | Novo 107; só nas cabines abertas ou envidraçadas |
 | PE-05 | Pedreiro agachado | S12, S13, S18 | não existe | GLB IA | Não | média | Novo 108 |
 | PE-06 | Laboratorista com termômetro | S24 (temperaturas) | não existe | GLB IA | Não | média | Novo 109 |
-| PE-07 | Encarregado refeito | Frente principal | médio | GLB IA | Não | baixa | Novo 111; uniforme igual ao dos demais |
+| PE-07 | Encarregado refeito | Frente principal | GLB (12/10/2026, arquivo novo do encarregado) | GLB IA | Não | baixa | Novo 111; uniforme igual ao dos demais |
 | PE-08 | Fiscal da OM | Decisões da missão, S25 | não existe | GLB IA | Não | baixa | Novo 110 |
 | PE-09 | Pedestres (moradores civis e militares) | Entorno e passagens de pedestres | não existe | CC0 com esqueleto e caminhada (Quaternius) | Sim: caminhada | baixa | Recolorir; o Tripo não gera esqueleto |
 

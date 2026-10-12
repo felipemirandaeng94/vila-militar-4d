@@ -820,23 +820,143 @@
   "mb": 0.29
  },
  "encarregado": {
-  "media": "#1e1c10",
-  "amareloLaranja": 0.032,
-  "oliva": 0.16,
+  "media": "#656b44",
+  "amareloLaranja": 0.026,
+  "oliva": 0.487,
   "verde": 0,
-  "escuro": 0.697,
+  "escuro": 0.1,
   "caixa": {
    "min": [
-    -0.357,
+    -0.345,
     0,
-    -0.161
+    -0.198
    ],
    "max": [
-    0.357,
+    0.345,
     1.75,
-    0.161
+    0.198
    ]
   },
-  "mb": 0.12
+  "mb": 0.35
+ },
+ "tanques-cap": {
+  "media": "#696b59",
+  "amareloLaranja": 0,
+  "oliva": 0.444,
+  "verde": 0,
+  "escuro": 0.035,
+  "caixa": {
+   "min": [
+    -4.182,
+    0,
+    -5
+   ],
+   "max": [
+    4.182,
+    5.556,
+    5
+   ]
+  },
+  "mb": 0.7
+ },
+ "silo-filer": {
+  "media": "#68694b",
+  "amareloLaranja": 0.036,
+  "oliva": 0.699,
+  "verde": 0,
+  "escuro": 0.04,
+  "caixa": {
+   "min": [
+    -1.597,
+    0,
+    -4.35
+   ],
+   "max": [
+    1.597,
+    11,
+    4.35
+   ]
+  },
+  "mb": 0.56
+ },
+ "betoneira-obra": {
+  "media": "#63634d",
+  "amareloLaranja": 0,
+  "oliva": 0.503,
+  "verde": 0,
+  "escuro": 0.067,
+  "caixa": {
+   "min": [
+    -1.1,
+    0,
+    -0.61
+   ],
+   "max": [
+    1.1,
+    1.384,
+    0.61
+   ]
+  },
+  "mb": 0.59
+ },
+ "frasco-areia": {
+  "media": "#9e9b92",
+  "amareloLaranja": 0.002,
+  "oliva": 0.001,
+  "verde": 0,
+  "escuro": 0.007,
+  "caixa": {
+   "min": [
+    -0.223,
+    0,
+    -0.217
+   ],
+   "max": [
+    0.223,
+    0.6,
+    0.217
+   ]
+  },
+  "mb": 0.14
+ },
+ "soldado": {
+  "media": "#6d553a",
+  "amareloLaranja": 0.19,
+  "oliva": 0.411,
+  "verde": 0,
+  "escuro": 0.177,
+  "caixa": {
+   "min": [
+    -0.338,
+    0,
+    -0.205
+   ],
+   "max": [
+    0.338,
+    1.75,
+    0.205
+   ]
+  },
+  "mb": 0.35
+ },
+ "viga-benkelman": {
+  "media": "#8e8f8e",
+  "amareloLaranja": 0,
+  "oliva": 0,
+  "verde": 0,
+  "escuro": 0.291,
+  "caixa": {
+   "min": [
+    -0.154,
+    0,
+    -1.8
+   ],
+   "max": [
+    0.154,
+    0.43,
+    1.8
+   ]
+  },
+  "mb": 0.13
  }
 }

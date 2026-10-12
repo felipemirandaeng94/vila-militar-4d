@@ -112,17 +112,27 @@ export function mkUsina() {
   silo.add(sc);
   silo.add(bx(3.6, 0.15, 4.0, dk, 0, 9.5, 0));
   parts.siloPos = new THREE.Vector3(-12.5, 0, 1.8);
-  // tanques de CAP aquecidos
+  // tanques de CAP aquecidos e bacia de contenção (mureta), num grupo que o GLB tanques-cap veste
   STG = 0.2;
   MANTER = true;
+  const tq = new THREE.Group();
   for (let i = 0; i < 2; i++) {
     const t = cy(1.35, 1.35, 10, mat(0x2b2d2b, { metalness: 0.3, roughness: 0.5 }), 20);
     t.rotation.z = Math.PI / 2;
     t.position.set(4 + i * 0.0, 1.8, -11 - i * 3.4);
-    gadd(t);
-    gadd(bx(9, 0.5, 2.8, mat(C.conc), 4, 0.25, -11 - i * 3.4));
+    tq.add(t);
+    tq.add(bx(9, 0.5, 2.8, mat(C.conc), 4, 0.25, -11 - i * 3.4));
   }
-  gadd(bx(14, 0.6, 9.6, mat(C.conc), 4, 0.3, -12.7)); // bacia de contenção (mureta)
+  tq.add(bx(14, 0.6, 9.6, mat(C.conc), 4, 0.3, -12.7));
+  gadd(tq);
+  parts.tanques = tq;
+  parts.tanquesPos = new THREE.Vector3(4, 0, -12.7);
+  // silo de filer ao lado do tambor (só o GLB silo-filer; sem ele, nada aparece)
+  STG = 0.7;
+  const sf = new THREE.Group();
+  sf.add(new THREE.Object3D());
+  gadd(sf);
+  parts.siloFiler = sf;
   // cabine de comando
   STG = 0.3;
   const cab = mkContainer(0xd7dbd2);

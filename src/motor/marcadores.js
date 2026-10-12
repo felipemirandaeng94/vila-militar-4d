@@ -6,9 +6,11 @@ import { M, ST } from '../estado.js';
 import { wy, mat, css, mundo } from './base.js';
 import { cena } from './renderizador.js';
 import { comDias, NUNCA, diasPorInstancia } from './dias.js';
+import { CATALOGO, geometriaPlana } from './modelos3d.js';
 
 let hastes = null,
   cabecas = null,
+  frascos = null,
   selRing = null,
   lista = [],
   posicoes = [],
@@ -54,11 +56,49 @@ export function buildMarkers() {
     LAY.ensaios.add(m);
   }
   selAnterior = -1;
+  buildFrascos();
   if (!selRing) {
     selRing = new THREE.Mesh(new THREE.TorusGeometry(1.0, 0.09, 8, 32), new THREE.MeshBasicMaterial({ color: 0xffffff }));
     selRing.rotation.x = Math.PI / 2;
     LAY.ensaios.add(selRing);
   }
+}
+
+// conjunto do frasco de areia (GLB) ao lado de cada ponto de grau de compactação pelo DNER-ME 092/94, só no dia do
+// ensaio; sem o GLB, ficam só os marcadores
+let geracao = 0;
+function buildFrascos() {
+  const LAY = cena.LAY;
+  if (frascos) LAY.ensaios.remove(frascos);
+  frascos = null;
+  const gc = lista.filter(t => /092\/94/.test(t.norma || ''));
+  if (!gc.length || !CATALOGO['frasco-areia']) return;
+  const g0 = ++geracao;
+  geometriaPlana('frasco-areia', 0)
+    .then(({ geometria, material }) => {
+      if (g0 !== geracao) return;
+      const m = new THREE.InstancedMesh(geometria.clone(), comDias(material.clone()), gc.length);
+      const o = new THREE.Object3D();
+      gc.forEach((t, i) => {
+        const p = mundo(t.s, t.z);
+        o.position.set(p.x + 0.8, wy(cotaExibida(t)), p.z + 0.4);
+        o.rotation.y = 0.6;
+        o.updateMatrix();
+        m.setMatrixAt(i, o.matrix);
+      });
+      diasPorInstancia(
+        m,
+        gc.map(t => [t.day, Math.min(t.until != null ? t.until : NUNCA, t.day + 1)])
+      );
+      m.castShadow = m.receiveShadow = true;
+      // clicar no frasco seleciona o ensaio, como o marcador
+      m.userData.tests = gc;
+      m.userData.info = { t: 'Frasco de areia', d: { Ensaio: 'Massa específica aparente in situ, DNER-ME 092/94' } };
+      m.computeBoundingSphere();
+      frascos = m;
+      LAY.ensaios.add(m);
+    })
+    .catch(() => {});
 }
 
 // o ensaio selecionado continua visível depois do "until"

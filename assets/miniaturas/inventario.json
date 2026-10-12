@@ -1577,6 +1577,66 @@
    }
   },
   {
+   "arquivo": "betoneira cement mixer - Tripo compat.glb",
+   "mb": 65.6,
+   "gerador": "glTF-Transform v4.5.1",
+   "malhas": 1,
+   "primitivas": 1,
+   "nos": 1,
+   "vertices": 1043054,
+   "triangulos": 1986373,
+   "materiais": [
+    {
+     "nome": "tripo_material_4d887b13-b961-468a-b6ab-97e5996a428b",
+     "mapas": [
+      "normalTexture",
+      "baseColorTexture",
+      "metallicRoughnessTexture"
+     ],
+     "extensoes": []
+    }
+   ],
+   "texturas": [
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 4317
+    },
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 2226
+    },
+    {
+     "formato": "png",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 4803
+    }
+   ],
+   "extensoesUsadas": [],
+   "extensoesObrigatorias": [],
+   "caixa": {
+    "min": [
+     -0.2775,
+     -0.3159,
+     -0.5001
+    ],
+    "max": [
+     0.2782,
+     0.3144,
+     0.5001
+    ],
+    "tamanho": [
+     0.5558,
+     0.6303,
+     1.0002
+    ]
+   }
+  },
+  {
    "arquivo": "cONE.glb",
    "mb": 43.7,
    "gerador": "Tripo",
@@ -2144,6 +2204,126 @@
    }
   },
   {
+   "arquivo": "construction worker 3d model - Tripo compat.glb",
+   "mb": 27.8,
+   "gerador": "glTF-Transform v4.5.1",
+   "malhas": 1,
+   "primitivas": 1,
+   "nos": 1,
+   "vertices": 353890,
+   "triangulos": 685943,
+   "materiais": [
+    {
+     "nome": "tripo_material_31a27e4b-d0ae-427b-8867-9c74588080db",
+     "mapas": [
+      "normalTexture",
+      "baseColorTexture",
+      "metallicRoughnessTexture"
+     ],
+     "extensoes": []
+    }
+   ],
+   "texturas": [
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 3408
+    },
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 1557
+    },
+    {
+     "formato": "png",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 4393
+    }
+   ],
+   "extensoesUsadas": [],
+   "extensoesObrigatorias": [],
+   "caixa": {
+    "min": [
+     -0.1215,
+     -0.4991,
+     -0.476
+    ],
+    "max": [
+     0.1128,
+     0.4996,
+     0.4754
+    ],
+    "tamanho": [
+     0.2343,
+     0.9987,
+     0.9514
+    ]
+   }
+  },
+  {
+   "arquivo": "construction worker blue helmet - Tripo 3d4b5745 compat.glb",
+   "mb": 27.9,
+   "gerador": "glTF-Transform v4.5.1",
+   "malhas": 1,
+   "primitivas": 1,
+   "nos": 1,
+   "vertices": 347360,
+   "triangulos": 674315,
+   "materiais": [
+    {
+     "nome": "tripo_material_cd100d8c-6ded-4f5e-90b8-f7f4baaf725c",
+     "mapas": [
+      "normalTexture",
+      "baseColorTexture",
+      "metallicRoughnessTexture"
+     ],
+     "extensoes": []
+    }
+   ],
+   "texturas": [
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 3225
+    },
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 1671
+    },
+    {
+     "formato": "png",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 4886
+    }
+   ],
+   "extensoesUsadas": [],
+   "extensoesObrigatorias": [],
+   "caixa": {
+    "min": [
+     -0.1134,
+     -0.4998,
+     -0.4822
+    ],
+    "max": [
+     0.1135,
+     0.4997,
+     0.4821
+    ],
+    "tamanho": [
+     0.2269,
+     0.9995,
+     0.9642
+    ]
+   }
+  },
+  {
    "arquivo": "encarregado.glb",
    "mb": 1.3,
    "gerador": "https://github.com/mikedh/trimesh",
@@ -2448,6 +2628,126 @@
    }
   },
   {
+   "arquivo": "industrial silo - Tripo 62c18ab6 compat.glb",
+   "mb": 38.7,
+   "gerador": "glTF-Transform v4.5.1",
+   "malhas": 1,
+   "primitivas": 1,
+   "nos": 1,
+   "vertices": 615338,
+   "triangulos": 1143708,
+   "materiais": [
+    {
+     "nome": "tripo_material_ac036561-cbf8-469f-8ec5-db71ed2c36b0",
+     "mapas": [
+      "normalTexture",
+      "baseColorTexture",
+      "metallicRoughnessTexture"
+     ],
+     "extensoes": []
+    }
+   ],
+   "texturas": [
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 3190
+    },
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 1530
+    },
+    {
+     "formato": "png",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 2318
+    }
+   ],
+   "extensoesUsadas": [],
+   "extensoesObrigatorias": [],
+   "caixa": {
+    "min": [
+     -0.1451,
+     -0.5001,
+     -0.3927
+    ],
+    "max": [
+     0.1453,
+     0.4994,
+     0.3977
+    ],
+    "tamanho": [
+     0.2904,
+     0.9995,
+     0.7904
+    ]
+   }
+  },
+  {
+   "arquivo": "industrial tanks - Tripo 5c246368 compat.glb",
+   "mb": 60.2,
+   "gerador": "glTF-Transform v4.5.1",
+   "malhas": 1,
+   "primitivas": 1,
+   "nos": 1,
+   "vertices": 1008829,
+   "triangulos": 1882731,
+   "materiais": [
+    {
+     "nome": "tripo_material_ca71e18b-e83c-4ae4-8837-0c1744e72abf",
+     "mapas": [
+      "normalTexture",
+      "baseColorTexture",
+      "metallicRoughnessTexture"
+     ],
+     "extensoes": []
+    }
+   ],
+   "texturas": [
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 3517
+    },
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 2397
+    },
+    {
+     "formato": "png",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 2176
+    }
+   ],
+   "extensoesUsadas": [],
+   "extensoesObrigatorias": [],
+   "caixa": {
+    "min": [
+     -0.4184,
+     -0.278,
+     -0.5001
+    ],
+    "max": [
+     0.4184,
+     0.278,
+     0.5002
+    ],
+    "tamanho": [
+     0.8369,
+     0.556,
+     1.0003
+    ]
+   }
+  },
+  {
    "arquivo": "jacaranda_tree/jacaranda_tree_1k.gltf",
    "mb": 0,
    "gerador": "Khronos glTF Blender I/O v4.4.56",
@@ -2630,6 +2930,126 @@
      0.5641,
      0.6703,
      0.9789
+    ]
+   }
+  },
+  {
+   "arquivo": "powder dispenser - Tripo c9082c30 compat.glb",
+   "mb": 50.6,
+   "gerador": "glTF-Transform v4.5.1",
+   "malhas": 1,
+   "primitivas": 1,
+   "nos": 1,
+   "vertices": 794422,
+   "triangulos": 1554428,
+   "materiais": [
+    {
+     "nome": "tripo_material_1235db21-403d-45ed-a579-5e4d4f94fca7",
+     "mapas": [
+      "normalTexture",
+      "baseColorTexture",
+      "metallicRoughnessTexture"
+     ],
+     "extensoes": []
+    }
+   ],
+   "texturas": [
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 3519
+    },
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 1518
+    },
+    {
+     "formato": "png",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 3769
+    }
+   ],
+   "extensoesUsadas": [],
+   "extensoesObrigatorias": [],
+   "caixa": {
+    "min": [
+     -0.3614,
+     -0.4999,
+     -0.3719
+    ],
+    "max": [
+     0.3613,
+     0.4984,
+     0.3714
+    ],
+    "tamanho": [
+     0.7227,
+     0.9984,
+     0.7433
+    ]
+   }
+  },
+  {
+   "arquivo": "precision linear stage - Tripo 8e96e470 compat.glb",
+   "mb": 6.4,
+   "gerador": "glTF-Transform v4.5.1",
+   "malhas": 1,
+   "primitivas": 1,
+   "nos": 1,
+   "vertices": 58121,
+   "triangulos": 106028,
+   "materiais": [
+    {
+     "nome": "tripo_material_55468021-43df-4932-9a08-fb496d5f5c5a",
+     "mapas": [
+      "normalTexture",
+      "baseColorTexture",
+      "metallicRoughnessTexture"
+     ],
+     "extensoes": []
+    }
+   ],
+   "texturas": [
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 1583
+    },
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 1354
+    },
+    {
+     "formato": "png",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 1182
+    }
+   ],
+   "extensoesUsadas": [],
+   "extensoesObrigatorias": [],
+   "caixa": {
+    "min": [
+     -0.0425,
+     -0.0876,
+     -0.4998
+    ],
+    "max": [
+     0.0431,
+     0.032,
+     0.4999
+    ],
+    "tamanho": [
+     0.0856,
+     0.1196,
+     0.9997
     ]
    }
   },

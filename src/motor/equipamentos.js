@@ -114,6 +114,15 @@ function vestirEquipamento(e) {
     op.rotation.y = -Math.PI / 2;
     e.o.add(op);
   }
+  // caminhão de prova: a viga Benkelman GLB no lugar da procedural, com a ponta de prova (+z do GLB) voltada para o
+  // eixo traseiro (+x do procedural)
+  const vb = e.tipo === 'prova' && e.o.userData.viga;
+  if (vb && CATALOGO['viga-benkelman']) {
+    const viga = criarLod('viga-benkelman', () => (vb.visible = false), { t: 'Viga Benkelman', d: { Ensaio: 'Deflexão recuperável, DNER-ME 024/94' } });
+    viga.position.set(vb.position.x, 0, vb.position.z);
+    viga.rotation.y = Math.PI / 2;
+    e.o.add(viga);
+  }
 }
 // equipamentos sem equipe no cronograma, estacionados no pátio, e o engenheiro residente
 const EXTRAS = [
@@ -123,6 +132,8 @@ const EXTRAS = [
 ];
 let engenheiro = null,
   encarregado = null;
+// soldados do efetivo da frente principal (o mesmo GLB, em duas posições)
+const soldados = [];
 
 // equipes (conjuntos de máquinas) e representações atendidas por cada uma
 const EQUIPES = {
@@ -238,6 +249,16 @@ export function buildEquipment() {
     vestir(encarregado, 'encarregado', { rot: 0, info: { t: 'Encarregado da frente', d: { Função: 'Coordena as equipes da frente de serviço' } } });
     cena.LAY.equip.add(encarregado);
   }
+  // dois soldados do efetivo, depois do encarregado
+  soldados.length = 0;
+  if (CATALOGO.soldado)
+    for (let i = 0; i < 2; i++) {
+      const o = new THREE.Group();
+      o.add(new THREE.Object3D());
+      vestir(o, 'soldado', { rot: 0, info: { t: 'Soldado do efetivo', d: { Função: 'Execução e apoio na frente de serviço' } } });
+      cena.LAY.equip.add(o);
+      soldados.push(o);
+    }
 }
 export function liftExtents() {}
 
@@ -613,21 +634,23 @@ export function updateEquipment(st, clk) {
 
 function posicionarEngenheiro(d) {
   const f = frentesAtivas(d)[0];
-  // ds: afastamento ao longo do eixo entre o engenheiro e o encarregado
-  for (const [o, ds] of [
-    [engenheiro, 0],
-    [encarregado, 1.3]
+  // ds e dz: afastamento ao longo do eixo e para fora da pista; dr: giro em relação ao olhar para a pista
+  for (const [o, ds, dz, dr] of [
+    [engenheiro, 0, 0, 0],
+    [encarregado, 1.3, 0, 0],
+    [soldados[0], 3.4, 0.4, -0.5],
+    [soldados[1], 4.4, -0.2, 0.3]
   ]) {
     if (!o) continue;
     o.visible = ST.lay.equip !== false;
     if (f) {
       // no passeio do lado direito, um pouco atrás da frente, olhando para a pista
       const s = clamp(f.s - 6 + ds, 0, P.L),
-        z = P.Z_VIA + 2.2;
-      colocar(o, s, z, wy(nat(s, z)), Math.PI / 2);
+        z = P.Z_VIA + 2.2 + dz;
+      colocar(o, s, z, wy(nat(s, z)), Math.PI / 2 + dr);
     } else {
-      const c = noCanteiro(16 + ds, -51.5);
-      colocar(o, c.s, c.z, wy(P.CANT.cota), 0);
+      const c = noCanteiro(16 + ds, -51.5 + dz);
+      colocar(o, c.s, c.z, wy(P.CANT.cota), dr);
     }
   }
 }
