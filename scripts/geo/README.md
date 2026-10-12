@@ -35,3 +35,7 @@ Depois de rodar o pipeline, confira `npm test` (os testes de `tests/local.test.j
 - Somente dados abertos. Nada do Google (Maps, Earth ou 3D Tiles) é baixado ou armazenado.
 - Área militar: não gravar nomes de edificações; vias de acesso privado ficam sem nome.
 - Créditos em `assets/CREDITOS.md` e na tela.
+
+## Planta de situação
+
+`planta_base.py`: lê `public/local/` e grava `docs/imagens/planta-base.png` (2400 × 1600 px) e `docs/imagens/planta-base.svg`, com norte para cima, eixo, estacas, frentes, canteiro, acesso, legenda e créditos.
