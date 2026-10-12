@@ -3,6 +3,7 @@ import { D } from '../../estado.js';
 import { esc } from '../dom.js';
 import { P } from '../../dominio/geometria.js';
 import { nf } from '../../dominio/util.js';
+import modelos3d from '../../../dados/modelos.json';
 
 // local real (Fase 3): via, extensão medida, canteiro e fontes dos dados abertos
 function local() {
@@ -75,7 +76,14 @@ const RECURSOS = [
     'Jacaranda Tree, de Rico Cilliers e Rob Tuytel, Poly Haven (polyhaven.com); malha reduzida para o app',
     'CC0 1.0 (domínio público)',
     'Árvores do entorno e folhas da palmeira-imperial'
-  ]
+  ],
+  // equipamentos, canteiro, usina, drenagem e sinalização (Fase 7): modelos do autor gerados no Tripo AI
+  ...modelos3d.modelos.map(m => [
+    'Modelo 3D',
+    m.equipamento + ' (' + m.arquivo + '), de Felipe Miranda: imagem no ChatGPT e modelo no Tripo AI (plano pago); reduzido para o app',
+    'Uso e distribuição autorizados pelo autor',
+    m.uso4D || 'Equipamento ou objeto do 4D (' + m.categoria + ')'
+  ])
 ];
 function recursos() {
   return `<h3 class="h3">Recursos visuais</h3><div class="tbl"><table><thead><tr><th>Recurso</th><th>Origem</th><th>Licença</th><th>Uso no modelo</th></tr></thead><tbody>${RECURSOS.map(

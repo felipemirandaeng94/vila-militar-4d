@@ -187,7 +187,10 @@ for (const a of alvos) {
   const bufs = {};
   for (const [k, v] of Object.entries(r.vistas)) {
     bufs[k] = Buffer.from(v.split(',')[1], 'base64');
-    await sharp(bufs[k]).resize(384).webp({ quality: 78 }).toFile(resolve(SAIDA, `${a.id}_${k}.webp`));
+    await sharp(bufs[k])
+      .resize(384)
+      .webp({ quality: 78 })
+      .toFile(resolve(SAIDA, `${a.id}_${k}.webp`));
   }
   // folha com as três vistas lado a lado, com legenda
   const leg = n =>

@@ -44,6 +44,47 @@ Baixadas pela API pública do Poly Haven em 11/10/2026 por `scripts/assets/baixa
 
 A palmeira-imperial, os tufos de grama, as fachadas (reboco, janelas, venezianas, telha cerâmica, laje e telha metálica), o meio-fio, a calçada, os postes e as placas são gerados no próprio app, sem recursos externos. O desenho das placas segue o Manual Brasileiro de Sinalização de Trânsito (CONTRAN).
 
+## Equipamentos, canteiro, usina, drenagem e sinalização (Fase 7)
+
+Autoria: imagens criadas por Felipe Miranda (ChatGPT) e modelos 3D gerados por Felipe Miranda no Tripo AI (plano pago). Licença: uso e distribuição autorizados pelo autor (assets/brutos/modelos/LICENCAS.txt). Reduzidos por scripts/otimizar-modelos.mjs (npm run modelos); decisões em dados/modelos.json.
+
+| Modelo | Arquivo de origem | Uso no app | Arquivos |
+|---|---|---|---|
+| Escavadeira hidráulica 20 t | Escavadeira.glb | Equipamento ou objeto do 4D (terraplenagem) | public/modelos/escavadeira_lod0.glb, _lod1.glb |
+| Caminhão basculante 6x4 (vazio) | cacamba vazia.glb | Equipamento ou objeto do 4D (terraplenagem) | public/modelos/basculante_lod0.glb, _lod1.glb |
+| Caminhão basculante 6x4 carregado, com lona | cacamba cheia.glb | Equipamento ou objeto do 4D (terraplenagem) | public/modelos/basculante-carregado_lod0.glb, _lod1.glb |
+| Caminhão basculante 6x4 com a caçamba levantada | CAÇAMBA BASCULANDO.glb | Equipamento ou objeto do 4D (terraplenagem) | public/modelos/basculante-basculando_lod0.glb, _lod1.glb |
+| Caminhão guindauto (munck) 6x4 com carroceria | caminhao munck.glb | Equipamento ou objeto do 4D (apoio/viaturas) | public/modelos/caminhao-munck_lod0.glb, _lod1.glb |
+| Caminhão espargidor de asfalto diluído CM-30 (imprimação) | CAMINHÃO DE CM-30.glb | Equipamento ou objeto do 4D (pavimentação) | public/modelos/espargidor-cm30_lod0.glb, _lod1.glb |
+| Caminhão espargidor de emulsão asfáltica (pintura de ligação) | CL.glb | Equipamento ou objeto do 4D (pavimentação) | public/modelos/espargidor-rr_lod0.glb, _lod1.glb |
+| Pá carregadeira de rodas | carregadeira.glb | Equipamento ou objeto do 4D (terraplenagem) | public/modelos/pa-carregadeira_lod0.glb, _lod1.glb |
+| Motoniveladora | Motoniveladora.glb | Equipamento ou objeto do 4D (terraplenagem) | public/modelos/motoniveladora_lod0.glb, _lod1.glb |
+| Rolo pé-de-carneiro vibratório | Rolo compactador.glb | Equipamento ou objeto do 4D (terraplenagem) | public/modelos/rolo-pe-de-carneiro_lod0.glb, _lod1.glb |
+| Rolo liso vibratório monocilíndrico | ROLO LISO COM RODAS.glb | Equipamento ou objeto do 4D (terraplenagem) | public/modelos/rolo-liso_lod0.glb, _lod1.glb |
+| Rolo tandem vibratório (dois cilindros lisos) | ROLO LISO.glb | Equipamento ou objeto do 4D (pavimentação) | public/modelos/rolo-tandem_lod0.glb, _lod1.glb |
+| Rolo de pneus | ROLO PNEUMATICO.glb | Equipamento ou objeto do 4D (pavimentação) | public/modelos/rolo-pneus_lod0.glb, _lod1.glb |
+| Vibroacabadora de esteiras | PAVIMENTADORA.glb | Equipamento ou objeto do 4D (pavimentação) | public/modelos/vibroacabadora_lod0.glb, _lod1.glb |
+| Trator de esteiras com lâmina e escarificador | Trator de Esteira.glb | Equipamento ou objeto do 4D (terraplenagem) | public/modelos/trator-esteiras_lod0.glb, _lod1.glb |
+| Fresadora a frio de esteiras com transportador frontal | fresadora.glb | Equipamento ou objeto do 4D (pavimentação) | public/modelos/fresadora_lod0.glb, _lod1.glb |
+| Vassoura mecânica rebocável | vassoura mecânica.glb | Equipamento ou objeto do 4D (pavimentação) | public/modelos/vassoura-mecanica_lod0.glb, _lod1.glb |
+| Retroescavadeira | Retroescavadeira.glb | Estacionada no pátio de máquinas do canteiro (o cronograma não tem equipe com retroescavadeira). | public/modelos/retroescavadeira_lod0.glb, _lod1.glb |
+| Minicarregadeira (skid steer) | mini carregadeira.glb | Estacionada no pátio de máquinas do canteiro. | public/modelos/minicarregadeira_lod0.glb, _lod1.glb |
+| Viatura administrativa (picape cabine dupla) | viatura administrativa.glb | Estacionada junto ao escritório da obra. | public/modelos/viatura-administrativa_lod0.glb, _lod1.glb |
+| Caminhão comboio de combustível | CL COMPLETO.glb | Estacionado no pátio de máquinas do canteiro. | public/modelos/comboio-combustivel_lod0.glb, _lod1.glb |
+| Grupo gerador rebocável | gerador.glb | Junto aos contêineres do canteiro. | public/modelos/gerador_lod0.glb, _lod1.glb |
+| Contêiner de canteiro de 20 pés (escritório, laboratório, almoxarifado, refeitório e sanitários) | Alojamento.glb | Equipamento ou objeto do 4D (canteiro) | public/modelos/conteiner_lod0.glb, _lod1.glb |
+| Baia de agregado com muros de concreto (brita) | armazen brita.glb | Equipamento ou objeto do 4D (usina) | public/modelos/baia-brita_lod0.glb, _lod1.glb |
+| Usina de CBUQ contínua móvel (silos dosadores, tambor secador-misturador, filtro de mangas, elevador e silo de massa) | USINA ASFALTO.glb | Equipamento ou objeto do 4D (usina) | public/modelos/usina-cbuq_lod0.glb, _lod1.glb |
+| Engenheiro residente (militar com colete refletivo e prancheta) | Engenheiro.glb | Na frente de serviço principal; sem frente ativa, junto ao escritório. | public/modelos/engenheiro_lod0.glb, _lod1.glb |
+| Cone de sinalização de 75 cm | cONE.glb | Equipamento ou objeto do 4D (sinalização) | public/modelos/cone_lod0.glb, _lod1.glb |
+| Tambor canalizador de sinalização | cone circular.glb | Acesso do canteiro. | public/modelos/tambor-sinalizacao_lod0.glb, _lod1.glb |
+| Barreira plástica de bloqueio | sinalizador.glb | Equipamento ou objeto do 4D (sinalização) | public/modelos/barreira-plastica_lod0.glb, _lod1.glb |
+| Caixa de boca de lobo pré-moldada com grelha | BUEIRO.glb | Equipamento ou objeto do 4D (drenagem) | public/modelos/boca-de-lobo_lod0.glb, _lod1.glb |
+| Tubo de concreto ponta e bolsa, peça de 1 m | TUBO 1 M.glb | Estoque de tubos no canteiro e ao lado da vala aberta. A rede assentada continua procedural (centenas de peças instanciadas, ver relatório). | public/modelos/tubo-concreto_lod0.glb, _lod1.glb |
+| Peça de meio-fio pré-moldado de concreto (1 m) | MEIO FIO.glb | Pilhas de peças no canteiro e na frente de meio-fio. O meio-fio assentado continua contínuo (procedural). | public/modelos/meio-fio_lod0.glb, _lod1.glb |
+
+Não usados (rejeitados na varredura): 4 silos.glb, ARVORE GRANDE.glb, ARVORE PQN.glb. Motivos em dados/modelos.json.
+
 ## Fontes tipográficas
 
 | Recurso | Licença |

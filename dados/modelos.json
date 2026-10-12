@@ -430,6 +430,11 @@
       "rotacaoY_graus": 180,
       "recolorir": true,
       "triangulos": { "lod0": 80000, "lod1": 8000 },
+      "pontos": {
+        "descricao": "Medidos no nível 0 processado (m, referencial do GLB): centro do silo de massa no chão (onde o caminhão carrega) e topo da chaminé.",
+        "siloDeMassa": [-8.7, 0, -6.5],
+        "chamine": [-9.08, 18.1, 6.65]
+      },
       "animacao": "simplificada",
       "animacaoDetalhe": "Estática; chama do queimador e fumaça da chaminé quando opera. A montagem por etapas continua procedural até a usina ficar pronta.",
       "partesMoveis": [],

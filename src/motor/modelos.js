@@ -1,5 +1,5 @@
 // Modelos procedurais dos equipamentos e das construções (frente = +x, origem no chão).
-// Os modelos reais (GLB) entram na Fase 7; estes continuam como alternativa.
+// Os modelos GLB (Fase 7, src/motor/modelos3d.js) os substituem quando carregam; estes ficam como alternativa.
 import * as THREE from 'three';
 import { mat, C, bx, cy, wheel } from './base.js';
 
@@ -53,6 +53,7 @@ export function mkTruck(kind = 'bascula', col = C.olive) {
     g.add(bx(5.0, 1.3, 2.4, mat(C.oliveD), -1.0, 1.9, 0));
     const vb = bx(3.6, 0.08, 0.12, mat(C.white), -5.0, 0.12, 0.6);
     g.add(vb);
+    g.userData = { viga: vb };
   }
   return g;
 }

@@ -5,6 +5,7 @@ import { wy, mat, mundo, rumo } from './base.js';
 import { cena } from './renderizador.js';
 import { comDias, NUNCA, finito, diasPorInstancia } from './dias.js';
 import { CAMADAS, alturas, diasDaVala, diaRep, servicoRep } from './pavimento.js';
+import { instanciasDoModelo } from './modelos3d.js';
 
 const grupo = new THREE.Group();
 grupo.name = 'drenagem';
@@ -91,7 +92,7 @@ export function buildDrenagem() {
       dias: [finito(diaRep('bocasDeLobo', b.s)), NUNCA]
     };
   });
-  instancias(new THREE.BoxGeometry(1, 1, 1), mat(0x8e8b84).clone(), bl, {
+  const caixas = instancias(new THREE.BoxGeometry(1, 1, 1), mat(0x8e8b84).clone(), bl, {
     t: 'Boca de lobo (caixa coletora com grelha)',
     d: { Serviço: nome('bocasDeLobo'), Norma: 'DNIT 026/2025-ES', Espaçamento: '40 m em cada lado' }
   });
@@ -100,9 +101,15 @@ export function buildDrenagem() {
     matrix: matriz(b.s, wy(alturas(b.s).top + 0.01), b.lado === 'BD' ? P.Z_SAR : -P.Z_SAR, 0, 0, 0, 0.9, 0.04, 0.6),
     dias: b.dias
   }));
-  instancias(new THREE.BoxGeometry(1, 1, 1), mat(0x2b2d2f, { metalness: 0.6, roughness: 0.4 }).clone(), grelhas, {
+  const grs = instancias(new THREE.BoxGeometry(1, 1, 1), mat(0x2b2d2f, { metalness: 0.6, roughness: 0.4 }).clone(), grelhas, {
     t: 'Grelha da boca de lobo',
     d: { Serviço: nome('bocasDeLobo') }
+  });
+  // caixa pré-moldada GLB (com a grelha) no lugar da caixa e da grelha procedurais, com a grelha no nível do pavimento
+  instanciasDoModelo(caixas, 'boca-de-lobo', comDias, (i, g) =>
+    matriz(bl[i].s, wy(alturas(bl[i].s).top) - g.boundingBox.max.y + 0.005, bl[i].lado === 'BD' ? P.Z_SAR : -P.Z_SAR)
+  ).then(ok => {
+    if (ok) grs.count = 0;
   });
   // ramais das bocas de lobo até a rede (visíveis só enquanto a caixa é executada)
   const ramais = bocasDeLobo().map(b => {

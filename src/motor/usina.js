@@ -11,8 +11,11 @@ export function mkUsina() {
     st = mat(C.steel, { metalness: 0.5, roughness: 0.45 });
   const parts = {};
   let STG = 0;
+  // manter: partes que ficam visíveis com o modelo GLB da usina (tanques de CAP, bacia, cabine de comando e base)
+  let MANTER = false;
   const gadd = o => {
     o.userData.stage = STG;
+    if (MANTER) o.userData.manter = true;
     g.add(o);
     return o;
   };
@@ -111,6 +114,7 @@ export function mkUsina() {
   parts.siloPos = new THREE.Vector3(-12.5, 0, 1.8);
   // tanques de CAP aquecidos
   STG = 0.2;
+  MANTER = true;
   for (let i = 0; i < 2; i++) {
     const t = cy(1.35, 1.35, 10, mat(0x2b2d2b, { metalness: 0.3, roughness: 0.5 }), 20);
     t.rotation.z = Math.PI / 2;

@@ -14,6 +14,7 @@ import { buildLabels, updateLabels, mostrarRotulos } from './rotulos.js';
 import { setView, setProfileClip, frontPoint, seguirFrente, passoCamera, camAt, focarPonto } from './camera.js';
 import { iniciarSelecao } from './selecao.js';
 import { uDia } from './dias.js';
+import { noCanteiro } from '../dominio/geometria.js';
 import { ceu } from './ceu.js';
 
 export { cena, visual, escolherQualidade, definirExposicao, applyTheme, setView, setProfileClip, camAt, focarPonto, buildMarkers, mostrarRotulos, superficie };
@@ -41,7 +42,7 @@ export function montarMotor(vp) {
   iniciarSelecao();
   carregarCeu();
   // inspeção no console e nos testes de navegador, só no servidor de desenvolvimento
-  if (import.meta.env.DEV) window.__vm4d = { cena, visual, ceu, setView };
+  if (import.meta.env.DEV) window.__vm4d = { cena, visual, ceu, setView, camAt, escolherQualidade, noCanteiro };
 }
 
 // troca de cenário ou decisão com retrabalho: o cronograma mudou

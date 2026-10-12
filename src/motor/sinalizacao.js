@@ -8,6 +8,7 @@ import { cena } from './renderizador.js';
 import { comDias, NUNCA, finito, diasPorInstancia } from './dias.js';
 import { CAMADAS, alturas, diaRep, servicoRep } from './pavimento.js';
 import { pbr } from './superficies.js';
+import { instanciasDoModelo } from './modelos3d.js';
 
 // tinta de demarcação viária: cor da tinta sobre o relevo do CBUQ novo, um pouco menos rugosa que ele
 const tinta = cor => pbr(mat(cor, { roughness: 0.75 }).clone(), { camada: 'asfalto_novo' });
@@ -67,7 +68,13 @@ export function buildSinalizacao() {
       if (fs.estado === 'meiaPista') for (let s = f.s0 + 2; s < f.s1; s += 6) cones.push({ s, matrix: matriz(s, wy(topo(s)), 0.25), dias: [fs.de, fs.ate] });
       if (fs.estado === 'total') {
         for (const s of [f.s0 + 1, f.s1 - 1])
-          for (let z = -3; z <= 3; z += 2) cavaletes.push({ s, matrix: matriz(s, wy(topo(s)) + 0.5, z, 0, 0.12, 1.0, 1.9), dias: [fs.de, fs.ate] });
+          for (let z = -3; z <= 3; z += 2)
+            cavaletes.push({
+              s,
+              matrix: matriz(s, wy(topo(s)) + 0.5, z, 0, 0.12, 1.0, 1.9),
+              glb: matriz(s, wy(topo(s)), z, Math.PI / 2),
+              dias: [fs.de, fs.ate]
+            });
         desvios.push({ f, de: fs.de, ate: fs.ate });
       }
     }
@@ -76,13 +83,18 @@ export function buildSinalizacao() {
   }
   const cone = new THREE.ConeGeometry(0.22, 0.75, 10);
   cone.translate(0, 0.375, 0);
-  instancias(cone, mat(0xe8641f, { roughness: 0.6 }).clone(), cones, {
+  const mCones = instancias(cone, mat(0xe8641f, { roughness: 0.6 }).clone(), cones, {
     t: 'Cones de sinalização de obra',
     d: { Referência: 'Manual de Sinalização de Obras e Emergências (DNIT, IPR 738)' }
   });
-  instancias(new THREE.BoxGeometry(1, 1, 1), mat(0xf2efe6).clone(), cavaletes, {
+  const mBloqueio = instancias(new THREE.BoxGeometry(1, 1, 1), mat(0xf2efe6).clone(), cavaletes, {
     t: 'Cavaletes de bloqueio (desvio total)',
     d: { Situação: 'Frente fechada ao tráfego' }
+  });
+  // GLB: cone de 75 cm (mesma base e altura do procedural) e barreira plástica atravessada no lugar do cavalete
+  instanciasDoModelo(mCones, 'cone', comDias);
+  instanciasDoModelo(mBloqueio, 'barreira-plastica', comDias, i => cavaletes[i].glb).then(ok => {
+    if (ok) mBloqueio.userData.info = { t: 'Barreiras plásticas de bloqueio (desvio total)', d: { Situação: 'Frente fechada ao tráfego' } };
   });
   instancias(new THREE.BoxGeometry(0.1, 1.4, 2.4), mat(0xf0a020).clone(), placas, {
     t: 'Placa de advertência de obra',

@@ -6,12 +6,13 @@
  * em torno do alvo da câmera (m), pós-processamento (null = direto na tela com MSAA; ao = resolução do GTAO; aa = SMAA
  * ou FXAA), distância de desenho (plano distante da câmera, m), fração das árvores desenhadas, sombra das árvores,
  * resolução do céu de fundo, lado das texturas PBR do terreno e do pavimento (px) e relevo (mapas de normais e projeção
- * triplanar nas faces inclinadas). Fase 6: distâncias (m) até as quais as árvores usam o modelo perto e o reduzido (além
+ * triplanar nas faces inclinadas). Fase 7: distância (m) a partir da qual os modelos 3D usam o nível 1. Fase 6: distâncias (m) até as quais as árvores usam o modelo perto e o reduzido (além
  * delas, o impostor) e gramado (raio em torno do alvo da câmera, m, e tufos por m² de área gramada).
  */
 export const PERFIS = {
   baixa: {
     nome: 'Baixa',
+    modelos: { lod1: 40 },
     pixelRatio: 1,
     sombra: 1024,
     filtro: 1,
@@ -28,6 +29,7 @@ export const PERFIS = {
   },
   media: {
     nome: 'Média',
+    modelos: { lod1: 70 },
     pixelRatio: 1.5,
     sombra: 2048,
     filtro: 1.5,
@@ -44,6 +46,7 @@ export const PERFIS = {
   },
   alta: {
     nome: 'Alta',
+    modelos: { lod1: 110 },
     pixelRatio: 2,
     sombra: 4096,
     filtro: 2,

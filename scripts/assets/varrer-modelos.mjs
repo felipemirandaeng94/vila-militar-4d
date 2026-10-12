@@ -129,7 +129,9 @@ async function varrer(arq) {
   const usoMat = (J.materials || []).map(m => ({
     nome: m.name || '',
     cor: m.pbrMetallicRoughness && m.pbrMetallicRoughness.baseColorFactor,
-    mapas: Object.keys(m).filter(k => /Texture$/.test(k)).concat(Object.keys(m.pbrMetallicRoughness || {}).filter(k => /Texture$/.test(k))),
+    mapas: Object.keys(m)
+      .filter(k => /Texture$/.test(k))
+      .concat(Object.keys(m.pbrMetallicRoughness || {}).filter(k => /Texture$/.test(k))),
     extensoes: Object.keys(m.extensions || {})
   }));
   return {

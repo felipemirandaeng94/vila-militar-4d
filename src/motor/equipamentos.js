@@ -1,11 +1,11 @@
 // Equipamentos: cada equipe tem as suas máquinas, que vão para a frente ativa do serviço que a equipe executa
 // e voltam ao pátio do canteiro quando ela está parada. O serviço é localizado pela "representacao" (dados/servicos.json).
 import * as THREE from 'three';
-import { P, gr, bocasDeLobo, pocosDeVisita, noCanteiro, acessoDoCanteiro } from '../dominio/geometria.js';
+import { P, gr, nat, bocasDeLobo, pocosDeVisita, noCanteiro, acessoDoCanteiro } from '../dominio/geometria.js';
 import { clamp, lerp } from '../dominio/util.js';
 import { trechosRuins } from '../dominio/quantitativos.js';
 import { ST, D } from '../estado.js';
-import { wy, mat, C, info, mundo, rumo, girar } from './base.js';
+import { wy, mat, C, info, mundo, rumo, girar, colocar } from './base.js';
 import {
   mkTruck,
   mkExcavator,
@@ -22,8 +22,9 @@ import {
   mkPlaca
 } from './modelos.js';
 import { superficie, ativas, servicoRep } from './pavimento.js';
-import { USI, SITE } from './canteiro.js';
+import { USI, SITE, chamineDaUsina } from './canteiro.js';
 import { cena } from './renderizador.js';
+import { vestir, definirVariante, giroflex, CATALOGO } from './modelos3d.js';
 
 export const EQ = [];
 const steam = [];
@@ -53,6 +54,57 @@ const TIPOS = {
   extrusora: [mkExtrusora, 'Extrusora de sarjeta'],
   placa: [mkPlaca, 'Compactador de placa vibratória']
 };
+// modelos GLB por tipo (dados/modelos.json); sem entrada, o tipo fica com o modelo procedural. variantes: estados
+// trocados durante o ciclo (basculante) ou pelo serviço (espargidor); manter: partes procedurais que ficam
+const GLB = {
+  bascula: { variantes: { vazio: 'basculante', carregado: 'basculante-carregado', basculando: 'basculante-basculando' } },
+  prova: { variantes: 'basculante-carregado', manter: o => [o.userData.viga] },
+  munck: { variantes: 'caminhao-munck' },
+  apoio: { variantes: 'caminhao-munck' },
+  espargidor: { variantes: { cm30: 'espargidor-cm30', rr: 'espargidor-rr' } },
+  exc: { variantes: 'escavadeira' },
+  grader: { variantes: 'motoniveladora' },
+  pe: { variantes: 'rolo-pe-de-carneiro', vibra: true },
+  liso: { variantes: 'rolo-liso', vibra: true },
+  pneus: { variantes: 'rolo-pneus' },
+  tandem: { variantes: 'rolo-tandem', vibra: true },
+  paver: { variantes: 'vibroacabadora' },
+  dozer: { variantes: 'trator-esteiras' },
+  loader: { variantes: 'pa-carregadeira' },
+  mill: { variantes: 'fresadora' },
+  // vassoura rebocável atrás do trator procedural, que perde só a escova frontal
+  vassoura: { variantes: 'vassoura-mecanica', pos: [-3.75, 0, 0], manter: o => o.children.filter(c => c !== o.userData.brush) }
+};
+// giroflex dos GLB: um material aceso e um apagado, compartilhados
+const LUZ = {
+  acesa: new THREE.MeshStandardMaterial({ color: 0xffc533, emissive: 0xffa500, emissiveIntensity: 2 }),
+  apagada: new THREE.MeshStandardMaterial({ color: 0xd9a21b, emissive: 0x2a1d00, roughness: 0.4 })
+};
+// comprimento (m) de cada tipo para as vagas do pátio: o do GLB ou o do procedural
+function comprimento(tipo) {
+  const g = GLB[tipo];
+  const id = g && (typeof g.variantes === 'string' ? g.variantes : Object.values(g.variantes)[0]);
+  if (id && CATALOGO[id]) return CATALOGO[id].comprimento_m + (tipo === 'vassoura' ? 3.5 : 0);
+  return { tripod: 1, placa: 2, extrusora: 3, betoneira: 8, pipa: 8, faixas: 8 }[tipo] || 7.5;
+}
+function vestirEquipamento(e) {
+  const g = GLB[e.tipo];
+  if (!g) return;
+  const variantes = typeof g.variantes === 'string' ? { base: g.variantes } : g.variantes;
+  if (!Object.values(variantes).every(id => CATALOGO[id])) return;
+  e.sup = vestir(e.o, variantes, { pos: g.pos, manter: g.manter ? g.manter(e.o) : [] });
+  e.vibra = !!g.vibra;
+  e.luzes = [];
+  for (const [estado, id] of Object.entries(variantes)) giroflex(e.sup.userData.lods[estado], id, LUZ.apagada, e.luzes);
+}
+// equipamentos sem equipe no cronograma, estacionados no pátio, e o engenheiro residente
+const EXTRAS = [
+  ['retroescavadeira', 'Retroescavadeira (reserva)'],
+  ['minicarregadeira', 'Minicarregadeira (apoio no canteiro)'],
+  ['comboio-combustivel', 'Caminhão comboio de combustível']
+];
+let engenheiro = null;
+
 // equipes (conjuntos de máquinas) e representações atendidas por cada uma
 const EQUIPES = {
   sinalizacaoObra: { nome: 'Sinalização de obra', maq: ['apoio'] },
@@ -82,17 +134,23 @@ export const repsDaEquipe = k => (EQUIPES[k] ? EQUIPES[k].reps || [k] : []);
 const TIME = {};
 for (const k of Object.keys(EQUIPES)) TIME[k] = [];
 
-// vagas do pátio de máquinas no canteiro (início do trecho), no arranjo de referência do canteiro
+// vagas do pátio de máquinas no canteiro (início do trecho), no arranjo de referência do canteiro: fileiras com as
+// máquinas lado a lado, atravessadas (comprimento em z); as fileiras A e B recebem as mais longas, a C (atrás das
+// outras, ao lado das baias) as mais curtas
 const PARK = [];
+const FILEIRAS = [
+  { z: -49, s0: 34, s1: 134, max: 13 },
+  { z: -63, s0: 34, s1: 134, max: 10 },
+  { z: -75.5, s0: 90, s1: 134, max: 7.5 }
+];
 
 export function buildEquipment() {
   PARK.length = 0;
-  for (const z of [-46, -56, -66])
-    for (let s = 30; s <= 132; s += 6.5) {
-      const c = noCanteiro(s, z);
-      PARK.push([c.s, c.z]);
-    }
-  let vaga = 0;
+  const vagas = FILEIRAS.flatMap(f => {
+    const v = [];
+    for (let s = f.s0; s <= f.s1; s += 4.6) v.push({ ...noCanteiro(s, f.z), max: f.max });
+    return v;
+  });
   for (const [k, e] of Object.entries(EQUIPES)) {
     for (const tipo of e.maq) {
       const [fab, nome] = TIPOS[tipo];
@@ -100,11 +158,57 @@ export function buildEquipment() {
       const n = `${nome} · equipe ${e.nome.toLowerCase()}`;
       info(o, n, {});
       cena.LAY.equip.add(o);
-      const eq = { id: k + TIME[k].length, tipo, nome: n, equipe: k, o, park: PARK[vaga++ % PARK.length], mk: o.userData };
+      const eq = { id: k + TIME[k].length, tipo, nome: n, equipe: k, o, park: null, mk: o.userData };
       o.userData.eq = eq;
+      vestirEquipamento(eq);
       EQ.push(eq);
       TIME[k].push(eq);
     }
+  }
+  // vagas: as máquinas mais longas primeiro, cada uma na primeira vaga que comporta o comprimento
+  const fila = EQ.filter(e => e.tipo !== 'tripod').sort((a, b) => comprimento(b.tipo) - comprimento(a.tipo));
+  const livre = vagas.slice();
+  const vaga = L => {
+    const i = livre.findIndex(v => v.max >= L);
+    return i >= 0 ? livre.splice(i, 1)[0] : livre.shift() || vagas[0];
+  };
+  for (const e of fila) {
+    const v = vaga(comprimento(e.tipo));
+    e.park = [v.s, v.z];
+  }
+  for (const e of EQ) if (!e.park) e.park = [vagas[0].s, vagas[0].z];
+  for (const [id, nome] of EXTRAS) {
+    if (!CATALOGO[id]) continue;
+    const v = vaga(CATALOGO[id].comprimento_m);
+    const g = new THREE.Group();
+    g.add(new THREE.Object3D());
+    vestir(g, id, { info: { t: nome, d: { Situação: 'Estacionado no pátio do canteiro' } } });
+    const p = mundo(v.s, v.z);
+    g.position.set(p.x, wy(P.CANT.cota), p.z);
+    g.rotation.y = Math.PI / 2 + rumo(v.s);
+    g.userData.mob = 0.5;
+    cena.LAY.canteiro.add(g);
+  }
+  // viatura administrativa junto ao escritório e gerador atrás dos contêineres
+  for (const [id, nome, s, z, rot] of [
+    ['viatura-administrativa', 'Viatura administrativa', 4, -57, Math.PI / 2],
+    ['gerador', 'Grupo gerador do canteiro', 14, -63.5, 0]
+  ]) {
+    if (!CATALOGO[id]) continue;
+    const g = new THREE.Group();
+    g.add(new THREE.Object3D());
+    vestir(g, id, { info: { t: nome, d: { Local: 'Canteiro de obras' } } });
+    const c = noCanteiro(s, z);
+    colocar(g, c.s, c.z, wy(P.CANT.cota), rot);
+    g.userData.mob = 0.3;
+    cena.LAY.canteiro.add(g);
+  }
+  // engenheiro residente: na frente principal ou, sem frente ativa, junto ao escritório
+  if (CATALOGO.engenheiro) {
+    engenheiro = new THREE.Group();
+    engenheiro.add(new THREE.Object3D());
+    vestir(engenheiro, 'engenheiro', { rot: 0, info: { t: 'Engenheiro residente', d: { Função: 'Acompanha a frente de serviço principal' } } });
+    cena.LAY.equip.add(engenheiro);
   }
   // vapor sobre o CBUQ recém-lançado e na chaminé
   const sm = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.12, depthWrite: false });
@@ -388,6 +492,8 @@ export function updateEquipment(st, clk) {
     for (const a of at(r).slice(0, 1)) {
       const z = a.faixa === 'BD' ? 1.9 : -1.9;
       put(T('ligante')[0], a.s + 3.5, z, 0);
+      // CM-30 na imprimação, emulsão RR na pintura de ligação
+      T('ligante')[0].variante = r === 'imprimacao' ? 'cm30' : 'rr';
       put(T('ligante')[1], a.s + 18 + 4 * tri(clk / 3), z, 0);
     }
   // CBUQ: vibroacabadora, rolos e caminhões da usina pelo desvio
@@ -458,7 +564,20 @@ export function updateEquipment(st, clk) {
       e.mk.beacon.material = used.has(e) && Math.sin(clk * 8) > 0 ? mat(0xffc533, { emissive: 0xffa500 }) : mat(C.yellow, { emissive: 0x2a1d00 });
     if (e.mk.drums && used.has(e)) e.mk.drums.forEach(dr => (dr.rotation.z -= 0.05));
     if (e.mk.brush && used.has(e)) e.mk.brush.rotation.y += 0.3;
+    // GLB (animação simplificada): estado do basculante, espargidor do serviço, giroflex e vibração dos rolos
+    if (e.sup) {
+      if (e.tipo === 'bascula') {
+        const u = e.mk;
+        definirVariante(e.sup, u.piv.rotation.z < -0.05 ? 'basculando' : u.load.visible && u.load.scale.y > 0.5 ? 'carregado' : 'vazio');
+      }
+      if (e.tipo === 'espargidor') definirVariante(e.sup, e.variante || 'cm30');
+      e.variante = null;
+      const acesa = used.has(e) && Math.sin(clk * 8) > 0;
+      for (const l of e.luzes) l.material = acesa ? LUZ.acesa : LUZ.apagada;
+      e.sup.position.y = e.vibra && used.has(e) && ST.playing ? 0.006 * Math.sin(clk * 95) : 0;
+    }
   }
+  posicionarEngenheiro(d);
   // usina operando e vapor
   const dos = servicoRep('dosagem');
   const on = !!(paving || (dos && d >= dos.b - 2 && d < dos.b)) && USI.ready;
@@ -476,7 +595,7 @@ export function updateEquipment(st, clk) {
   };
   if (on)
     for (let i = 0; i < 8; i++) {
-      const v = USI.parts.chimney,
+      const v = chamineDaUsina(),
         g = girar(USI.siloS, v.x, v.z);
       puff(USI.g.position.x + g.x, USI.g.position.y + v.y, USI.g.position.z + g.z, 1.3, i / 8);
     }
@@ -491,6 +610,21 @@ export function updateEquipment(st, clk) {
   }
   for (; si < steam.length; si++) steam[si].visible = false;
   if (SITE.flag) SITE.flag.rotation.y = Math.sin(clk * 1.3) * 0.15;
+}
+
+function posicionarEngenheiro(d) {
+  if (!engenheiro) return;
+  const f = frentesAtivas(d)[0];
+  engenheiro.visible = ST.lay.equip !== false;
+  if (f) {
+    // no passeio do lado direito, um pouco atrás da frente, olhando para a pista
+    const s = clamp(f.s - 6, 0, P.L),
+      z = P.Z_VIA + 2.2;
+    colocar(engenheiro, s, z, wy(nat(s, z)), Math.PI / 2);
+  } else {
+    const c = noCanteiro(16, -51.5);
+    colocar(engenheiro, c.s, c.z, wy(P.CANT.cota), 0);
+  }
 }
 
 // frente principal ativa (para o rótulo e para a câmera que segue a frente)

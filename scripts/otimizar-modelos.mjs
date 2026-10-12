@@ -49,6 +49,13 @@ function temToktx() {
   }
 }
 const KTX2 = temToktx();
+// transcodificador Basis do three.js para o KTX2Loader do app
+if (KTX2) {
+  const de = resolve(RAIZ, 'node_modules/three/examples/jsm/libs/basis'),
+    para = resolve(RAIZ, 'public/modelos/basis');
+  mkdirSync(para, { recursive: true });
+  for (const f of ['basis_transcoder.js', 'basis_transcoder.wasm']) writeFileSync(resolve(para, f), readFileSync(resolve(de, f)));
+}
 if (!KTX2)
   console.warn(
     'AVISO: toktx (KTX-Software) não está instalado; as texturas saem em WebP. Para KTX2, instale o KTX-Software (https://github.com/KhronosGroup/KTX-Software/releases), ponha o toktx no PATH e rode npm run modelos -- --forcar.'
@@ -216,7 +223,8 @@ async function codificar(buf, lado, tipo) {
   }
   const tmp = join(tmpdir(), 'vm4d-' + process.pid + '-' + Math.random().toString(36).slice(2));
   await img.png().toFile(tmp + '.png');
-  const opc = tipo === 'normal' ? ['--encode', 'uastc', '--uastc_quality', '2', '--assign_oetf', 'linear'] : ['--encode', 'etc1s', '--clevel', '2', '--qlevel', '128'];
+  const opc =
+    tipo === 'normal' ? ['--encode', 'uastc', '--uastc_quality', '2', '--assign_oetf', 'linear'] : ['--encode', 'etc1s', '--clevel', '2', '--qlevel', '128'];
   if (tipo === 'cor') opc.push('--assign_oetf', 'srgb');
   else if (tipo !== 'normal') opc.push('--assign_oetf', 'linear');
   execFileSync('toktx', ['--t2', '--genmipmap', ...opc, tmp + '.ktx2', tmp + '.png']);
@@ -224,6 +232,43 @@ async function codificar(buf, lado, tipo) {
   rmSync(tmp + '.png');
   rmSync(tmp + '.ktx2');
   return { dados, mime: 'image/ktx2' };
+}
+
+// giroflex: vértices cuja cor na textura é âmbar saturado, na parte alta do modelo, agrupados (até 2 pontos)
+async function giroflex(g, corBuf) {
+  if (!g.uv) return [];
+  const { data, info } = await sharp(corBuf).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  let ymax = 0;
+  for (let i = 1; i < g.pos.length; i += 3) ymax = Math.max(ymax, g.pos[i]);
+  const pts = [];
+  for (let v = 0; v < g.pos.length / 3; v++) {
+    const y = g.pos[v * 3 + 1];
+    if (y < 0.5 * ymax) continue;
+    const px = Math.min(info.width - 1, Math.max(0, Math.floor((g.uv[v * 2] % 1) * info.width)));
+    const py = Math.min(info.height - 1, Math.max(0, Math.floor((g.uv[v * 2 + 1] % 1) * info.height)));
+    const k = (py * info.width + px) * 3;
+    const r = data[k] / 255,
+      gg = data[k + 1] / 255,
+      b = data[k + 2] / 255;
+    const mx = Math.max(r, gg, b),
+      d = mx - Math.min(r, gg, b);
+    if (mx < 0.7 || d / mx < 0.55) continue;
+    let h = mx === r ? 60 * (((gg - b) / d) % 6) : mx === gg ? 60 * ((b - r) / d + 2) : 60 * ((r - gg) / d + 4);
+    if (h < 0) h += 360;
+    if (h >= 18 && h <= 50) pts.push([g.pos[v * 3], y, g.pos[v * 3 + 2]]);
+  }
+  const grupos = [];
+  for (const p of pts.sort((a, b) => b[1] - a[1])) {
+    const gr = grupos.find(q => Math.hypot(q.c[0] - p[0], q.c[1] - p[1], q.c[2] - p[2]) < 0.45);
+    if (gr) {
+      gr.n++;
+      for (let k = 0; k < 3; k++) gr.s[k] += p[k];
+    } else grupos.push({ c: p, s: [...p], n: 1 });
+  }
+  const bons = grupos.filter(q => q.n >= 4).map(q => q.s.map(v => +(v / q.n).toFixed(2)));
+  if (!bons.length) return [];
+  const topo = Math.max(...bons.map(q => q[1]));
+  return bons.filter(q => q[1] > topo - 0.6).slice(0, 2);
 }
 
 // ---------- montagem de um nível ----------
@@ -316,6 +361,9 @@ async function processar(m) {
     else break;
     console.log(`  ${m.id}: nível 0 com ${(glb0.byteLength / 1048576).toFixed(2)} MB; refazendo com textura ${lado0} e ${alvo0} triângulos`);
   }
+  const VEICULO = ['terraplenagem', 'pavimentação', 'apoio/viaturas'].includes(m.categoria) && !m.recolorir;
+  const corTex = [...texturas.values()].find(t => t.tipo === 'cor');
+  const luzes = VEICULO && corTex ? await giroflex(g0[0], corTex.buf) : [];
   // nível 1 a partir do nível 0 já normalizado
   const g1 = g0.map(g => simplificar(g, Math.round((tri.lod1 * g.idx.length) / 3 / (alvo0 || 1))).g);
   const glb1 = await nivel(doc, g1, texturas, Math.min(tex.lod1, lado0));
@@ -336,7 +384,8 @@ async function processar(m) {
     simplificacao: s0.map(r => `${r.modo}, erro ${r.erro}`).join('; '),
     escala: +info0.escala.toFixed(4),
     tamanho_m: info0.tamanho,
-    recolorido: m.recolorir ? +recolorido.toFixed(3) : 0
+    recolorido: m.recolorir ? +recolorido.toFixed(3) : 0,
+    giroflex: luzes
   };
 }
 
@@ -345,7 +394,15 @@ mkdirSync(SAIDA, { recursive: true });
 const manifesto = existsSync(MANIFESTO) ? JSON.parse(readFileSync(MANIFESTO, 'utf8')) : { modelos: {} };
 const hash = m =>
   createHash('sha1')
-    .update(JSON.stringify([m, CONFIG.padroes, KTX2, readFileSync(fileURLToPath(import.meta.url))]))
+    .update(
+      JSON.stringify([
+        // só os campos que mudam o processamento
+        ['arquivo', 'categoria', 'comprimento_m', 'altura_m', 'referenciaEscala', 'rotacaoY_graus', 'recolorir', 'triangulos', 'textura'].map(k => m[k]),
+        CONFIG.padroes,
+        KTX2,
+        readFileSync(fileURLToPath(import.meta.url))
+      ])
+    )
     .digest('hex')
     .slice(0, 12);
 const lista = CONFIG.modelos.filter(m => !pedidos.length || pedidos.includes(m.id));
@@ -361,7 +418,13 @@ for (const m of lista) {
   const h = hash(m);
   const tOrig = statSync(origem).mtimeMs;
   const atual =
-    !forcar && existsSync(s0) && existsSync(s1) && statSync(s0).mtimeMs > tOrig && statSync(s1).mtimeMs > tOrig && manifesto.modelos[m.id] && manifesto.modelos[m.id].hash === h;
+    !forcar &&
+    existsSync(s0) &&
+    existsSync(s1) &&
+    statSync(s0).mtimeMs > tOrig &&
+    statSync(s1).mtimeMs > tOrig &&
+    manifesto.modelos[m.id] &&
+    manifesto.modelos[m.id].hash === h;
   if (atual) {
     console.log(`${m.id}: já processado`);
     continue;
