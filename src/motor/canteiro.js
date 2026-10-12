@@ -8,6 +8,8 @@ import { mkContainer, mkFlag } from './modelos.js';
 import { mkUsina } from './usina.js';
 import { cena } from './renderizador.js';
 import { vestir, CATALOGO, geometriaPlana } from './modelos3d.js';
+import { pbr } from './superficies.js';
+import { geometriaMonte } from './soltos.js';
 
 export const SITE = {};
 // usina montada (g, parts) e posição do silo de massa em coordenadas da obra (siloS, siloZ)
@@ -223,10 +225,12 @@ function buildArredores(LAY) {
   ]);
 }
 
-// monte de fresado na baia do canteiro, que cresce com a fresagem das frentes
+// monte de fresado na baia do canteiro, que cresce com a fresagem das frentes: monte procedural com a textura de
+// cascalho solto recolorida para o cinza-escuro do asfalto fresado
 let fresado = null;
 export function buildFresado() {
-  fresado = mkPile(7, 3.2, 0x34363a);
+  fresado = new THREE.Mesh(geometriaMonte(7, 3.2, 31), pbr(mat(0x34363a, { roughness: 1 }).clone(), { camada: 'cascalho_solto' }));
+  fresado.castShadow = fresado.receiveShadow = true;
   placeOn(fresado, 22, -98);
   info(fresado, 'Estoque de fresado', {
     Uso: 'Reaproveitamento no CBUQ (DNIT 033/2021-ES) ou bota-fora',
@@ -266,6 +270,6 @@ export function updateSite(st) {
     const k = feito / P.L;
     fresado.visible = k > 0.005 && pout < 0.5;
     fresado.scale.set(0.3 + 0.7 * Math.sqrt(k), 0.2 + 0.8 * k, 0.3 + 0.7 * Math.sqrt(k));
-    fresado.position.y = wy(P.CANT.cota) + (3.2 * fresado.scale.y) / 2;
+    fresado.position.y = wy(P.CANT.cota);
   }
 }

@@ -1,6 +1,6 @@
 {
   "licenca": "CC0 1.0 (domínio público)",
-  "download": "2026-10-11",
+  "download": "2026-10-12",
   "materiais": {
     "argila": {
       "id": "Textura de Terra Vermelha Compactada",
@@ -101,6 +101,25 @@
       ],
       "tamanho_m": 2.0,
       "origem": "https://polyhaven.com/a/cracked_red_ground"
+    },
+    "solo_solto": {
+      "id": "farm_soil",
+      "nome": "Farm Soil",
+      "autores": [
+        "Amal Kumar"
+      ],
+      "tamanho_m": 2.0,
+      "origem": "https://polyhaven.com/a/farm_soil"
+    },
+    "cascalho_solto": {
+      "id": "gravel_floor_02",
+      "nome": "Gravel Floor 02",
+      "autores": [
+        "Jenelle van Heerden",
+        "Dimitrios Savva"
+      ],
+      "tamanho_m": 2.0,
+      "origem": "https://polyhaven.com/a/gravel_floor_02"
     },
     "asfalto_solto": {
       "id": "Textura de Asfalto Fresco e Brilhante",

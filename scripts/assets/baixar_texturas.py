@@ -50,6 +50,8 @@ MATERIAIS = {
     "grama": "leafy_grass",
     "concreto": "concrete_floor_03",  # passeios, sarjeta e meio-fio
     "saibro": "cracked_red_ground",  # quadras de saibro do entorno
+    "solo_solto": "farm_soil",  # solo solto ou revolvido: leiras, monte da vala, camada espalhada sem compactar
+    "cascalho_solto": "gravel_floor_02",  # brita e solo-brita soltos; o fresado usa a mesma, recolorida
 }
 
 
@@ -79,11 +81,10 @@ def main():
     manifesto = {"licenca": "CC0 1.0 (domínio público)", "download": datetime.date.today().isoformat(), "materiais": {}}
     arq_man = DESTINO / "texturas.json"
     anterior = json.loads(arq_man.read_text(encoding="utf-8")).get("materiais", {}) if arq_man.exists() else {}
-    for nome, m in anterior.items():
-        if m.get("ia"):
-            manifesto["materiais"][nome] = m
+    ia = {nome: m for nome, m in anterior.items() if m.get("ia")}
     for nome, ident in MATERIAIS.items():
-        if nome in manifesto["materiais"]:
+        if nome in ia:
+            manifesto["materiais"][nome] = ia.pop(nome)
             print(f"{nome:14s} gerada por IA (preparar-texturas.py), mantida")
             continue
         info = json.loads(obter(f"{API}/info/{ident}"))
@@ -106,7 +107,9 @@ def main():
                 img.save(pasta / f"{saida}.webp", "WEBP", quality=args.qualidade, method=6)
             tam = sum(p.stat().st_size for p in pasta.glob("*.webp")) / 1e6
             print(f"{nome:14s} {ident:22s} {res}  {tam:5.1f} MB")
-    arq_man.write_text(json.dumps(manifesto, ensure_ascii=False, indent=2), encoding="utf-8")
+    # as geradas por IA sem textura do Poly Haven correspondente (CBUQ solto) vão no fim, na ordem anterior
+    manifesto["materiais"].update(ia)
+    arq_man.write_bytes(json.dumps(manifesto, ensure_ascii=False, indent=2).encode("utf-8"))
     print(f"Pronto: {DESTINO}. Licença CC0; créditos em assets/CREDITOS.md.")
 
 

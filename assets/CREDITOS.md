@@ -29,6 +29,8 @@ Baixadas pela API pública do Poly Haven em 11/10/2026 por `scripts/assets/baixa
 | Recurso | Fonte | Licença | Uso no app | Arquivos |
 |---|---|---|---|---|
 | Textura "Cracked Red Ground", de Amal Kumar | Poly Haven, https://polyhaven.com/a/cracked_red_ground | CC0 1.0 | Quadras de saibro do entorno (cor-alvo 0xa4683e) | `public/texturas/saibro/` |
+| Textura "Farm Soil", de Amal Kumar | Poly Haven, https://polyhaven.com/a/farm_soil (download em 12/10/2026) | CC0 1.0 | Material solto: leiras de solo, monte de terra da vala, regularização e substituição espalhadas antes da compactação | `public/texturas/solo_solto/` |
+| Textura "Gravel Floor 02", de Jenelle van Heerden e Dimitrios Savva | Poly Haven, https://polyhaven.com/a/gravel_floor_02 (download em 12/10/2026) | CC0 1.0 | Material solto: leiras de brita graduada e solo-brita, base e sub-base espalhadas antes da compactação; recolorida em cinza-escuro no monte de fresado do canteiro | `public/texturas/cascalho_solto/` |
 | Textura "Dry Mud Field 001", de Rob Tuytel e Rico Cilliers | Poly Haven, https://polyhaven.com/a/dry_mud_field_001 | CC0 1.0 | Solo compactado: regularização, reaterro, substituição, sub-base existente, chão do entorno | `public/texturas/solo/` |
 | Textura "Gravel Floor 04", de Charlotte Baglioni | Poly Haven, https://polyhaven.com/a/gravel_floor_04 | CC0 1.0 | Brita graduada, solo-brita, imprimação e pintura de ligação (sobre a base), pátio do canteiro, faixa de desvio | `public/texturas/brita/` |
 | Textura "Asphalt 02", de Rob Tuytel | Poly Haven, https://polyhaven.com/a/asphalt_02 | CC0 1.0 | Revestimento existente e vias do entorno | `public/texturas/asfalto_usado/` |

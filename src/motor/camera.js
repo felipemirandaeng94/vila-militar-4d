@@ -7,6 +7,7 @@ import { cena } from './renderizador.js';
 import { malhaTerreno } from './terreno.js';
 import { CAMADAS, superficie } from './pavimento.js';
 import { frentesAtivas } from './equipamentos.js';
+import { SOLTOS } from './soltos.js';
 
 let camAnim = null;
 // plano do corte em perfil: vertical, pela corda do eixo (início → fim); some o lado direito
@@ -62,6 +63,8 @@ export function setProfileClip(on) {
   };
   apply(malhaTerreno().material);
   for (const o of CAMADAS) apply(o.material);
+  // leiras compartilham o material por serviço: aplicar uma vez basta
+  for (const m of new Set(SOLTOS.map(o => o.material))) apply(m);
   ['entorno', 'canteiro', 'usina'].forEach(k => (cena.LAY[k].visible = !on && ST.lay[k] !== false));
 }
 

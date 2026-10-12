@@ -10,6 +10,7 @@ import { wy, mat, mundo, colocar } from './base.js';
 import { cena } from './renderizador.js';
 import { comDias, NUNCA, finito, diasPorInstancia } from './dias.js';
 import { pbr } from './superficies.js';
+import { espalhado } from './soltos.js';
 
 export const CAMADAS = []; // malhas com dias (para o corte em perfil e a seleção)
 
@@ -57,6 +58,7 @@ function faixa({ z0, z1, bot, top, dias, cor, opts = {}, sup, nome, info, s0 = 0
   const pos = [],
     dd = [],
     sz = [],
+    esp = [],
     idx = [];
   const ss = [];
   for (let s = s0; s < s1 - 1e-6; s += passo) ss.push(s);
@@ -72,6 +74,8 @@ function faixa({ z0, z1, bot, top, dias, cor, opts = {}, sup, nome, info, s0 = 0
       pb = mundo(s, zb);
     pos.push(pa.x, t, pa.z, pb.x, t, pb.z, pb.x, bt, pb.z, pa.x, bt, pa.z);
     sz.push(s, za, s, zb, s, zb, s, za);
+    // espessura nos vértices do topo: a camada espalhada fica mais alta (superficies.js, ESPALHADO)
+    esp.push(t - bt, t - bt, 0, 0);
     for (let k = 0; k < 4; k++) dd.push(finito(a), finito(d));
   });
   for (let i = 0; i < ss.length - 1; i++) {
@@ -92,6 +96,7 @@ function faixa({ z0, z1, bot, top, dias, cor, opts = {}, sup, nome, info, s0 = 0
   geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   geo.setAttribute('aDias', new THREE.Float32BufferAttribute(dd, 2));
   geo.setAttribute('aSZ', new THREE.Float32BufferAttribute(sz, 2));
+  if (sup && sup.espalhado) geo.setAttribute('aEsp', new THREE.Float32BufferAttribute(esp, 1));
   geo.setIndex(idx);
   geo.computeVertexNormals();
   const m = comDias(new THREE.MeshStandardMaterial(Object.assign({ color: cor, roughness: 0.9, metalness: 0, side: THREE.DoubleSide }, opts)));
@@ -273,7 +278,7 @@ export function buildPavement() {
       dias: s => [diaRep('substituicao', s), NUNCA].map(finito),
       cor: 0xb58a55,
       lados: false,
-      sup: { camada: 'solo', molhar: true, marcas: 'pneu' },
+      sup: { camada: 'solo', molhar: true, marcas: ['pneu', 'rolo'], espalhado: espalhado('substituicao') },
       nome: 'substituicao',
       info: { t: 'Substituição de solo (60 cm)', d: { Serviço: nomeSvc('substituicao'), Material: 'Solo de jazida, ISC 14 %' } }
     });
@@ -285,7 +290,7 @@ export function buildPavement() {
     dias: s => [diaRep('regularizacao', s), NUNCA].map(finito),
     cor: 0xc7a275,
     lados: false,
-    sup: { camada: 'solo', molhar: true, marcas: 'pneu' },
+    sup: { camada: 'solo', molhar: true, marcas: ['pneu', 'rolo'], espalhado: espalhado('regularizacao') },
     nome: 'regularizacao',
     info: { t: 'Subleito regularizado', d: { Serviço: nomeSvc('regularizacao'), Norma: 'DNIT 137/2010-ES' } }
   });
@@ -311,7 +316,7 @@ export function buildPavement() {
     top: s => h(s).sb,
     dias: s => [diaRep('subBase', s), NUNCA].map(finito),
     cor: 0xb79a72,
-    sup: { camada: 'brita', molhar: true, marcas: 'pneu' },
+    sup: { camada: 'brita', molhar: true, marcas: ['pneu', 'rolo'], espalhado: espalhado('subBase') },
     nome: 'subBase',
     info: sbInfo
   });
@@ -322,7 +327,7 @@ export function buildPavement() {
     top: s => h(s).ba,
     dias: s => [diaRep('base', s), NUNCA].map(finito),
     cor: 0x9d9d97,
-    sup: { camada: 'brita', molhar: true, marcas: 'pneu' },
+    sup: { camada: 'brita', molhar: true, marcas: ['pneu', 'rolo'], espalhado: espalhado('base') },
     nome: 'base',
     info: { t: 'Base de brita graduada', d: { Espessura: '15 cm', Largura: '7,0 m', Norma: 'DNIT 141/2022-ES', 'GC mínimo': '100 %' } }
   });

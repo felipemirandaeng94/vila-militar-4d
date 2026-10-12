@@ -5,6 +5,7 @@ import { centrarMundo } from './base.js';
 import { buildTerrain } from './terreno.js';
 import { buildSurroundings, atualizarEntorno } from './entorno.js';
 import { buildPavement, superficie } from './pavimento.js';
+import { buildSoltos, atualizarSoltos } from './soltos.js';
 import { buildDrenagem } from './drenagem.js';
 import { buildSinalizacao } from './sinalizacao.js';
 import { buildCanteiro, buildFresado, updateSite } from './canteiro.js';
@@ -25,6 +26,7 @@ export { cena, visual, escolherQualidade, definirExposicao, applyTheme, setView,
 // partes que dependem do cronograma (dias de execução de cada estaca)
 function construirObra() {
   buildPavement();
+  buildSoltos();
   buildDrenagem();
   buildSinalizacao();
   buildMarkers();
@@ -57,6 +59,7 @@ export const trocarExagero = construirObra;
 // atualiza o modelo para o estado st; curtoDe(id) devolve o nome curto do serviço para o rótulo da frente
 export function atualizarMotor(st, clk, force, curtoDe) {
   uDia.value = st.d;
+  atualizarSoltos(st.d);
   updateSite(st);
   updateEquipment(st, clk);
   updateMarkers(st, clk);

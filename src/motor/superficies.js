@@ -1,4 +1,4 @@
-// Materiais PBR do terreno e do pavimento (Fase 5). Nove texturas (Poly Haven, CC0, e as geradas por IA preparadas por
+// Materiais PBR do terreno e do pavimento (Fase 5). Onze texturas (Poly Haven, CC0, e as geradas por IA preparadas por
 // scripts/assets/preparar-texturas.py; origem de cada uma em public/texturas/texturas.json) ficam em três
 // arrays de textura (cor, normal e ARM = oclusão, rugosidade, metal), uma camada por material, compartilhados por todas
 // as superfícies. O shader (MeshStandardMaterial com onBeforeCompile) projeta as texturas pela posição no mundo,
@@ -11,10 +11,35 @@ import { uDia } from './dias.js';
 
 // ordem das camadas nos arrays
 // o terreno mistura até 8 camadas por vértice (aPesoA e aPesoB): as que ele usa ficam nas 8 primeiras posições
-export const TEXTURAS = ['argila', 'solo', 'brita', 'asfalto_novo', 'asfalto_usado', 'grama', 'concreto', 'saibro', 'asfalto_solto'];
+export const TEXTURAS = [
+  'argila',
+  'solo',
+  'brita',
+  'asfalto_novo',
+  'asfalto_usado',
+  'grama',
+  'concreto',
+  'saibro',
+  'asfalto_solto',
+  // material solto: leiras, montes e camada espalhada antes da compactação (soltos.js)
+  'solo_solto',
+  'cascalho_solto'
+];
 export const T = Object.fromEntries(TEXTURAS.map((n, i) => [n, i]));
 // lado real de cada textura (m), do manifesto public/texturas/texturas.json
-export const TAMANHO = { argila: 2, solo: 3, brita: 2.46, asfalto_novo: 1, asfalto_usado: 3, grama: 2, concreto: 2.5, saibro: 2, asfalto_solto: 1 };
+export const TAMANHO = {
+  argila: 2,
+  solo: 3,
+  brita: 2.46,
+  asfalto_novo: 1,
+  asfalto_usado: 3,
+  grama: 2,
+  concreto: 2.5,
+  saibro: 2,
+  asfalto_solto: 1,
+  solo_solto: 2,
+  cascalho_solto: 2
+};
 // CBUQ solto (camada asfalto_solto) atrás da vibroacabadora: idade (dias) em que a rolagem começa a fechar a superfície
 // e em que ela fica com o aspecto do compactado
 export const SOLTO = [0.02, 0.06];
@@ -165,6 +190,23 @@ varying vec4 vPesoB;
 attribute vec2 aSZ;
 varying vec2 vSZ;
 #endif
+#ifdef ESPALHADO
+// camada espalhada e ainda não compactada: entre o rolo (uSolto.x) e a frente de espalhamento (uSolto.y), em estacas
+uniform vec2 uSolto;
+float espalhado(float s) {
+  return smoothstep(uSolto.x - 1.0, uSolto.x + 1.0, s) * (1.0 - smoothstep(uSolto.y + 0.5, uSolto.y + 1.5, s));
+}
+#endif
+#ifdef ESPALHADO
+// espessura da camada nos vértices do topo (0 na base)
+attribute float aEsp;
+#endif
+`;
+// material solto antes da compactação: cerca de 25 % mais espesso que a camada compactada
+const VERT_ESPALHADO = /* glsl */ `
+#ifdef ESPALHADO
+transformed.y += 0.25 * aEsp * espalhado(aSZ.x);
+#endif
 `;
 const VERT_MAIN = /* glsl */ `
 {
@@ -194,6 +236,14 @@ uniform float uEscala[${TEXTURAS.length}];
 uniform float uCamada;
 uniform float uMolhar;
 uniform float uSecagem;
+uniform float uCamadaSolta;
+#ifdef ESPALHADO
+// camada espalhada e ainda não compactada: entre o rolo (uSolto.x) e a frente de espalhamento (uSolto.y), em estacas
+uniform vec2 uSolto;
+float espalhado(float s) {
+  return smoothstep(uSolto.x - 1.0, uSolto.x + 1.0, s) * (1.0 - smoothstep(uSolto.y + 0.5, uSolto.y + 1.5, s));
+}
+#endif
 varying vec3 vMundo;
 varying vec3 vNormalMundo;
 #ifdef PESOS
@@ -327,6 +377,19 @@ vec2 sAr = vec2(0.0);
   if (kSolto < 0.99) amostra(uCamada, vMundo, dpx, dpy, w, sCor, sDn, sAr, 1.0 - kSolto);
   if (kSolto > 0.01) amostra(${TEXTURAS.indexOf('asfalto_solto')}.0, vMundo, dpx, dpy, w, sCor, sDn, sAr, kSolto);
   sCor *= 1.0 - 0.15 * kSolto;
+  #elif defined(ESPALHADO)
+  // material espalhado: mais claro e, com relevo, com a textura solta, mais áspero e de normal mais forte; o rolo o
+  // leva ao aspecto compactado. Na qualidade baixa (sem RELEVO) muda só a cor e a altura (vértice)
+  float kEsp = espalhado(vSZ.x);
+  #ifdef RELEVO
+  if (kEsp < 0.99) amostra(uCamada, vMundo, dpx, dpy, w, sCor, sDn, sAr, 1.0 - kEsp);
+  if (kEsp > 0.01) amostra(uCamadaSolta, vMundo, dpx, dpy, w, sCor, sDn, sAr, kEsp);
+  sDn *= 1.0 + 0.9 * kEsp;
+  sAr.y = min(1.0, sAr.y * (1.0 + 0.3 * kEsp));
+  #else
+  amostra(uCamada, vMundo, dpx, dpy, w, sCor, sDn, sAr, 1.0);
+  #endif
+  sCor *= 1.0 + 0.2 * kEsp;
   #else
   amostra(uCamada, vMundo, dpx, dpy, w, sCor, sDn, sAr, 1.0);
   #endif
@@ -360,6 +423,11 @@ vec2 sAr = vec2(0.0);
   float k = fract((z + 3.5) / 1.75);
   float borda = 1.0 - smoothstep(0.0, 0.025, min(k, 1.0 - k));
   float novo = 1.0 - smoothstep(0.0, 2.0, idade);
+  #ifdef ESPALHADO
+  // camada granular: as marcas surgem onde o rolo já passou
+  borda *= 1.0 - kEsp;
+  novo *= 1.0 - kEsp;
+  #endif
   sCor *= 1.0 - 0.1 * borda;
   sAr.y *= mix(1.0, 0.8, novo) * (1.0 + 0.15 * borda);
   #endif
@@ -386,8 +454,11 @@ function aplicarShader(sh) {
     uMolhar: { value: this.userData.molhar ? 1 : 0 },
     uSecagem: { value: this.userData.secagem ?? 0.8 }
   });
+  const esp = this.userData.espalhado;
+  if (esp) Object.assign(sh.uniforms, { uSolto: { value: esp.frente }, uCamadaSolta: { value: T[esp.camada] } });
   sh.vertexShader = sh.vertexShader
     .replace('#include <common>', '#include <common>\n' + VERT_PARS)
+    .replace('#include <begin_vertex>', '#include <begin_vertex>\n' + VERT_ESPALHADO)
     .replace('#include <fog_vertex>', '#include <fog_vertex>\n' + VERT_MAIN);
   sh.fragmentShader = sh.fragmentShader
     .replace('#include <common>', '#include <common>\n' + FRAG_PARS)
@@ -403,7 +474,9 @@ function aplicarShader(sh) {
 /**
  * Prepara um MeshStandardMaterial como superfície PBR. o: { camada (nome em TEXTURAS) | pesos (terreno, atributos
  * aPesoA/aPesoB), sz (atributo aSZ com estaca e afastamento), geometrica (normal pelas derivadas), molhar, secagem,
- * marcas: 'pneu' | 'rolo', junta, fresado, solto (CBUQ: textura solta logo após o espalhamento) }. Encadeia com um onBeforeCompile já existente (comDias), que deve ser aplicado
+ * marcas: 'pneu' | 'rolo' | ['pneu', 'rolo'], junta, fresado, solto (CBUQ: textura solta logo após o espalhamento),
+ * espalhado: { camada (textura do material solto), frente (Vector2: estacas do rolo e da frente, soltos.js) } (camada
+ * granular espalhada e não compactada; a geometria precisa do atributo aEsp) }. Encadeia com um onBeforeCompile já existente (comDias), que deve ser aplicado
  * antes, porque os estados da obra usam a varying vDias.
  */
 export function pbr(material, o = {}) {
@@ -417,8 +490,13 @@ export function pbr(material, o = {}) {
   if (o.sz) d.SZ = '';
   if (o.geometrica) d.NORMAL_GEOMETRICA = '';
   if (o.molhar) d.MOLHAR = '';
-  if (o.marcas === 'pneu') d.MARCAS_PNEU = '';
-  if (o.marcas === 'rolo') d.MARCAS_ROLO = '';
+  const marcas = [].concat(o.marcas || []);
+  if (marcas.includes('pneu')) d.MARCAS_PNEU = '';
+  if (marcas.includes('rolo')) d.MARCAS_ROLO = '';
+  if (o.espalhado) {
+    d.ESPALHADO = '';
+    material.userData.espalhado = o.espalhado;
+  }
   if (o.junta) d.JUNTA = '';
   if (o.fresado) d.FRESADO = '';
   if (o.solto) d.SOLTO = '';

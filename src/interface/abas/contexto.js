@@ -66,6 +66,18 @@ const RECURSOS = [
   ['Textura PBR', 'Cracked Red Ground, de Amal Kumar, Poly Haven (polyhaven.com)', 'CC0 1.0 (domínio público)', 'Quadras de saibro do entorno'],
   [
     'Textura PBR',
+    'Farm Soil, de Amal Kumar, Poly Haven (polyhaven.com)',
+    'CC0 1.0 (domínio público)',
+    'Leiras de solo, monte da vala e solo espalhado antes da compactação'
+  ],
+  [
+    'Textura PBR',
+    'Gravel Floor 02, de Jenelle van Heerden e Dimitrios Savva, Poly Haven (polyhaven.com)',
+    'CC0 1.0 (domínio público)',
+    'Leiras e camadas granulares espalhadas antes da compactação; monte de fresado (recolorida)'
+  ],
+  [
+    'Textura PBR',
     'Dry Mud Field 001, de Rob Tuytel e Rico Cilliers, Poly Haven (polyhaven.com)',
     'CC0 1.0 (domínio público)',
     'Solo compactado: regularização, reaterro, substituição, sub-base existente, chão do entorno'
