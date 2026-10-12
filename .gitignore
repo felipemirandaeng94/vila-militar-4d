@@ -16,4 +16,8 @@ scripts/geo/.venv/
 __pycache__/
 geo/brutos/
 geo/tmp/
-assets/brutos/
+# brutos (arquivos grandes) fora do git, exceto a licença dos modelos (Fase 7)
+assets/brutos/*
+!assets/brutos/modelos/
+assets/brutos/modelos/*
+!assets/brutos/modelos/LICENCAS.txt
