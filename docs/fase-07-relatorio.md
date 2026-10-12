@@ -1,14 +1,14 @@
 # Fase 7 (complemento) · Relatório da varredura e do tratamento dos modelos 3D
 
-Data: 11/10/2026. Origem: `assets/brutos/modelos/` (36 arquivos). Licença dos modelos do autor: `assets/brutos/modelos/LICENCAS.txt`. Decisões: `dados/modelos.json`. Miniaturas: `assets/miniaturas/`.
+Data: 11/10/2026. Origem: `assets/brutos/modelos/` (44 arquivos; 8 deles chegaram depois, no mesmo dia, e foram tratados no mesmo fluxo). Licença dos modelos do autor: `assets/brutos/modelos/LICENCAS.txt`. Decisões: `dados/modelos.json`. Miniaturas: `assets/miniaturas/`.
 
 ## Resumo
 
-- 36 arquivos varridos: 35 GLB do Tripo AI e o jacarandá do Poly Haven (já tratado na Fase 6, fora deste pipeline).
-- 32 modelos aceitos e 3 rejeitados. Os 35 arquivos do Tripo seguem o mesmo padrão: malha única com um material, de 0,45 a 1,96 milhão de triângulos, texturas 4096² (cor e metal/rugosidade em JPEG, normal em PNG), extensões `KHR_materials_volume` e `FB_ngon_encoding` e maior dimensão perto de 1 unidade.
-- Pipeline `npm run modelos`: 1 823 MB de origem viram 22,4 MB em `public/modelos/` (19,7 MB nos níveis 0, 2,7 MB nos níveis 1). O maior nível 0 é o da usina, com 1,15 MB. A pasta inteira, com as árvores da Fase 6, tem 23,8 MB (limite de 40 MB).
+- 44 arquivos varridos: 43 GLB do Tripo AI e o jacarandá do Poly Haven (já tratado na Fase 6, fora deste pipeline).
+- 40 modelos aceitos e 3 rejeitados. Os 43 arquivos do Tripo seguem o mesmo padrão: malha única com um material, de 0,45 a 1,96 milhão de triângulos (0,63 milhão no auxiliar de topografia), texturas 4096² (cor e metal/rugosidade em JPEG, normal em PNG), extensões `KHR_materials_volume` e `FB_ngon_encoding` e maior dimensão perto de 1 unidade.
+- Pipeline `npm run modelos`: 2 204 MB de origem viram 27,1 MB em `public/modelos/` (23,8 MB nos níveis 0, 3,3 MB nos níveis 1). O maior nível 0 é o da usina, com 1,15 MB. A pasta inteira, com as árvores da Fase 6, tem 28,5 MB (limite de 40 MB).
 - Texturas em WebP: o `toktx` (KTX-Software) não está instalado. O pipeline já gera KTX2 quando ele estiver no PATH (ver "Trabalho manual").
-- Taxa de quadros na qualidade baixa (GTX 1660 Ti, sem limitador de quadros, mesma cena da obra em andamento): vista geral 95 fps com os modelos procedurais e 148 fps com os GLB; vista da frente 178 e 183 fps. As chamadas de desenho caíram de 224 para 132. Com o limitador ligado, os dois casos ficam em 60 fps. Não foi preciso reduzir os LODs.
+- Taxa de quadros na qualidade baixa (GTX 1660 Ti, sem limitador de quadros, mesma cena da obra em andamento, com os 40 modelos): vista geral 91 fps com os modelos procedurais e 175 fps com os GLB; vista da frente 182 e 213 fps. As chamadas de desenho caíram de 224 para 102. Com o limitador ligado, os dois casos ficam em 60 fps. Não foi preciso reduzir os LODs.
 
 ## 1. Antes e depois por modelo
 
@@ -48,6 +48,14 @@ Triângulos: original → nível 0 / nível 1. Tamanho: MB do original → níve
 | BUEIRO.glb | Caixa de boca de lobo com grelha | 1.941.768 → 6.000 / 800 | 66,3 → 0,17 + 0,04 | 1,2 × 0,6 × 0,9 | Aceito (bocas de lobo da sarjeta e estoque) |
 | TUBO 1 M.glb | Tubo de concreto ponta e bolsa de 1 m | 1.918.362 → 4.996 / 598 | 66,2 → 0,16 + 0,02 | 1,0 × 0,6 × 0,6 | Aceito (estoque no canteiro) |
 | MEIO FIO.glb | Peça de meio-fio de 1 m | 452.150 → 2.000 / 200 | 26,3 → 0,13 + 0,01 | 0,2 × 0,2 × 1,0 | Aceito (estoque no canteiro) |
+| caminhao pipa.glb | Caminhão-pipa 10 000 L 6x4 | 1.641.721 → 39.999 / 4.946 | 51,8 → 0,63 + 0,09 | 3,3 × 3,3 × 8,5 | Aceito (pipa) |
+| caminhao betoneira.glb | Caminhão betoneira 6x4 (balão de 8 m³) | 1.921.617 → 39.999 / 4.898 | 59,7 → 0,64 + 0,09 | 3,5 × 4,3 × 8,5 | Aceito (betoneira) |
+| caminhao pintura de faixas.glb | Caminhão de pintura de faixas com carrinho aplicador | 1.951.631 → 40.000 / 4.960 | 60,9 → 0,68 + 0,09 | 3,1 × 3,9 × 8,0 | Aceito (faixas) |
+| extrusora de sarjeta.glb | Extrusora de sarjeta de esteiras, com o trecho moldado atrás | 1.535.923 → 40.000 / 4.940 | 49,9 → 0,69 + 0,10 | 2,0 × 2,8 × 6,0 | Aceito (extrusora) |
+| Compactador de solo.glb | Compactador de placa vibratória (sem operador) | 1.254.599 → 11.998 / 1.510 | 42,6 → 0,23 + 0,03 | 0,7 × 1,0 × 1,5 | Aceito (placa) |
+| topografia estacao total.glb | Topógrafo operando estação total sobre tripé, com a maleta | 1.459.823 → 20.000 / 2.496 | 52,3 → 0,55 + 0,08 | 1,4 × 1,7 × 1,5 | Aceito (estação das equipes de topografia e de interferências) |
+| aux topografia.glb | Auxiliar com bastão e prisma | 633.068 → 15.000 / 2.068 | 29,7 → 0,47 + 0,07 | 0,7 × 1,86 × 0,5 | Aceito (segundo integrante da topografia, voltado para a estação) |
+| tripe seco.glb | Tripé com base nivelante | 897.046 → 7.994 / 994 | 34,4 → 0,21 + 0,03 | 1,2 × 1,5 × 1,2 | Aceito (ponto de ré na frente de interferências) |
 
 Critério de escala: medidas típicas de mercado registradas em `criterioEscala` de cada entrada (por exemplo, escavadeira de 20 t com lança 9,5 m, basculante 6x4 8,5 m, rolo tandem 4,5 m, vibroacabadora 6 m, fresadora com transportador 12,5 m, picape 5,3 m). A escala usa a maior dimensão horizontal; para pessoa, cone e tambor, a altura. Como o Tripo não respeita proporções reais, larguras e alturas saem aproximadas: a escavadeira ficou com 4,4 m de largura e o contêiner com 2,4 m de altura (real: 2,59 m).
 
@@ -55,7 +63,7 @@ Orientação: frente original em +Z em 18 modelos, em −X em 4, em +X em 4; os 
 
 Recoloração: só a vassoura (amarela) e a usina (tambor laranja e guarda-corpos amarelos). Cones, tambor, barreira e o colete do engenheiro ficaram laranja, porque são sinalização e EPI. O gerador (cinza) e os contêineres (brancos) ficaram como vieram.
 
-Divergências entre nome e imagem (valeu a imagem): `ROLO LISO.glb` é tandem, `Rolo compactador.glb` é pé-de-carneiro, `cone circular.glb` é tambor, `BUEIRO.glb` é caixa de boca de lobo, `Alojamento.glb` é contêiner genérico e `sinalizador.glb` é barreira. `CL.glb`, `CL COMPLETO.glb` e `CAMINHÃO DE CM-30.glb` foram identificados pelo autor (ver "Pendências").
+Divergências entre nome e imagem (valeu a imagem): `ROLO LISO.glb` é tandem, `Rolo compactador.glb` é pé-de-carneiro, `cone circular.glb` é tambor, `BUEIRO.glb` é caixa de boca de lobo, `Alojamento.glb` é contêiner genérico, `sinalizador.glb` é barreira e `Compactador de solo.glb` é placa vibratória. `CL.glb`, `CL COMPLETO.glb` e `CAMINHÃO DE CM-30.glb` foram identificados pelo autor (ver "Pendências").
 
 ## 2. Rejeitados e duplicatas
 
@@ -74,16 +82,13 @@ Problemas encontrados nos aceitos: nenhuma base flutuando (o pipeline põe a bas
 
 ## 3. Equipamentos do 4D ainda sem GLB (continuam procedurais)
 
-Em ordem de prioridade para você gerar:
+Os 8 modelos enviados depois cobriram caminhão-pipa, caminhão betoneira, extrusora de sarjeta, caminhão de pintura de faixas, placa vibratória e topografia. Restam, em ordem de prioridade:
 
-1. **Caminhão-pipa 10 000 L**: aparece na regularização, na sub-base e na base. É o único "caminhão especial" do aceite que ainda falta.
-2. **Caminhão betoneira**: bocas de lobo e sarjeta.
-3. **Extrusora de sarjeta** (fôrma deslizante): sarjeta.
-4. **Caminhão de pintura de faixas**: sinalização horizontal.
-5. **Compactador de placa vibratória, com operador**: reaterro da vala.
-6. **Estação total ou nível sobre tripé, com topógrafo**: topografia e interferências.
+1. **Operador da placa vibratória**: o GLB veio sem operador, e o boneco procedural saiu. Um militar segurando o guidão completaria o reaterro da vala.
+2. **Betoneira de 400 L** (pequena, de obra): os dados pedem essa betoneira nas bocas de lobo (S12) e no meio-fio (S18). Hoje o 4D usa o caminhão betoneira nas bocas de lobo e não mostra betoneira no meio-fio.
+3. **Operador com detector de cabos e tubulações**: frente de interferências (S08), que hoje mostra a estação total com o tripé de ré.
 
-Situação do aceite da fase: escavadeira, basculante, motoniveladora, os quatro rolos, vibroacabadora, munck e os dois espargidores já usam GLB. Falta o caminhão-pipa (item 1).
+Situação do aceite da fase: escavadeira, basculante, motoniveladora, os quatro rolos, vibroacabadora e os caminhões especiais (munck, os dois espargidores, pipa, betoneira e pintura de faixas) usam GLB. Todos os tipos de máquina do 4D têm modelo GLB.
 
 Também ficam procedurais, por decisão de desempenho ou de modelagem: a rede de tubos assentada (centenas de peças instanciadas, com visibilidade por dia), o meio-fio e a sarjeta contínuos, os tanques de CAP com a bacia e a cabine de comando da usina, e a montagem da usina por etapas, que fica procedural até 88 % e depois dá lugar ao GLB.
 
@@ -138,12 +143,12 @@ A imagem `assets/referencias/vista_aerea_conceito.png` foi usada só como guia d
 
 ## Como testar
 
-1. `npm run modelos`: deve dizer "já processado" para os 32 modelos. Use `-- --forcar` para refazer tudo, ou `-- <id>` para um modelo só.
+1. `npm run modelos`: deve dizer "já processado" para os 40 modelos. Use `-- --forcar` para refazer tudo, ou `-- <id>` para um modelo só.
 2. `npm test`: 73 testes, entre eles `tests/modelos.test.js`, que confere o catálogo, os equipamentos exigidos e o orçamento de arquivos.
 3. `npm run dev` e abra o app:
    - Na vista 3D, o canteiro mostra primeiro os procedurais e, em alguns segundos, os GLB.
    - Avance o dia e use "Seguir frente".
-   - Na aba "Contexto e normas", a tabela de recursos lista os 32 modelos.
+   - Na aba "Contexto e normas", a tabela de recursos lista os 40 modelos.
    - Para conferir o fallback, renomeie um `public/modelos/<id>_lod0.glb` e `_lod1.glb`: o procedural fica e o console mostra um aviso.
 4. `npm run build`.
 
@@ -151,7 +156,7 @@ A imagem `assets/referencias/vista_aerea_conceito.png` foi usada só como guia d
 
 - **KTX2**: instale o KTX-Software (https://github.com/KhronosGroup/KTX-Software/releases), ponha o `toktx` no PATH e rode `npm run modelos -- --forcar`. O pipeline gera KTX2 (ETC1S na cor e em metal/rugosidade, UASTC na normal) e copia o transcodificador para `public/modelos/basis/`; o app já carrega o KTX2Loader. Esse ramo não pôde ser testado aqui, porque o `toktx` não está instalado.
 - **Confirmar os caminhões-tanque**: nas suas respostas, a primeira dizia "CM-30 é o caminhão lubrificante", e a segunda disse que o CM-30 é o espargidor de CM-30, o CL é o espargidor de RR e o CL COMPLETO é o comboio de combustível. Segui a segunda. Você citou RR-2C; os dados da obra especificam RR-1C na pintura de ligação, e esse valor normativo não foi alterado.
-- **Gerar os modelos da seção 3**, começando pelo caminhão-pipa.
+- **Gerar os modelos da seção 3**, começando pelo operador da placa vibratória.
 - **Peças móveis no Blender** (seção 5), quando quiser animação completa.
 - O Playwright do projeto pede o Chromium 1248, mas só o 1228 está baixado. Os scripts de miniatura usam o 1228 encontrado. Para atualizar, rode `npx playwright install chromium`.
 - `assets/referencias/` não foi versionada (imagem de 4 MB, só referência). Diga se quiser incluí-la.

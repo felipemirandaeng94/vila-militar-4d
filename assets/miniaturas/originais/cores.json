@@ -698,5 +698,165 @@
    ]
   },
   "mb": 59.27
+ },
+ "aux-topografia": {
+  "media": "#66573e",
+  "amareloLaranja": 0.032,
+  "oliva": 0.18,
+  "verde": 0,
+  "escuro": 0.155,
+  "caixa": {
+   "min": [
+    -0.201,
+    0,
+    -0.136
+   ],
+   "max": [
+    0.201,
+    1,
+    0.136
+   ]
+  },
+  "mb": 29.68
+ },
+ "caminhao-betoneira": {
+  "media": "#636558",
+  "amareloLaranja": 0.001,
+  "oliva": 0.242,
+  "verde": 0.001,
+  "escuro": 0.1,
+  "caixa": {
+   "min": [
+    -0.5,
+    0,
+    -0.205
+   ],
+   "max": [
+    0.5,
+    0.507,
+    0.205
+   ]
+  },
+  "mb": 59.65
+ },
+ "caminhao-pintura-de-faixas": {
+  "media": "#5a5a51",
+  "amareloLaranja": 0.012,
+  "oliva": 0.151,
+  "verde": 0,
+  "escuro": 0.147,
+  "caixa": {
+   "min": [
+    -0.5,
+    0,
+    -0.194
+   ],
+   "max": [
+    0.5,
+    0.483,
+    0.194
+   ]
+  },
+  "mb": 60.89
+ },
+ "caminhao-pipa": {
+  "media": "#6c6e66",
+  "amareloLaranja": 0.001,
+  "oliva": 0.053,
+  "verde": 0,
+  "escuro": 0.101,
+  "caixa": {
+   "min": [
+    -0.193,
+    0,
+    -0.5
+   ],
+   "max": [
+    0.193,
+    0.393,
+    0.5
+   ]
+  },
+  "mb": 51.79
+ },
+ "compactador-de-solo": {
+  "media": "#515446",
+  "amareloLaranja": 0,
+  "oliva": 0.458,
+  "verde": 0,
+  "escuro": 0.145,
+  "caixa": {
+   "min": [
+    -0.214,
+    0,
+    -0.484
+   ],
+   "max": [
+    0.214,
+    0.636,
+    0.484
+   ]
+  },
+  "mb": 42.63
+ },
+ "extrusora-de-sarjeta": {
+  "media": "#6f7066",
+  "amareloLaranja": 0.001,
+  "oliva": 0.146,
+  "verde": 0,
+  "escuro": 0.063,
+  "caixa": {
+   "min": [
+    -0.168,
+    0,
+    -0.5
+   ],
+   "max": [
+    0.168,
+    0.464,
+    0.5
+   ]
+  },
+  "mb": 49.93
+ },
+ "topografia-estacao-total": {
+  "media": "#656054",
+  "amareloLaranja": 0.042,
+  "oliva": 0.196,
+  "verde": 0.001,
+  "escuro": 0.169,
+  "caixa": {
+   "min": [
+    -0.441,
+    0,
+    -0.409
+   ],
+   "max": [
+    0.441,
+    1,
+    0.409
+   ]
+  },
+  "mb": 52.34
+ },
+ "tripe-seco": {
+  "media": "#686a66",
+  "amareloLaranja": 0,
+  "oliva": 0.111,
+  "verde": 0,
+  "escuro": 0.219,
+  "caixa": {
+   "min": [
+    -0.393,
+    0,
+    -0.389
+   ],
+   "max": [
+    0.393,
+    0.998,
+    0.389
+   ]
+  },
+  "mb": 34.44
  }
 }

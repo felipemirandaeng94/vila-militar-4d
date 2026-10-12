@@ -4,8 +4,14 @@
   "convencao": "Depois do processamento: metros, Y para cima, frente em -Z, base em Y = 0 e centro da caixa em X = Z = 0. A escala é valor_m dividido pela maior dimensão horizontal do original (referenciaEscala 'comprimento') ou pela altura (referenciaEscala 'altura'). rotacaoY_graus gira o original em torno de Y (sentido do three.js: positivo leva +X para -Z) para pôr a frente em -Z.",
   "licencaPadrao": "Imagens criadas por Felipe Miranda (ChatGPT) e modelo 3D gerado por Felipe Miranda no Tripo AI (plano pago). Uso e distribuição autorizados pelo autor (assets/brutos/modelos/LICENCAS.txt).",
   "padroes": {
-    "triangulos": { "lod0": 40000, "lod1": 5000 },
-    "textura": { "lod0": 1024, "lod1": 256 },
+    "triangulos": {
+      "lod0": 40000,
+      "lod1": 5000
+    },
+    "textura": {
+      "lod0": 1024,
+      "lod1": 256
+    },
     "animacao": "simplificada",
     "corOliva": "#5a6340"
   },
@@ -393,7 +399,10 @@
       "frenteOriginal": "+Z (porta e janelas)",
       "rotacaoY_graus": 180,
       "recolorir": false,
-      "triangulos": { "lod0": 20000, "lod1": 3000 },
+      "triangulos": {
+        "lod0": 20000,
+        "lod1": 3000
+      },
       "animacao": "simplificada",
       "animacaoDetalhe": "Estático; aparece na mobilização.",
       "partesMoveis": [],
@@ -411,7 +420,10 @@
       "frenteOriginal": "+Z (lado aberto)",
       "rotacaoY_graus": 180,
       "recolorir": false,
-      "triangulos": { "lod0": 20000, "lod1": 2500 },
+      "triangulos": {
+        "lod0": 20000,
+        "lod1": 2500
+      },
       "animacao": "simplificada",
       "animacaoDetalhe": "Estática; aparece na mobilização.",
       "partesMoveis": [],
@@ -429,7 +441,10 @@
       "frenteOriginal": "+Z (silo de massa, lado de carga dos caminhões)",
       "rotacaoY_graus": 180,
       "recolorir": true,
-      "triangulos": { "lod0": 80000, "lod1": 8000 },
+      "triangulos": {
+        "lod0": 80000,
+        "lod1": 8000
+      },
       "pontos": {
         "descricao": "Medidos no nível 0 processado (m, referencial do GLB): centro do silo de massa no chão (onde o caminhão carrega) e topo da chaminé.",
         "siloDeMassa": [-8.7, 0, -6.5],
@@ -454,7 +469,10 @@
       "frenteOriginal": "+Z",
       "rotacaoY_graus": 180,
       "recolorir": false,
-      "triangulos": { "lod0": 15000, "lod1": 2000 },
+      "triangulos": {
+        "lod0": 15000,
+        "lod1": 2000
+      },
       "animacao": "simplificada",
       "animacaoDetalhe": "Estático (sem esqueleto).",
       "partesMoveis": [],
@@ -473,8 +491,14 @@
       "frenteOriginal": "simétrico",
       "rotacaoY_graus": 0,
       "recolorir": false,
-      "triangulos": { "lod0": 3000, "lod1": 300 },
-      "textura": { "lod0": 512, "lod1": 128 },
+      "triangulos": {
+        "lod0": 3000,
+        "lod1": 300
+      },
+      "textura": {
+        "lod0": 512,
+        "lod1": 128
+      },
       "animacao": "simplificada",
       "animacaoDetalhe": "Estático; instanciado (centenas de cópias) com o nível 1.",
       "partesMoveis": [],
@@ -494,8 +518,14 @@
       "frenteOriginal": "simétrico",
       "rotacaoY_graus": 0,
       "recolorir": false,
-      "triangulos": { "lod0": 4000, "lod1": 400 },
-      "textura": { "lod0": 512, "lod1": 128 },
+      "triangulos": {
+        "lod0": 4000,
+        "lod1": 400
+      },
+      "textura": {
+        "lod0": 512,
+        "lod1": 128
+      },
       "animacao": "simplificada",
       "animacaoDetalhe": "Estático.",
       "partesMoveis": [],
@@ -513,8 +543,14 @@
       "frenteOriginal": "+X (face listrada)",
       "rotacaoY_graus": 90,
       "recolorir": false,
-      "triangulos": { "lod0": 5000, "lod1": 500 },
-      "textura": { "lod0": 512, "lod1": 128 },
+      "triangulos": {
+        "lod0": 5000,
+        "lod1": 500
+      },
+      "textura": {
+        "lod0": 512,
+        "lod1": 128
+      },
       "animacao": "simplificada",
       "animacaoDetalhe": "Estática; instanciada no bloqueio do desvio total, no lugar dos cavaletes.",
       "partesMoveis": [],
@@ -532,8 +568,14 @@
       "frenteOriginal": "sem frente (bocais nas duas pontas)",
       "rotacaoY_graus": 0,
       "recolorir": false,
-      "triangulos": { "lod0": 6000, "lod1": 800 },
-      "textura": { "lod0": 512, "lod1": 256 },
+      "triangulos": {
+        "lod0": 6000,
+        "lod1": 800
+      },
+      "textura": {
+        "lod0": 512,
+        "lod1": 256
+      },
       "animacao": "simplificada",
       "animacaoDetalhe": "Estática; instanciada nas bocas de lobo da sarjeta, com a grelha no nível do pavimento.",
       "partesMoveis": [],
@@ -552,8 +594,14 @@
       "frenteOriginal": "sem frente (eixo do tubo em X)",
       "rotacaoY_graus": 0,
       "recolorir": false,
-      "triangulos": { "lod0": 5000, "lod1": 600 },
-      "textura": { "lod0": 512, "lod1": 128 },
+      "triangulos": {
+        "lod0": 5000,
+        "lod1": 600
+      },
+      "textura": {
+        "lod0": 512,
+        "lod1": 128
+      },
       "animacao": "simplificada",
       "animacaoDetalhe": "Estático.",
       "partesMoveis": []
@@ -571,11 +619,184 @@
       "frenteOriginal": "sem frente (comprimento em Z)",
       "rotacaoY_graus": 0,
       "recolorir": false,
-      "triangulos": { "lod0": 2000, "lod1": 200 },
-      "textura": { "lod0": 512, "lod1": 128 },
+      "triangulos": {
+        "lod0": 2000,
+        "lod1": 200
+      },
+      "textura": {
+        "lod0": 512,
+        "lod1": 128
+      },
       "animacao": "simplificada",
       "animacaoDetalhe": "Estático.",
       "partesMoveis": []
+    },
+    {
+      "animacao": "simplificada",
+      "partesMoveis": [],
+      "recolorir": false,
+      "id": "caminhao-pipa",
+      "arquivo": "caminhao pipa.glb",
+      "equipamento": "Caminhão-pipa 10 000 L 6x4",
+      "tipos4D": ["pipa"],
+      "categoria": "terraplenagem",
+      "comprimento_m": 8.5,
+      "referenciaEscala": "comprimento",
+      "criterioEscala": "Caminhão 6x4 com tanque de 10 000 L: cerca de 8,5 m.",
+      "frenteOriginal": "+Z",
+      "rotacaoY_graus": 180,
+      "animacaoDetalhe": "Deslocamento do conjunto."
+    },
+    {
+      "animacao": "simplificada",
+      "partesMoveis": [],
+      "recolorir": false,
+      "id": "caminhao-betoneira",
+      "arquivo": "caminhao betoneira.glb",
+      "equipamento": "Caminhão betoneira 6x4 (balão de 8 m³)",
+      "tipos4D": ["betoneira"],
+      "categoria": "drenagem",
+      "veiculo": true,
+      "comprimento_m": 8.5,
+      "referenciaEscala": "comprimento",
+      "criterioEscala": "Caminhão betoneira 6x4 com balão de 8 m³: 8,3 a 8,6 m.",
+      "frenteOriginal": "+X",
+      "rotacaoY_graus": 90,
+      "animacaoDetalhe": "Deslocamento do conjunto; o balão não gira enquanto a malha for única.",
+      "observacoes": "Usado na sarjeta (S19) e, como no procedural, nas bocas de lobo; os dados das bocas de lobo (S12) e do meio-fio (S18) pedem betoneira de 400 L, ainda sem modelo."
+    },
+    {
+      "animacao": "simplificada",
+      "partesMoveis": [],
+      "recolorir": false,
+      "id": "caminhao-pintura-faixas",
+      "arquivo": "caminhao pintura de faixas.glb",
+      "equipamento": "Caminhão de pintura de faixas com carrinho aplicador",
+      "tipos4D": ["faixas"],
+      "categoria": "sinalização",
+      "veiculo": true,
+      "comprimento_m": 8.0,
+      "referenciaEscala": "comprimento",
+      "criterioEscala": "Caminhão 4x2 com plataforma de pintura e carrinho aplicador lateral: cerca de 8 m.",
+      "frenteOriginal": "+X",
+      "rotacaoY_graus": 90,
+      "animacaoDetalhe": "Deslocamento do conjunto."
+    },
+    {
+      "animacao": "simplificada",
+      "partesMoveis": [],
+      "recolorir": false,
+      "id": "extrusora-sarjeta",
+      "arquivo": "extrusora de sarjeta.glb",
+      "equipamento": "Extrusora de sarjeta de esteiras (fôrma deslizante)",
+      "tipos4D": ["extrusora"],
+      "categoria": "drenagem",
+      "veiculo": true,
+      "comprimento_m": 6.0,
+      "referenciaEscala": "comprimento",
+      "criterioEscala": "Extrusora de meio-fio e sarjeta de esteiras com o trecho recém-moldado atrás (Power Curber 5700): cerca de 6 m.",
+      "frenteOriginal": "-Z (silo de concreto; a sarjeta moldada sai atrás)",
+      "rotacaoY_graus": 0,
+      "animacaoDetalhe": "Deslocamento do conjunto.",
+      "observacoes": "O modelo inclui um trecho de sarjeta moldada saindo da fôrma."
+    },
+    {
+      "animacao": "simplificada",
+      "partesMoveis": [],
+      "recolorir": false,
+      "id": "placa-vibratoria",
+      "arquivo": "Compactador de solo.glb",
+      "equipamento": "Compactador de placa vibratória",
+      "tipos4D": ["placa"],
+      "categoria": "terraplenagem",
+      "veiculo": false,
+      "comprimento_m": 1.5,
+      "referenciaEscala": "comprimento",
+      "criterioEscala": "Placa vibratória de 90 a 100 kg com o guidão: cerca de 1,5 m.",
+      "frenteOriginal": "+Z (placa; o guidão fica atrás)",
+      "rotacaoY_graus": 180,
+      "triangulos": {
+        "lod0": 12000,
+        "lod1": 1500
+      },
+      "textura": {
+        "lod0": 512,
+        "lod1": 128
+      },
+      "animacaoDetalhe": "Vai e volta no reaterro da vala, com vibração vertical.",
+      "observacoes": "Nome genérico (compactador de solo); a imagem mostra placa vibratória. Vem sem operador: o boneco procedural sai."
+    },
+    {
+      "animacao": "simplificada",
+      "partesMoveis": [],
+      "recolorir": false,
+      "id": "topografo-estacao-total",
+      "arquivo": "topografia estacao total.glb",
+      "equipamento": "Topógrafo operando estação total sobre tripé, com a maleta",
+      "tipos4D": ["tripod"],
+      "categoria": "terraplenagem",
+      "veiculo": false,
+      "comprimento_m": 1.6,
+      "altura_m": 1.7,
+      "referenciaEscala": "altura",
+      "criterioEscala": "Altura do topógrafo curvado sobre a ocular (com o boné): cerca de 1,70 m.",
+      "frenteOriginal": "+X (direção da visada)",
+      "rotacaoY_graus": 90,
+      "triangulos": {
+        "lod0": 20000,
+        "lod1": 2500
+      },
+      "animacaoDetalhe": "Estático na estação; a visada aponta para o auxiliar à frente."
+    },
+    {
+      "animacao": "simplificada",
+      "partesMoveis": [],
+      "recolorir": false,
+      "id": "auxiliar-prisma",
+      "arquivo": "aux topografia.glb",
+      "equipamento": "Auxiliar de topografia com bastão e prisma",
+      "tipos4D": ["prisma"],
+      "categoria": "terraplenagem",
+      "veiculo": false,
+      "comprimento_m": 0.7,
+      "altura_m": 1.86,
+      "referenciaEscala": "altura",
+      "criterioEscala": "Altura do topo do prisma no bastão, com o auxiliar de 1,75 m: cerca de 1,86 m.",
+      "frenteOriginal": "+Z",
+      "rotacaoY_graus": 180,
+      "triangulos": {
+        "lod0": 15000,
+        "lod1": 2000
+      },
+      "animacaoDetalhe": "Estático, voltado para a estação total.",
+      "observacoes": "Colete e prisma de sinalização: cor mantida."
+    },
+    {
+      "animacao": "simplificada",
+      "partesMoveis": [],
+      "recolorir": false,
+      "id": "tripe-re",
+      "arquivo": "tripe seco.glb",
+      "equipamento": "Tripé com base nivelante (ponto de ré)",
+      "tipos4D": ["tripeRe"],
+      "categoria": "terraplenagem",
+      "veiculo": false,
+      "comprimento_m": 0.9,
+      "altura_m": 1.5,
+      "referenciaEscala": "altura",
+      "criterioEscala": "Tripé de alumínio aberto com base nivelante: cerca de 1,5 m.",
+      "frenteOriginal": "simétrico",
+      "rotacaoY_graus": 0,
+      "triangulos": {
+        "lod0": 8000,
+        "lod1": 1000
+      },
+      "textura": {
+        "lod0": 512,
+        "lod1": 128
+      },
+      "animacaoDetalhe": "Estático.",
+      "observacoes": "Usado na frente de interferências como ponto de ré da estação total."
     }
   ],
   "rejeitados": [

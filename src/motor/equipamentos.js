@@ -50,6 +50,8 @@ const TIPOS = {
   vassoura: [() => mkTractor('vassoura'), 'Vassoura mecânica'],
   mill: [mkMill, 'Fresadora a frio de 1,0 m'],
   tripod: [mkTripod, 'Estação total / nível (topografia)'],
+  prisma: [mkTripod, 'Auxiliar de topografia com bastão e prisma'],
+  tripeRe: [mkTripod, 'Tripé com base nivelante (ponto de ré)'],
   betoneira: [mkBetoneira, 'Caminhão betoneira'],
   extrusora: [mkExtrusora, 'Extrusora de sarjeta'],
   placa: [mkPlaca, 'Compactador de placa vibratória']
@@ -72,6 +74,14 @@ const GLB = {
   dozer: { variantes: 'trator-esteiras' },
   loader: { variantes: 'pa-carregadeira' },
   mill: { variantes: 'fresadora' },
+  pipa: { variantes: 'caminhao-pipa' },
+  betoneira: { variantes: 'caminhao-betoneira' },
+  faixas: { variantes: 'caminhao-pintura-faixas' },
+  extrusora: { variantes: 'extrusora-sarjeta' },
+  placa: { variantes: 'placa-vibratoria', vibra: true },
+  tripod: { variantes: 'topografo-estacao-total' },
+  prisma: { variantes: 'auxiliar-prisma' },
+  tripeRe: { variantes: 'tripe-re' },
   // vassoura rebocável atrás do trator procedural, que perde só a escova frontal
   vassoura: { variantes: 'vassoura-mecanica', pos: [-3.75, 0, 0], manter: o => o.children.filter(c => c !== o.userData.brush) }
 };
@@ -85,7 +95,7 @@ function comprimento(tipo) {
   const g = GLB[tipo];
   const id = g && (typeof g.variantes === 'string' ? g.variantes : Object.values(g.variantes)[0]);
   if (id && CATALOGO[id]) return CATALOGO[id].comprimento_m + (tipo === 'vassoura' ? 3.5 : 0);
-  return { tripod: 1, placa: 2, extrusora: 3, betoneira: 8, pipa: 8, faixas: 8 }[tipo] || 7.5;
+  return { tripod: 1, prisma: 1, tripeRe: 1, placa: 2, extrusora: 3, betoneira: 8, pipa: 8, faixas: 8 }[tipo] || 7.5;
 }
 function vestirEquipamento(e) {
   const g = GLB[e.tipo];
@@ -109,8 +119,8 @@ let engenheiro = null;
 const EQUIPES = {
   sinalizacaoObra: { nome: 'Sinalização de obra', maq: ['apoio'] },
   sinalizacaoVertical: { nome: 'Sinalização vertical', maq: ['apoio'] },
-  topografia: { nome: 'Topografia', maq: ['tripod', 'tripod'] },
-  interferencias: { nome: 'Interferências', maq: ['tripod', 'tripod'] },
+  topografia: { nome: 'Topografia', maq: ['tripod', 'prisma'] },
+  interferencias: { nome: 'Interferências', maq: ['tripod', 'tripeRe'] },
   limpeza: { nome: 'Limpeza', maq: ['dozer', 'bascula'] },
   fresagem: { nome: 'Fresagem', maq: ['mill', 'bascula', 'bascula', 'vassoura'], reps: ['fresagem', 'retrabalhoCbuq'] },
   estoqueFresado: { nome: 'Estoque de fresado', maq: ['loader'] },
@@ -134,6 +144,8 @@ export const repsDaEquipe = k => (EQUIPES[k] ? EQUIPES[k].reps || [k] : []);
 const TIME = {};
 for (const k of Object.keys(EQUIPES)) TIME[k] = [];
 
+// equipamentos de topografia: só aparecem em serviço (não ficam no pátio)
+const TOPOGRAFIA = new Set(['tripod', 'prisma', 'tripeRe']);
 // vagas do pátio de máquinas no canteiro (início do trecho), no arranjo de referência do canteiro: fileiras com as
 // máquinas lado a lado, atravessadas (comprimento em z); as fileiras A e B recebem as mais longas, a C (atrás das
 // outras, ao lado das baias) as mais curtas
@@ -166,7 +178,7 @@ export function buildEquipment() {
     }
   }
   // vagas: as máquinas mais longas primeiro, cada uma na primeira vaga que comporta o comprimento
-  const fila = EQ.filter(e => e.tipo !== 'tripod').sort((a, b) => comprimento(b.tipo) - comprimento(a.tipo));
+  const fila = EQ.filter(e => !TOPOGRAFIA.has(e.tipo)).sort((a, b) => comprimento(b.tipo) - comprimento(a.tipo));
   const livre = vagas.slice();
   const vaga = L => {
     const i = livre.findIndex(v => v.max >= L);
@@ -365,7 +377,7 @@ export function updateEquipment(st, clk) {
   if (topo && d >= topo.a && d < topo.b) {
     const t = (d - topo.a) / (topo.b - topo.a);
     put(T('topografia')[0], Math.round(t * (P.L / P.EST)) * P.EST, 5.5, 0);
-    put(T('topografia')[1], Math.round(t * (P.L / P.EST)) * P.EST + 60, -5.5, 0);
+    put(T('topografia')[1], Math.round(t * (P.L / P.EST)) * P.EST + 60, -5.5, Math.PI);
   }
   // limpeza (global): faixa lateral do desvio
   const limp = servicoRep('limpeza');
@@ -551,7 +563,7 @@ export function updateEquipment(st, clk) {
 
   // máquinas paradas no pátio; giroflex, tambores e vassouras
   for (const e of EQ) {
-    e.o.visible = ST.lay.equip !== false && (e.tipo !== 'tripod' || used.has(e));
+    e.o.visible = ST.lay.equip !== false && (!TOPOGRAFIA.has(e.tipo) || used.has(e));
     if (!used.has(e)) {
       setPose(e, e.park[0], e.park[1], Math.PI / 2, d);
       e.o.rotation.y = Math.PI / 2 + rumo(e.park[0]);

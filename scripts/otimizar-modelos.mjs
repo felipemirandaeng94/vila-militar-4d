@@ -361,7 +361,8 @@ async function processar(m) {
     else break;
     console.log(`  ${m.id}: nível 0 com ${(glb0.byteLength / 1048576).toFixed(2)} MB; refazendo com textura ${lado0} e ${alvo0} triângulos`);
   }
-  const VEICULO = ['terraplenagem', 'pavimentação', 'apoio/viaturas'].includes(m.categoria) && !m.recolorir;
+  // giroflex só em veículos (campo veiculo, ou pela categoria): pessoas e objetos ficam de fora
+  const VEICULO = (m.veiculo ?? ['terraplenagem', 'pavimentação', 'apoio/viaturas'].includes(m.categoria)) && !m.recolorir;
   const corTex = [...texturas.values()].find(t => t.tipo === 'cor');
   const luzes = VEICULO && corTex ? await giroflex(g0[0], corTex.buf) : [];
   // nível 1 a partir do nível 0 já normalizado
@@ -397,7 +398,9 @@ const hash = m =>
     .update(
       JSON.stringify([
         // só os campos que mudam o processamento
-        ['arquivo', 'categoria', 'comprimento_m', 'altura_m', 'referenciaEscala', 'rotacaoY_graus', 'recolorir', 'triangulos', 'textura'].map(k => m[k]),
+        ['arquivo', 'categoria', 'veiculo', 'comprimento_m', 'altura_m', 'referenciaEscala', 'rotacaoY_graus', 'recolorir', 'triangulos', 'textura'].map(
+          k => m[k]
+        ),
         CONFIG.padroes,
         KTX2,
         readFileSync(fileURLToPath(import.meta.url))

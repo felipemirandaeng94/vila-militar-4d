@@ -638,5 +638,165 @@
    ]
   },
   "mb": 0.13
+ },
+ "caminhao-pipa": {
+  "media": "#676960",
+  "amareloLaranja": 0.002,
+  "oliva": 0.09,
+  "verde": 0.001,
+  "escuro": 0.125,
+  "caixa": {
+   "min": [
+    -1.635,
+    0,
+    -4.25
+   ],
+   "max": [
+    1.635,
+    3.338,
+    4.25
+   ]
+  },
+  "mb": 0.63
+ },
+ "caminhao-betoneira": {
+  "media": "#5d5f51",
+  "amareloLaranja": 0,
+  "oliva": 0.259,
+  "verde": 0,
+  "escuro": 0.118,
+  "caixa": {
+   "min": [
+    -1.744,
+    0,
+    -4.25
+   ],
+   "max": [
+    1.744,
+    4.312,
+    4.25
+   ]
+  },
+  "mb": 0.64
+ },
+ "caminhao-pintura-faixas": {
+  "media": "#55554a",
+  "amareloLaranja": 0.01,
+  "oliva": 0.186,
+  "verde": 0,
+  "escuro": 0.158,
+  "caixa": {
+   "min": [
+    -1.551,
+    0,
+    -4
+   ],
+   "max": [
+    1.551,
+    3.864,
+    4
+   ]
+  },
+  "mb": 0.68
+ },
+ "extrusora-sarjeta": {
+  "media": "#6e7066",
+  "amareloLaranja": 0.001,
+  "oliva": 0.139,
+  "verde": 0,
+  "escuro": 0.068,
+  "caixa": {
+   "min": [
+    -1.004,
+    0,
+    -3
+   ],
+   "max": [
+    1.004,
+    2.782,
+    3
+   ]
+  },
+  "mb": 0.69
+ },
+ "placa-vibratoria": {
+  "media": "#494c41",
+  "amareloLaranja": 0,
+  "oliva": 0.353,
+  "verde": 0,
+  "escuro": 0.202,
+  "caixa": {
+   "min": [
+    -0.331,
+    0,
+    -0.75
+   ],
+   "max": [
+    0.331,
+    0.984,
+    0.75
+   ]
+  },
+  "mb": 0.23
+ },
+ "topografo-estacao-total": {
+  "media": "#615b4d",
+  "amareloLaranja": 0.032,
+  "oliva": 0.2,
+  "verde": 0.001,
+  "escuro": 0.111,
+  "caixa": {
+   "min": [
+    -0.695,
+    0,
+    -0.75
+   ],
+   "max": [
+    0.695,
+    1.7,
+    0.75
+   ]
+  },
+  "mb": 0.55
+ },
+ "auxiliar-prisma": {
+  "media": "#63563f",
+  "amareloLaranja": 0.016,
+  "oliva": 0.172,
+  "verde": 0,
+  "escuro": 0.159,
+  "caixa": {
+   "min": [
+    -0.374,
+    0,
+    -0.253
+   ],
+   "max": [
+    0.374,
+    1.86,
+    0.253
+   ]
+  },
+  "mb": 0.47
+ },
+ "tripe-re": {
+  "media": "#676964",
+  "amareloLaranja": 0,
+  "oliva": 0.084,
+  "verde": 0,
+  "escuro": 0.245,
+  "caixa": {
+   "min": [
+    -0.59,
+    0,
+    -0.584
+   ],
+   "max": [
+    0.59,
+    1.5,
+    0.584
+   ]
+  },
+  "mb": 0.21
  }
 }

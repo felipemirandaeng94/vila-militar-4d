@@ -82,6 +82,14 @@ Autoria: imagens criadas por Felipe Miranda (ChatGPT) e modelos 3D gerados por F
 | Caixa de boca de lobo pré-moldada com grelha | BUEIRO.glb | Equipamento ou objeto do 4D (drenagem) | public/modelos/boca-de-lobo_lod0.glb, _lod1.glb |
 | Tubo de concreto ponta e bolsa, peça de 1 m | TUBO 1 M.glb | Estoque de tubos no canteiro e ao lado da vala aberta. A rede assentada continua procedural (centenas de peças instanciadas, ver relatório). | public/modelos/tubo-concreto_lod0.glb, _lod1.glb |
 | Peça de meio-fio pré-moldado de concreto (1 m) | MEIO FIO.glb | Pilhas de peças no canteiro e na frente de meio-fio. O meio-fio assentado continua contínuo (procedural). | public/modelos/meio-fio_lod0.glb, _lod1.glb |
+| Caminhão-pipa 10 000 L 6x4 | caminhao pipa.glb | Equipamento ou objeto do 4D (terraplenagem) | public/modelos/caminhao-pipa_lod0.glb, _lod1.glb |
+| Caminhão betoneira 6x4 (balão de 8 m³) | caminhao betoneira.glb | Equipamento ou objeto do 4D (drenagem) | public/modelos/caminhao-betoneira_lod0.glb, _lod1.glb |
+| Caminhão de pintura de faixas com carrinho aplicador | caminhao pintura de faixas.glb | Equipamento ou objeto do 4D (sinalização) | public/modelos/caminhao-pintura-faixas_lod0.glb, _lod1.glb |
+| Extrusora de sarjeta de esteiras (fôrma deslizante) | extrusora de sarjeta.glb | Equipamento ou objeto do 4D (drenagem) | public/modelos/extrusora-sarjeta_lod0.glb, _lod1.glb |
+| Compactador de placa vibratória | Compactador de solo.glb | Equipamento ou objeto do 4D (terraplenagem) | public/modelos/placa-vibratoria_lod0.glb, _lod1.glb |
+| Topógrafo operando estação total sobre tripé, com a maleta | topografia estacao total.glb | Equipamento ou objeto do 4D (terraplenagem) | public/modelos/topografo-estacao-total_lod0.glb, _lod1.glb |
+| Auxiliar de topografia com bastão e prisma | aux topografia.glb | Equipamento ou objeto do 4D (terraplenagem) | public/modelos/auxiliar-prisma_lod0.glb, _lod1.glb |
+| Tripé com base nivelante (ponto de ré) | tripe seco.glb | Equipamento ou objeto do 4D (terraplenagem) | public/modelos/tripe-re_lod0.glb, _lod1.glb |
 
 Não usados (rejeitados na varredura): 4 silos.glb, ARVORE GRANDE.glb, ARVORE PQN.glb. Motivos em dados/modelos.json.
 

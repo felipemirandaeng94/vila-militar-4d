@@ -569,6 +569,69 @@
    }
   },
   {
+   "arquivo": "Compactador de solo.glb",
+   "mb": 42.6,
+   "gerador": "Tripo",
+   "malhas": 1,
+   "primitivas": 1,
+   "nos": 1,
+   "vertices": 657557,
+   "triangulos": 1254599,
+   "materiais": [
+    {
+     "nome": "tripo_material_ba4d2202-d356-4b7c-8a68-83a2f25f1df3",
+     "mapas": [
+      "normalTexture",
+      "baseColorTexture",
+      "metallicRoughnessTexture"
+     ],
+     "extensoes": []
+    }
+   ],
+   "texturas": [
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 3101
+    },
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 1495
+    },
+    {
+     "formato": "png",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 3801
+    }
+   ],
+   "extensoesUsadas": [
+    "KHR_materials_volume",
+    "FB_ngon_encoding"
+   ],
+   "extensoesObrigatorias": [],
+   "caixa": {
+    "min": [
+     -0.2138,
+     0,
+     -0.484
+    ],
+    "max": [
+     0.2138,
+     0.6358,
+     0.484
+    ],
+    "tamanho": [
+     0.4276,
+     0.6358,
+     0.968
+    ]
+   }
+  },
+  {
    "arquivo": "Engenheiro.glb",
    "mb": 27.3,
    "gerador": "Tripo",
@@ -1451,6 +1514,69 @@
    }
   },
   {
+   "arquivo": "aux topografia.glb",
+   "mb": 29.7,
+   "gerador": "Tripo",
+   "malhas": 1,
+   "primitivas": 1,
+   "nos": 1,
+   "vertices": 327731,
+   "triangulos": 633068,
+   "materiais": [
+    {
+     "nome": "tripo_material_cd82dda9-4523-46b3-97b5-06d898210c89",
+     "mapas": [
+      "normalTexture",
+      "baseColorTexture",
+      "metallicRoughnessTexture"
+     ],
+     "extensoes": []
+    }
+   ],
+   "texturas": [
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 3952
+    },
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 1502
+    },
+    {
+     "formato": "png",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 7277
+    }
+   ],
+   "extensoesUsadas": [
+    "KHR_materials_volume",
+    "FB_ngon_encoding"
+   ],
+   "extensoesObrigatorias": [],
+   "caixa": {
+    "min": [
+     -0.2009,
+     0,
+     -0.1359
+    ],
+    "max": [
+     0.2009,
+     0.9996,
+     0.1359
+    ],
+    "tamanho": [
+     0.4019,
+     0.9996,
+     0.2718
+    ]
+   }
+  },
+  {
    "arquivo": "cONE.glb",
    "mb": 43.7,
    "gerador": "Tripo",
@@ -1640,6 +1766,69 @@
    }
   },
   {
+   "arquivo": "caminhao betoneira.glb",
+   "mb": 59.7,
+   "gerador": "Tripo",
+   "malhas": 1,
+   "primitivas": 1,
+   "nos": 1,
+   "vertices": 1020095,
+   "triangulos": 1921617,
+   "materiais": [
+    {
+     "nome": "tripo_material_4ebe76d3-72bb-4ced-b484-8aea0289d15a",
+     "mapas": [
+      "normalTexture",
+      "baseColorTexture",
+      "metallicRoughnessTexture"
+     ],
+     "extensoes": []
+    }
+   ],
+   "texturas": [
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 3013
+    },
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 1523
+    },
+    {
+     "formato": "png",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 2152
+    }
+   ],
+   "extensoesUsadas": [
+    "KHR_materials_volume",
+    "FB_ngon_encoding"
+   ],
+   "extensoesObrigatorias": [],
+   "caixa": {
+    "min": [
+     -0.4999,
+     0,
+     -0.2055
+    ],
+    "max": [
+     0.4999,
+     0.5073,
+     0.2055
+    ],
+    "tamanho": [
+     0.9998,
+     0.5073,
+     0.411
+    ]
+   }
+  },
+  {
    "arquivo": "caminhao munck.glb",
    "mb": 59.9,
    "gerador": "Tripo",
@@ -1699,6 +1888,132 @@
      0.3583,
      0.4535,
      0.9837
+    ]
+   }
+  },
+  {
+   "arquivo": "caminhao pintura de faixas.glb",
+   "mb": 60.9,
+   "gerador": "Tripo",
+   "malhas": 1,
+   "primitivas": 1,
+   "nos": 1,
+   "vertices": 1041677,
+   "triangulos": 1951631,
+   "materiais": [
+    {
+     "nome": "tripo_material_d9fb47af-b1ad-4608-aa5e-57296297f3ee",
+     "mapas": [
+      "normalTexture",
+      "baseColorTexture",
+      "metallicRoughnessTexture"
+     ],
+     "extensoes": []
+    }
+   ],
+   "texturas": [
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 3264
+    },
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 1612
+    },
+    {
+     "formato": "png",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 2054
+    }
+   ],
+   "extensoesUsadas": [
+    "KHR_materials_volume",
+    "FB_ngon_encoding"
+   ],
+   "extensoesObrigatorias": [],
+   "caixa": {
+    "min": [
+     -0.4998,
+     0,
+     -0.1942
+    ],
+    "max": [
+     0.4998,
+     0.4834,
+     0.1942
+    ],
+    "tamanho": [
+     0.9996,
+     0.4834,
+     0.3884
+    ]
+   }
+  },
+  {
+   "arquivo": "caminhao pipa.glb",
+   "mb": 51.8,
+   "gerador": "Tripo",
+   "malhas": 1,
+   "primitivas": 1,
+   "nos": 1,
+   "vertices": 871705,
+   "triangulos": 1641721,
+   "materiais": [
+    {
+     "nome": "tripo_material_fbd99f47-4801-49a3-a4e9-3dc646865f77",
+     "mapas": [
+      "normalTexture",
+      "baseColorTexture",
+      "metallicRoughnessTexture"
+     ],
+     "extensoes": []
+    }
+   ],
+   "texturas": [
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 3042
+    },
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 1560
+    },
+    {
+     "formato": "png",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 1946
+    }
+   ],
+   "extensoesUsadas": [
+    "KHR_materials_volume",
+    "FB_ngon_encoding"
+   ],
+   "extensoesObrigatorias": [],
+   "caixa": {
+    "min": [
+     -0.1925,
+     0,
+     -0.5001
+    ],
+    "max": [
+     0.1925,
+     0.393,
+     0.5001
+    ],
+    "tamanho": [
+     0.3851,
+     0.393,
+     1.0002
     ]
    }
   },
@@ -1825,6 +2140,69 @@
      0.7786,
      1.0002,
      0.7987
+    ]
+   }
+  },
+  {
+   "arquivo": "extrusora de sarjeta.glb",
+   "mb": 49.9,
+   "gerador": "Tripo",
+   "malhas": 1,
+   "primitivas": 1,
+   "nos": 1,
+   "vertices": 827503,
+   "triangulos": 1535923,
+   "materiais": [
+    {
+     "nome": "tripo_material_7255aebe-e182-413c-a4d6-de225a271200",
+     "mapas": [
+      "normalTexture",
+      "baseColorTexture",
+      "metallicRoughnessTexture"
+     ],
+     "extensoes": []
+    }
+   ],
+   "texturas": [
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 3454
+    },
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 1873
+    },
+    {
+     "formato": "png",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 1938
+    }
+   ],
+   "extensoesUsadas": [
+    "KHR_materials_volume",
+    "FB_ngon_encoding"
+   ],
+   "extensoesObrigatorias": [],
+   "caixa": {
+    "min": [
+     -0.1675,
+     0,
+     -0.5002
+    ],
+    "max": [
+     0.1675,
+     0.4638,
+     0.5002
+    ],
+    "tamanho": [
+     0.3351,
+     0.4638,
+     1.0003
     ]
    }
   },
@@ -2200,6 +2578,132 @@
      0.2576,
      0.365,
      0.9999
+    ]
+   }
+  },
+  {
+   "arquivo": "topografia estacao total.glb",
+   "mb": 52.3,
+   "gerador": "Tripo",
+   "malhas": 1,
+   "primitivas": 1,
+   "nos": 1,
+   "vertices": 756076,
+   "triangulos": 1459823,
+   "materiais": [
+    {
+     "nome": "tripo_material_69606ae4-d30b-49ea-8783-cf3efd25aa43",
+     "mapas": [
+      "normalTexture",
+      "baseColorTexture",
+      "metallicRoughnessTexture"
+     ],
+     "extensoes": []
+    }
+   ],
+   "texturas": [
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 4269
+    },
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 2184
+    },
+    {
+     "formato": "png",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 6409
+    }
+   ],
+   "extensoesUsadas": [
+    "KHR_materials_volume",
+    "FB_ngon_encoding"
+   ],
+   "extensoesObrigatorias": [],
+   "caixa": {
+    "min": [
+     -0.4411,
+     0,
+     -0.4089
+    ],
+    "max": [
+     0.4411,
+     1.0004,
+     0.4089
+    ],
+    "tamanho": [
+     0.8822,
+     1.0004,
+     0.8178
+    ]
+   }
+  },
+  {
+   "arquivo": "tripe seco.glb",
+   "mb": 34.4,
+   "gerador": "Tripo",
+   "malhas": 1,
+   "primitivas": 1,
+   "nos": 1,
+   "vertices": 472842,
+   "triangulos": 897046,
+   "materiais": [
+    {
+     "nome": "tripo_material_7c7c5d86-3162-41f4-9a5b-859f09594d2e",
+     "mapas": [
+      "normalTexture",
+      "baseColorTexture",
+      "metallicRoughnessTexture"
+     ],
+     "extensoes": []
+    }
+   ],
+   "texturas": [
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 3254
+    },
+    {
+     "formato": "jpeg",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 1721
+    },
+    {
+     "formato": "png",
+     "largura": 4096,
+     "altura": 4096,
+     "kb": 5006
+    }
+   ],
+   "extensoesUsadas": [
+    "KHR_materials_volume",
+    "FB_ngon_encoding"
+   ],
+   "extensoesObrigatorias": [],
+   "caixa": {
+    "min": [
+     -0.3931,
+     0,
+     -0.3887
+    ],
+    "max": [
+     0.3931,
+     0.9982,
+     0.3887
+    ],
+    "tamanho": [
+     0.7863,
+     0.9982,
+     0.7774
     ]
    }
   },
