@@ -105,6 +105,19 @@ Autoria: imagens criadas por Felipe Miranda (ChatGPT) e modelos 3D gerados por F
 
 Não usados (rejeitados na varredura): 4 silos.glb, ARVORE GRANDE.glb, ARVORE PQN.glb. Motivos em dados/modelos.json.
 
+## Som ambiente (Fase 8)
+
+Áudios do Freesound com licença Creative Commons 0 (CC0 1.0, domínio público; a licença de cada um foi conferida na página do som em 12/10/2026). Baixados sem conta, a partir das prévias públicas em MP3 (`cdn.freesound.org/previews/…-hq.mp3`). O crédito é cortesia. Tocam em laço, só depois do clique no botão Som, com volume pela distância à câmera (`src/motor/som.js`).
+
+| Recurso | Fonte | Licença | Uso no app | Arquivo |
+|---|---|---|---|---|
+| "Truck Engine Idle Loops", de qubodup | Freesound, https://freesound.org/people/qubodup/sounds/187564/ | CC0 1.0 | Motores a diesel das máquinas e dos caminhões em serviço | `public/sons/motor-diesel.mp3` |
+| "Truck Reverse Beeper", de Disasteradio | Freesound, https://freesound.org/people/Disasteradio/sounds/197166/ | CC0 1.0 | Bipe de ré dos caminhões e das máquinas andando de ré | `public/sons/bipe-re.mp3` |
+| "Soil compactor. Pinnasetihendaja müra.", de Jyri-channel | Freesound, https://freesound.org/people/Jyri-channel/sounds/857744/ | CC0 1.0 | Rolos vibratórios e placa vibratória em serviço | `public/sons/rolo-vibratorio.mp3` |
+| "industrial hums factory water treatment plant drone highcut", de kyles | Freesound, https://freesound.org/people/kyles/sounds/453460/ | CC0 1.0 | Usina de CBUQ produzindo (ruído industrial contínuo; não há gravação CC0 de usina de asfalto no Freesound) | `public/sons/usina.mp3` |
+
+Os efeitos de partículas (poeira, fumaça, vapor, jatos do pipa e do espargidor, exaustão) são gerados no próprio app, sem recursos externos.
+
 ## Fontes tipográficas
 
 | Recurso | Licença |

@@ -7,7 +7,8 @@
  * ou FXAA), distância de desenho (plano distante da câmera, m), fração das árvores desenhadas, sombra das árvores,
  * resolução do céu de fundo, lado das texturas PBR do terreno e do pavimento (px), relevo (mapas de normais e projeção
  * triplanar nas faces inclinadas) e disfarce de repetição das texturas (amostragem estocástica e manchas de grande escala). Fase 7: distância (m) a partir da qual os modelos 3D usam o nível 1. Fase 6: distâncias (m) até as quais as árvores usam o modelo perto e o reduzido (além
- * delas, o impostor) e gramado (raio em torno do alvo da câmera, m, e tufos por m² de área gramada).
+ * delas, o impostor) e gramado (raio em torno do alvo da câmera, m, e tufos por m² de área gramada). Fase 8: efeitos de
+ * partículas (máximo de partículas vivas e fator da taxa de emissão).
  */
 export const PERFIS = {
   baixa: {
@@ -26,7 +27,8 @@ export const PERFIS = {
     relevo: false,
     antirepeticao: false,
     arvores: { perto: 40, medio: 120 },
-    gramado: { raio: 30, densidade: 0.8 }
+    gramado: { raio: 30, densidade: 0.8 },
+    efeitos: { max: 700, taxa: 0.35 }
   },
   media: {
     nome: 'Média',
@@ -44,7 +46,8 @@ export const PERFIS = {
     relevo: true,
     antirepeticao: true,
     arvores: { perto: 70, medio: 200 },
-    gramado: { raio: 55, densidade: 1.6 }
+    gramado: { raio: 55, densidade: 1.6 },
+    efeitos: { max: 1800, taxa: 0.7 }
   },
   alta: {
     nome: 'Alta',
@@ -62,7 +65,8 @@ export const PERFIS = {
     relevo: true,
     antirepeticao: true,
     arvores: { perto: 100, medio: 280 },
-    gramado: { raio: 85, densidade: 2.6 }
+    gramado: { raio: 85, densidade: 2.6 },
+    efeitos: { max: 4000, taxa: 1 }
   }
 };
 export const ORDEM = ['baixa', 'media', 'alta'];

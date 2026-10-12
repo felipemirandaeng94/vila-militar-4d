@@ -9,6 +9,8 @@ import { buildDrenagem } from './drenagem.js';
 import { buildSinalizacao } from './sinalizacao.js';
 import { buildCanteiro, buildFresado, updateSite } from './canteiro.js';
 import { buildEquipment, updateEquipment } from './equipamentos.js';
+import { buildEfeitos, atualizarEfeitos, definirEfeitos, efeitos } from './efeitos.js';
+import { atualizarSom, definirSom, definirVolume, som } from './som.js';
 import { buildMarkers, updateMarkers } from './marcadores.js';
 import { buildLabels, updateLabels, mostrarRotulos } from './rotulos.js';
 import { setView, setProfileClip, frontPoint, seguirFrente, passoCamera, camAt, focarPonto } from './camera.js';
@@ -17,6 +19,7 @@ import { uDia } from './dias.js';
 import { noCanteiro } from '../dominio/geometria.js';
 import { ceu } from './ceu.js';
 
+export { definirEfeitos, efeitos, definirSom, definirVolume, som };
 export { cena, visual, escolherQualidade, definirExposicao, applyTheme, setView, setProfileClip, camAt, focarPonto, buildMarkers, mostrarRotulos, superficie };
 
 // partes que dependem do cronograma (dias de execução de cada estaca)
@@ -37,12 +40,13 @@ export function montarMotor(vp) {
   buildCanteiro();
   buildFresado();
   buildEquipment();
+  buildEfeitos();
   construirObra();
   setView('iso', true);
   iniciarSelecao();
   carregarCeu();
   // inspeção no console e nos testes de navegador, só no servidor de desenvolvimento
-  if (import.meta.env.DEV) window.__vm4d = { cena, visual, ceu, setView, camAt, escolherQualidade, noCanteiro };
+  if (import.meta.env.DEV) window.__vm4d = { cena, visual, ceu, setView, camAt, escolherQualidade, noCanteiro, efeitos, definirEfeitos, som };
 }
 
 // troca de cenário ou decisão com retrabalho: o cronograma mudou
@@ -64,5 +68,8 @@ export function atualizarMotor(st, clk, force, curtoDe) {
 export function quadro(dt) {
   passoCamera(dt);
   atualizarEntorno(dt);
+  // efeitos e som com o tempo real do quadro (a fumaça e o vapor continuam com a obra pausada)
+  atualizarEfeitos({ d: ST.day }, dt);
+  atualizarSom(dt);
 }
 export { renderizar };

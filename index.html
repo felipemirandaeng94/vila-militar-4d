@@ -62,6 +62,8 @@
         <div class="opts">
           <div class="field"><label for="optQual">Qualidade gráfica</label><select id="optQual"><option value="auto">Automática</option><option value="baixa">Baixa</option><option value="media">Média</option><option value="alta">Alta</option></select><p class="cdesc" id="qualDesc"></p></div>
           <div class="field"><div class="row"><label for="optExp">Exposição</label><b id="expVal"></b></div><input id="optExp" type="range" min="0.5" max="1.8" step="0.05" value="0.95"></div>
+          <label class="ck"><input type="checkbox" id="optEfeitos" checked> Efeitos: poeira, fumaça, vapor e jatos</label>
+          <div class="field"><div class="row"><label for="optVol">Volume do som</label><b id="volVal"></b></div><input id="optVol" type="range" min="0" max="1" step="0.05" value="0.7"><p class="cdesc">O som ambiente (motores, bipe de ré, rolo vibratório e usina) só começa ao clicar em <b>Som</b>, na barra da obra. Volume pela distância à câmera.</p></div>
           <label class="ck"><input type="checkbox" id="optFps"> Quadros por segundo (tecla F)</label>
         </div>
       </details>
@@ -83,6 +85,7 @@
         <button id="next" class="btn ghost" aria-label="Próximo serviço">Serviço ▶</button>
         <input id="stg" type="range" min="0" max="34" step="0.01" value="0" aria-label="Dia da obra">
         <span id="stgl" class="stgl">—</span>
+        <button id="som" class="btn ghost" aria-pressed="false" title="Som ambiente da obra (tecla M)">Som desligado</button>
       </div>
       <div class="info" id="info" hidden>
         <button class="x" id="infox" aria-label="Fechar">×</button>

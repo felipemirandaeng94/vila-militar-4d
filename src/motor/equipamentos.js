@@ -1,11 +1,11 @@
 // Equipamentos: cada equipe tem as suas máquinas, que vão para a frente ativa do serviço que a equipe executa
 // e voltam ao pátio do canteiro quando ela está parada. O serviço é localizado pela "representacao" (dados/servicos.json).
 import * as THREE from 'three';
-import { P, gr, nat, bocasDeLobo, pocosDeVisita, noCanteiro, acessoDoCanteiro } from '../dominio/geometria.js';
+import { P, nat, bocasDeLobo, pocosDeVisita, noCanteiro, acessoDoCanteiro } from '../dominio/geometria.js';
 import { clamp, lerp } from '../dominio/util.js';
 import { trechosRuins } from '../dominio/quantitativos.js';
 import { ST, D } from '../estado.js';
-import { wy, mat, C, info, mundo, rumo, girar, colocar } from './base.js';
+import { wy, mat, C, info, mundo, rumo, colocar } from './base.js';
 import {
   mkTruck,
   mkExcavator,
@@ -22,12 +22,13 @@ import {
   mkPlaca
 } from './modelos.js';
 import { superficie, ativas, servicoRep } from './pavimento.js';
-import { USI, SITE, chamineDaUsina } from './canteiro.js';
+import { USI, SITE } from './canteiro.js';
 import { cena } from './renderizador.js';
 import { vestir, definirVariante, giroflex, criarLod, CATALOGO } from './modelos3d.js';
 
 export const EQ = [];
-const steam = [];
+// estado da operação no quadro atual, lido pelos efeitos e pelo som: usina produzindo e frente do CBUQ em execução
+export const OPER = { usina: false, paving: null };
 
 // tipos de máquina: fábrica do modelo e nome
 const TIPOS = {
@@ -91,7 +92,7 @@ const LUZ = {
   apagada: new THREE.MeshStandardMaterial({ color: 0xd9a21b, emissive: 0x2a1d00, roughness: 0.4 })
 };
 // comprimento (m) de cada tipo para as vagas do pátio: o do GLB ou o do procedural
-function comprimento(tipo) {
+export function comprimento(tipo) {
   const g = GLB[tipo];
   const id = g && (typeof g.variantes === 'string' ? g.variantes : Object.values(g.variantes)[0]);
   if (id && CATALOGO[id]) return CATALOGO[id].comprimento_m + (tipo === 'vassoura' ? 3.5 : 0);
@@ -237,14 +238,6 @@ export function buildEquipment() {
     vestir(encarregado, 'encarregado', { rot: 0, info: { t: 'Encarregado da frente', d: { Função: 'Coordena as equipes da frente de serviço' } } });
     cena.LAY.equip.add(encarregado);
   }
-  // vapor sobre o CBUQ recém-lançado e na chaminé
-  const sm = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.12, depthWrite: false });
-  for (let i = 0; i < 26; i++) {
-    const p = new THREE.Mesh(new THREE.SphereGeometry(1, 8, 6), sm.clone());
-    p.visible = false;
-    steam.push(p);
-    cena.LAY.equip.add(p);
-  }
 }
 export function liftExtents() {}
 
@@ -287,6 +280,9 @@ function pathPose(pts, u) {
 function setPose(e, s, z, h, d, yOff = 0) {
   const y = superficie(s, z, d),
     p = mundo(s, z);
+  // estaca e afastamento da máquina (efeitos.js: chão sob ela)
+  e.s = s;
+  e.z = z;
   e.o.position.set(p.x, wy(y) + yOff, p.z);
   if (h != null) {
     h += rumo(s);
@@ -605,37 +601,13 @@ export function updateEquipment(st, clk) {
     }
   }
   posicionarEngenheiro(d);
-  // usina operando e vapor
+  // usina operando (a fumaça da chaminé e o vapor do CBUQ ficam em efeitos.js)
   const dos = servicoRep('dosagem');
   const on = !!(paving || (dos && d >= dos.b - 2 && d < dos.b)) && USI.ready;
   USI.parts.drum.rotation.y += on ? 0.03 : 0;
   USI.parts.flame.material.opacity = on ? 0.55 + 0.25 * Math.sin(clk * 9) : 0;
-  let si = 0;
-  const puff = (x, y, z, sz, ph) => {
-    const p = steam[si++];
-    if (!p) return;
-    const t = frac(clk / 3 + ph);
-    p.visible = true;
-    p.position.set(x + t * 1.5, y + t * 6, z);
-    p.scale.setScalar(sz * (0.6 + t));
-    p.material.opacity = 0.16 * (1 - t);
-  };
-  if (on)
-    for (let i = 0; i < 8; i++) {
-      const v = chamineDaUsina(),
-        g = girar(USI.siloS, v.x, v.z);
-      puff(USI.g.position.x + g.x, USI.g.position.y + v.y, USI.g.position.z + g.z, 1.3, i / 8);
-    }
-  if (paving) {
-    const z = paving.faixa === 'BD' ? 1.75 : -1.75,
-      f = paving.s;
-    for (let i = 0; i < 12; i++) {
-      const ss = f - 2 - (i / 12) * 26,
-        p = mundo(ss, z + ((i % 3) - 1) * 1.1);
-      puff(p.x, wy(gr(Math.max(0, ss))) + 0.3, p.z, 0.9, i * 0.37);
-    }
-  }
-  for (; si < steam.length; si++) steam[si].visible = false;
+  OPER.usina = on;
+  OPER.paving = paving || null;
   if (SITE.flag) SITE.flag.rotation.y = Math.sin(clk * 1.3) * 0.15;
 }
 

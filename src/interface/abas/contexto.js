@@ -89,6 +89,13 @@ const RECURSOS = [
     'CC0 1.0 (domínio público)',
     'Árvores do entorno e folhas da palmeira-imperial'
   ],
+  // som ambiente (Fase 8): áudios CC0 do Freesound
+  ...[
+    ['Truck Engine Idle Loops, de qubodup', 187564, 'qubodup', 'Motores a diesel das máquinas em serviço'],
+    ['Truck Reverse Beeper, de Disasteradio', 197166, 'Disasteradio', 'Bipe de ré'],
+    ['Soil compactor, de Jyri-channel', 857744, 'Jyri-channel', 'Rolos e placa vibratória'],
+    ['industrial hums factory water treatment plant drone highcut, de kyles', 453460, 'kyles', 'Usina de CBUQ (ruído industrial contínuo)']
+  ].map(([t, id, u, uso]) => ['Som', `${t}, Freesound (freesound.org/people/${u}/sounds/${id})`, 'CC0 1.0 (domínio público)', uso]),
   // equipamentos, canteiro, usina, drenagem e sinalização (Fase 7): modelos do autor gerados no Tripo AI
   ...modelos3d.modelos.map(m => [
     'Modelo 3D',
@@ -98,7 +105,7 @@ const RECURSOS = [
   ])
 ];
 function recursos() {
-  return `<h3 class="h3">Recursos visuais</h3><div class="tbl"><table><thead><tr><th>Recurso</th><th>Origem</th><th>Licença</th><th>Uso no modelo</th></tr></thead><tbody>${RECURSOS.map(
+  return `<h3 class="h3">Recursos visuais e sonoros</h3><div class="tbl"><table><thead><tr><th>Recurso</th><th>Origem</th><th>Licença</th><th>Uso no modelo</th></tr></thead><tbody>${RECURSOS.map(
     r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`
   ).join('')}</tbody></table></div>`;
 }
