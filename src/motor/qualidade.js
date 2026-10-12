@@ -6,7 +6,8 @@
  * em torno do alvo da câmera (m), pós-processamento (null = direto na tela com MSAA; ao = resolução do GTAO; aa = SMAA
  * ou FXAA), distância de desenho (plano distante da câmera, m), fração das árvores desenhadas, sombra das árvores,
  * resolução do céu de fundo, lado das texturas PBR do terreno e do pavimento (px) e relevo (mapas de normais e projeção
- * triplanar nas faces inclinadas).
+ * triplanar nas faces inclinadas). Fase 6: distâncias (m) até as quais as árvores usam o modelo perto e o reduzido (além
+ * delas, o impostor) e gramado (raio em torno do alvo da câmera, m, e tufos por m² de área gramada).
  */
 export const PERFIS = {
   baixa: {
@@ -21,7 +22,9 @@ export const PERFIS = {
     sombraVegetacao: false,
     ceu: '2k',
     texturas: 512,
-    relevo: false
+    relevo: false,
+    arvores: { perto: 40, medio: 120 },
+    gramado: { raio: 30, densidade: 0.8 }
   },
   media: {
     nome: 'Média',
@@ -35,7 +38,9 @@ export const PERFIS = {
     sombraVegetacao: false,
     ceu: '2k',
     texturas: 1024,
-    relevo: true
+    relevo: true,
+    arvores: { perto: 70, medio: 200 },
+    gramado: { raio: 55, densidade: 1.6 }
   },
   alta: {
     nome: 'Alta',
@@ -49,7 +54,9 @@ export const PERFIS = {
     sombraVegetacao: true,
     ceu: '4k',
     texturas: 2048,
-    relevo: true
+    relevo: true,
+    arvores: { perto: 100, medio: 280 },
+    gramado: { raio: 85, densidade: 2.6 }
   }
 };
 export const ORDEM = ['baixa', 'media', 'alta'];

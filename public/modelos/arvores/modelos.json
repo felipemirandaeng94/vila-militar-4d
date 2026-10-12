@@ -1,0 +1,22 @@
+{
+  "modelos": [
+    {
+      "id": "jacaranda_tree",
+      "nome": "Jacaranda Tree",
+      "autores": [
+        "Rob Tuytel",
+        "Rico Cilliers"
+      ],
+      "licenca": "CC0 1.0 (domínio público)",
+      "url": "https://polyhaven.com/a/jacaranda_tree",
+      "baixado_em": "2026-10-11",
+      "arquivos": [
+        "jacaranda.glb",
+        "casca.webp",
+        "galhos.webp",
+        "folhas.webp"
+      ],
+      "observacao": "Malha reduzida por scripts/assets/arvores.mjs (tronco e galhos simplificados, folhas desbastadas)"
+    }
+  ]
+}

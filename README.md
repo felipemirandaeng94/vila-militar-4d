@@ -55,6 +55,7 @@ Roda os testes das regras da obra (Vitest) em `tests/`.
 - `src/estado.js` e `src/controlador.js`: estado central e ligação entre as camadas.
 - `public/hdri/`: céu HDRI do Poly Haven (CC0) em 2K e 4K, baixado por `scripts/assets/baixar_polyhaven.py`.
 - `public/texturas/`: texturas PBR do Poly Haven (CC0) em 1K e 2K, WebP, geradas por `scripts/assets/baixar_texturas.py`.
+- `public/modelos/arvores/`: jacarandá do Poly Haven (CC0) reduzido em GLB com dois níveis de detalhe e as texturas em WebP, gerados por `scripts/assets/baixar_modelos.py` e `scripts/assets/arvores.mjs` (Fase 6).
 - `public/local/`: local real (eixo, terreno, vias, edificações e metadados), gerado por `scripts/geo/` (pipeline Python, veja `scripts/geo/README.md`).
 - `assets/CREDITOS.md`: origem e licença dos recursos externos.
 - `tests/`: testes do domínio e do local real.

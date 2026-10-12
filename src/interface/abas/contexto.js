@@ -69,6 +69,12 @@ const RECURSOS = [
     'Concrete Floor 03, de Rob Tuytel e Matterfield, Poly Haven (polyhaven.com)',
     'CC0 1.0 (domínio público)',
     'Passeios, sarjeta, meio-fio e vias de concreto'
+  ],
+  [
+    'Modelo 3D',
+    'Jacaranda Tree, de Rico Cilliers e Rob Tuytel, Poly Haven (polyhaven.com); malha reduzida para o app',
+    'CC0 1.0 (domínio público)',
+    'Árvores do entorno e folhas da palmeira-imperial'
   ]
 ];
 function recursos() {

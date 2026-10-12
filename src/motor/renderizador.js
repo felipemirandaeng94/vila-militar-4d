@@ -20,11 +20,12 @@ let hemi = null,
   carregando = Promise.resolve();
 // direção do sol (unitária, do chão para o sol); sem o HDRI, a da versão anterior
 const SOL = new THREE.Vector3(-60, 110, 190).normalize();
-// a vegetação é montada depois do renderizador; entorno.js registra aqui o ajuste de densidade
-let ajusteVegetacao = null;
+// a vegetação é montada depois do renderizador (as árvores, depois de carregar o modelo); entorno.js registra aqui os
+// ajustes de densidade, sombra, níveis de detalhe e gramado, chamados com o perfil em uso e a cada troca de perfil
+const ajustesVegetacao = [];
 export function registrarVegetacao(f) {
-  ajusteVegetacao = f;
-  f(PERFIS[visual.perfil].vegetacao, PERFIS[visual.perfil].sombraVegetacao);
+  ajustesVegetacao.push(f);
+  f(PERFIS[visual.perfil]);
 }
 
 export function iniciarRenderizador(vp) {
@@ -139,7 +140,7 @@ export function aplicarQualidade(nome) {
   camera.updateProjectionMatrix();
   configurarPos(renderer, scene, camera, p.pos);
   resize();
-  if (ajusteVegetacao) ajusteVegetacao(p.vegetacao, p.sombraVegetacao);
+  for (const f of ajustesVegetacao) f(p);
   // texturas PBR (superficies.js): resolução e relevo do perfil; a medição da taxa de quadros espera a carga
   definirRelevo(p.relevo);
   const cargas = [carregando, carregarTexturas(renderer, p.texturas)];

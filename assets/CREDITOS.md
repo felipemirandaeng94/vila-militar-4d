@@ -36,6 +36,14 @@ Baixadas pela API pública do Poly Haven em 11/10/2026 por `scripts/assets/baixa
 | Textura "Leafy Grass", de Charlotte Baglioni | Poly Haven, https://polyhaven.com/a/leafy_grass | CC0 1.0 | Gramados, campos e matas | `public/texturas/grama/` |
 | Textura "Concrete Floor 03", de Rob Tuytel e Matterfield | Poly Haven, https://polyhaven.com/a/concrete_floor_03 | CC0 1.0 | Passeios, sarjeta, meio-fio e vias de concreto | `public/texturas/concreto/` |
 
+## Árvores (Fase 6)
+
+| Recurso | Fonte | Licença | Uso no app | Arquivos |
+|---|---|---|---|---|
+| Modelo "Jacaranda Tree", de Rico Cilliers (orientação de Rob Tuytel) | Poly Haven, https://polyhaven.com/a/jacaranda_tree (API pública, download em 11/10/2026 por `scripts/assets/baixar_modelos.py`) | CC0 1.0 (domínio público); o crédito é cortesia | Árvores do entorno (jacarandá e os tons de oiti, ficus e amendoeira); a textura das folhas também forma as folhas da palmeira-imperial gerada no app | `public/modelos/arvores/jacaranda.glb` (malha reduzida por `scripts/assets/arvores.mjs`), `casca.webp`, `galhos.webp`, `folhas.webp`, `modelos.json` |
+
+A palmeira-imperial, os tufos de grama, as fachadas (reboco, janelas, venezianas, telha cerâmica, laje e telha metálica), o meio-fio, a calçada, os postes e as placas são gerados no próprio app, sem recursos externos. O desenho das placas segue o Manual Brasileiro de Sinalização de Trânsito (CONTRAN).
+
 ## Fontes tipográficas
 
 | Recurso | Licença |

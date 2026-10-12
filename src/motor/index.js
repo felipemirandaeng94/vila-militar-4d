@@ -3,7 +3,7 @@ import { ST } from '../estado.js';
 import { cena, iniciarRenderizador, applyTheme, renderizar, carregarCeu, visual, escolherQualidade, definirExposicao } from './renderizador.js';
 import { centrarMundo } from './base.js';
 import { buildTerrain } from './terreno.js';
-import { buildSurroundings } from './entorno.js';
+import { buildSurroundings, atualizarEntorno } from './entorno.js';
 import { buildPavement, superficie } from './pavimento.js';
 import { buildDrenagem } from './drenagem.js';
 import { buildSinalizacao } from './sinalizacao.js';
@@ -62,5 +62,6 @@ export function atualizarMotor(st, clk, force, curtoDe) {
 
 export function quadro(dt) {
   passoCamera(dt);
+  atualizarEntorno(dt);
 }
 export { renderizar };

@@ -29,7 +29,7 @@ export function initUI() {
   // créditos das fontes do local real sobre o modelo 3D
   $('creditos3d').textContent =
     (D.local ? 'Entorno: ' + D.local.meta.creditos.map(c => c.texto).join(' · ') : 'Local real indisponível: eixo reto e terreno fictício.') +
-    ' · Céu e texturas: Poly Haven (CC0)';
+    ' · Céu, texturas e árvores: Poly Haven (CC0)';
   // vistas
   document.querySelectorAll('[data-view]').forEach(
     b =>
