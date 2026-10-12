@@ -14,6 +14,9 @@ em metros, licença e origem de cada material).
 
 Os JPG originais ficam em assets/brutos/texturas/ (fora do git). Requer
 Pillow com suporte a WebP (pip install pillow).
+
+Materiais marcados com "ia": true no manifesto (texturas geradas por IA e
+preparadas por scripts/assets/preparar-texturas.py) não são sobrescritos.
 """
 import argparse
 import datetime
@@ -73,7 +76,15 @@ def main():
     if not features.check("webp"):
         sys.exit("O Pillow instalado não grava WebP.")
     manifesto = {"licenca": "CC0 1.0 (domínio público)", "download": datetime.date.today().isoformat(), "materiais": {}}
+    arq_man = DESTINO / "texturas.json"
+    anterior = json.loads(arq_man.read_text(encoding="utf-8")).get("materiais", {}) if arq_man.exists() else {}
+    for nome, m in anterior.items():
+        if m.get("ia"):
+            manifesto["materiais"][nome] = m
     for nome, ident in MATERIAIS.items():
+        if nome in manifesto["materiais"]:
+            print(f"{nome:14s} gerada por IA (preparar-texturas.py), mantida")
+            continue
         info = json.loads(obter(f"{API}/info/{ident}"))
         arquivos = json.loads(obter(f"{API}/files/{ident}"))
         dim = info.get("dimensions") or [1000, 1000]
@@ -94,7 +105,7 @@ def main():
                 img.save(pasta / f"{saida}.webp", "WEBP", quality=args.qualidade, method=6)
             tam = sum(p.stat().st_size for p in pasta.glob("*.webp")) / 1e6
             print(f"{nome:14s} {ident:22s} {res}  {tam:5.1f} MB")
-    (DESTINO / "texturas.json").write_text(json.dumps(manifesto, ensure_ascii=False, indent=2), encoding="utf-8")
+    arq_man.write_text(json.dumps(manifesto, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Pronto: {DESTINO}. Licença CC0; créditos em assets/CREDITOS.md.")
 
 

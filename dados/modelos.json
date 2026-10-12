@@ -797,6 +797,70 @@
       },
       "animacaoDetalhe": "Estático.",
       "observacoes": "Usado na frente de interferências como ponto de ré da estação total."
+    },
+    {
+      "animacao": "simplificada",
+      "partesMoveis": [],
+      "recolorir": false,
+      "veiculo": false,
+      "categoria": "canteiro",
+      "referenciaEscala": "altura",
+      "rotacaoY_graus": 180,
+      "frenteOriginal": "+Z",
+      "id": "executor",
+      "arquivo": "executor.glb",
+      "equipamento": "Militar executor com colete refletivo e capacete branco",
+      "tipos4D": [],
+      "uso4D": "Operador da placa vibratória no reaterro da vala.",
+      "comprimento_m": 0.5,
+      "altura_m": 1.75,
+      "criterioEscala": "Altura de um adulto com capacete: 1,75 m.",
+      "triangulos": {
+        "lod0": 15000,
+        "lod1": 2000
+      },
+      "animacaoDetalhe": "Estático, atrás do guidão da placa (acompanha o vai e vem).",
+      "observacoes": "Veio em pose T, sem esqueleto: os braços são abaixados no pipeline (abaixarBracos). Colete laranja é EPI: cor mantida.",
+      "abaixarBracos": {
+        "ombro": [0.21, 1.34],
+        "angulo_graus": 75,
+        "transicao_m": 0.07,
+        "cintura_m": 1.2
+      }
+    },
+    {
+      "animacao": "simplificada",
+      "partesMoveis": [],
+      "recolorir": false,
+      "veiculo": false,
+      "categoria": "canteiro",
+      "referenciaEscala": "altura",
+      "rotacaoY_graus": 180,
+      "frenteOriginal": "+Z",
+      "id": "encarregado",
+      "arquivo": "encarregado.glb",
+      "equipamento": "Sargento encarregado com rádio, colete refletivo e capacete azul",
+      "tipos4D": [],
+      "uso4D": "Na frente de serviço principal, ao lado do engenheiro residente.",
+      "comprimento_m": 0.5,
+      "altura_m": 1.75,
+      "criterioEscala": "Altura de um adulto com capacete: 1,75 m.",
+      "triangulos": {
+        "lod0": 15000,
+        "lod1": 2000
+      },
+      "textura": {
+        "lod0": 1024,
+        "lod1": 256
+      },
+      "animacaoDetalhe": "Estático.",
+      "observacoes": "Veio em pose T, sem esqueleto e sem normais (exportado pelo trimesh, 6 100 triângulos e textura de 1024): o pipeline calcula as normais e abaixa os braços.",
+      "abaixarBracos": {
+        "ombro": [0.21, 1.34],
+        "angulo_graus": 75,
+        "transicao_m": 0.07,
+        "cintura_m": 1.2
+      }
     }
   ],
   "rejeitados": [

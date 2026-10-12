@@ -1,4 +1,5 @@
-// Materiais PBR do terreno e do pavimento (Fase 5). Sete texturas do Poly Haven (CC0, public/texturas/) ficam em três
+// Materiais PBR do terreno e do pavimento (Fase 5). Oito texturas (Poly Haven, CC0, e as geradas por IA preparadas por
+// scripts/assets/preparar-texturas.py; origem de cada uma em public/texturas/texturas.json) ficam em três
 // arrays de textura (cor, normal e ARM = oclusão, rugosidade, metal), uma camada por material, compartilhados por todas
 // as superfícies. O shader (MeshStandardMaterial com onBeforeCompile) projeta as texturas pela posição no mundo,
 // triplanar nos taludes e nas faces laterais das camadas (sem esticar), e recolore a textura para a cor-alvo de cada
@@ -9,10 +10,13 @@ import * as THREE from 'three';
 import { uDia } from './dias.js';
 
 // ordem das camadas nos arrays
-export const TEXTURAS = ['argila', 'solo', 'brita', 'asfalto_novo', 'asfalto_usado', 'grama', 'concreto'];
+export const TEXTURAS = ['argila', 'solo', 'brita', 'asfalto_novo', 'asfalto_usado', 'grama', 'concreto', 'asfalto_solto'];
 export const T = Object.fromEntries(TEXTURAS.map((n, i) => [n, i]));
 // lado real de cada textura (m), do manifesto public/texturas/texturas.json
-export const TAMANHO = { argila: 2, solo: 3, brita: 2.46, asfalto_novo: 2, asfalto_usado: 3, grama: 2, concreto: 2.5 };
+export const TAMANHO = { argila: 1, solo: 3, brita: 2.46, asfalto_novo: 1, asfalto_usado: 3, grama: 2, concreto: 2.5, asfalto_solto: 1 };
+// CBUQ solto (camada asfalto_solto) atrás da vibroacabadora: idade (dias) em que a rolagem começa a fechar a superfície
+// e em que ela fica com o aspecto do compactado
+export const SOLTO = [0.02, 0.06];
 
 // uniformes compartilhados: trocar a textura troca em todos os materiais
 const U = {
@@ -24,7 +28,8 @@ const U = {
   uDia
 };
 const materiais = new Set();
-let relevo = true;
+// chaves do perfil de qualidade que viram defines do shader em todos os materiais
+const opcoes = { RELEVO: true, ANTIREPETICAO: true };
 
 // arrays provisórios de 1 × 1 (cinza neutro, normal plana, ARM médio): a superfície mostra a cor-alvo até as fotos chegarem
 function provisorio(rgba, srgb) {
@@ -131,16 +136,19 @@ export async function carregarTexturas(renderer, lado) {
   return true;
 }
 
-/** Relevo (mapas de normais e projeção triplanar) liga ou desliga em todas as superfícies (qualidade baixa: desligado). */
-export function definirRelevo(on) {
-  if (relevo === on) return;
-  relevo = on;
+function definirOpcao(nome, on) {
+  if (opcoes[nome] === on) return;
+  opcoes[nome] = on;
   for (const m of materiais) {
-    if (on) m.defines.RELEVO = '';
-    else delete m.defines.RELEVO;
+    if (on) m.defines[nome] = '';
+    else delete m.defines[nome];
     m.needsUpdate = true;
   }
 }
+/** Relevo (mapas de normais e projeção triplanar) liga ou desliga em todas as superfícies (qualidade baixa: desligado). */
+export const definirRelevo = on => definirOpcao('RELEVO', on);
+/** Disfarce de repetição (amostragem estocástica em planta) em todas as superfícies (qualidade baixa: desligado). */
+export const definirAntirepeticao = on => definirOpcao('ANTIREPETICAO', on);
 
 // ---------- shader ----------
 const VERT_PARS = /* glsl */ `
@@ -205,9 +213,13 @@ float ruido(vec2 p) {
   float d = fract(sin(dot(i + vec2(1.0, 1.0), vec2(127.1, 311.7))) * 43758.5453);
   return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
 }
-// segunda amostra em planta, girada e deslocada (rotação 3-4-5), misturada à primeira por manchas de ruído: as trincas
-// e manchas da foto deixam de se repetir em grade ao longo de 1,6 km
-const mat2 GIRO = mat2(0.6, -0.8, 0.8, 0.6);
+// disfarce de repetição (técnica de amostragem de I. Quilez): um ruído suave em unidades de textura escolhe, ponto a
+// ponto, uma de 6 variações (cada uma desloca a textura por um vetor pseudoaleatório) e mistura duas variações vizinhas
+// numa faixa estreita guiada pelo contraste entre elas. Sem eixo girado, a normal das duas amostras fica no mesmo
+// referencial. Custo: duas leituras por mapa nas faces em planta
+vec2 desvio(float i) {
+  return fract(sin(vec2(3.0, 7.0) * i + 0.5) * 43758.5453);
+}
 
 // amostra uma camada pela posição no mundo: planta nas faces horizontais, triplanar nas inclinadas e nas laterais.
 // As amostras ficam dentro de ramos que variam por pixel (pesos, faces): textureGrad recebe as derivadas da posição
@@ -222,19 +234,26 @@ void amostra(float c, vec3 p, vec3 dx, vec3 dy, vec3 w, inout vec3 cor, inout ve
   if (w.y > 0.01) {
     vec3 uv = vec3(p.xz * e, c);
     vec2 gx = dx.xz * e, gy = dy.xz * e;
+    #ifdef ANTIREPETICAO
+    float v = ruido(uv.xy * 0.45 + c * 7.3) * 6.0;
+    float ia = floor(v);
+    vec3 uva = vec3(uv.xy + desvio(ia), c), uvb = vec3(uv.xy + desvio(ia + 1.0), c);
+    vec3 ca = TX(tCor, uva, gx, gy).rgb, cb = TX(tCor, uvb, gx, gy).rgb;
+    // o grão mais claro (mais alto) de cada variação vence na faixa de mistura: troca nítida, sem lavar o contraste
+    float k = smoothstep(0.4, 0.6, fract(v) - 0.2 * dot(ca - cb, vec3(0.333)) / max(0.02, dot(m, vec3(0.333))));
+    vec3 c1 = mix(ca, cb, k);
+    vec2 a1 = mix(TX(tArm, uva, gx, gy).rg, TX(tArm, uvb, gx, gy).rg, k);
+    #ifdef RELEVO
+    vec2 t = mix(TX(tNormal, uva, gx, gy).xy, TX(tNormal, uvb, gx, gy).xy, k) * 2.0 - 1.0;
+    #endif
+    #else
     vec3 c1 = TX(tCor, uv, gx, gy).rgb;
     vec2 a1 = TX(tArm, uv, gx, gy).rg;
     #ifdef RELEVO
     vec2 t = TX(tNormal, uv, gx, gy).xy * 2.0 - 1.0;
-    float k = smoothstep(0.35, 0.65, ruido(p.xz * 0.09 + c * 7.3));
-    if (k > 0.01) {
-      vec3 uv2 = vec3(GIRO * uv.xy + vec2(0.31, 0.57), c);
-      vec2 gx2 = GIRO * gx, gy2 = GIRO * gy;
-      c1 = mix(c1, TX(tCor, uv2, gx2, gy2).rgb, k);
-      a1 = mix(a1, TX(tArm, uv2, gx2, gy2).rg, k);
-      // a normal da amostra girada volta para o referencial da planta
-      t = mix(t, (TX(tNormal, uv2, gx2, gy2).xy * 2.0 - 1.0) * GIRO, k);
-    }
+    #endif
+    #endif
+    #ifdef RELEVO
     nn += vec3(t.x, 0.0, t.y) * w.y;
     #endif
     cc += c1 * w.y;
@@ -261,7 +280,12 @@ void amostra(float c, vec3 p, vec3 dx, vec3 dy, vec3 w, inout vec3 cor, inout ve
   // variação de grande escala (a mesma foto, 12 vezes maior) quebra a repetição vista de longe
   float em = e * 0.083;
   float macro = dot(TX(tCor, vec3(p.xz * em, c), dx.xz * em, dy.xz * em).rgb, vec3(0.333)) / max(0.02, dot(m, vec3(0.333)));
-  cor += cc / max(m, vec3(0.02)) * mix(1.0, macro, 0.35) * peso;
+  macro = mix(1.0, macro, 0.35);
+  #ifdef ANTIREPETICAO
+  // manchas de 15 a 40 m (umidade, segregação, poeira) que não seguem o passo da textura
+  macro *= 0.9 + 0.2 * ruido(p.xz * 0.05 + c * 3.1) * (0.6 + 0.4 * ruido(p.xz * 0.023 - c));
+  #endif
+  cor += cc / max(m, vec3(0.02)) * macro * peso;
   dn += nn * peso;
   ar += aa * peso;
 }
@@ -296,6 +320,12 @@ vec2 sAr = vec2(0.0);
   sCor /= max(soma, 1e-3);
   sDn /= max(soma, 1e-3);
   sAr /= max(soma, 1e-3);
+  #elif defined(SOLTO)
+  // CBUQ recém-espalhado: textura solta e brilhante atrás da vibroacabadora, compactada pela rolagem
+  float kSolto = 1.0 - smoothstep(${SOLTO[0].toFixed(3)}, ${SOLTO[1].toFixed(3)}, uDia - vDias.x);
+  if (kSolto < 0.99) amostra(uCamada, vMundo, dpx, dpy, w, sCor, sDn, sAr, 1.0 - kSolto);
+  if (kSolto > 0.01) amostra(${TEXTURAS.indexOf('asfalto_solto')}.0, vMundo, dpx, dpy, w, sCor, sDn, sAr, kSolto);
+  sCor *= 1.0 - 0.15 * kSolto;
   #else
   amostra(uCamada, vMundo, dpx, dpy, w, sCor, sDn, sAr, 1.0);
   #endif
@@ -372,7 +402,7 @@ function aplicarShader(sh) {
 /**
  * Prepara um MeshStandardMaterial como superfície PBR. o: { camada (nome em TEXTURAS) | pesos (terreno, atributos
  * aPesoA/aPesoB), sz (atributo aSZ com estaca e afastamento), geometrica (normal pelas derivadas), molhar, secagem,
- * marcas: 'pneu' | 'rolo', junta, fresado }. Encadeia com um onBeforeCompile já existente (comDias), que deve ser aplicado
+ * marcas: 'pneu' | 'rolo', junta, fresado, solto (CBUQ: textura solta logo após o espalhamento) }. Encadeia com um onBeforeCompile já existente (comDias), que deve ser aplicado
  * antes, porque os estados da obra usam a varying vDias.
  */
 export function pbr(material, o = {}) {
@@ -390,14 +420,16 @@ export function pbr(material, o = {}) {
   if (o.marcas === 'rolo') d.MARCAS_ROLO = '';
   if (o.junta) d.JUNTA = '';
   if (o.fresado) d.FRESADO = '';
-  if (relevo) d.RELEVO = '';
+  if (o.solto) d.SOLTO = '';
+  for (const [nome, on] of Object.entries(opcoes)) if (on) d[nome] = '';
   material.onBeforeCompile = function (sh, r) {
     if (anterior) anterior.call(this, sh, r);
     aplicarShader.call(this, sh);
   };
   const chave = 'sup' + Object.keys(d).sort().join(',');
   material.customProgramCacheKey = function () {
-    return (chaveAnterior ? chaveAnterior.call(this) : '') + chave + (this.defines && 'RELEVO' in this.defines ? 'R' : '');
+    const op = Object.keys(opcoes).filter(n => this.defines && n in this.defines);
+    return (chaveAnterior ? chaveAnterior.call(this) : '') + chave + op.join('');
   };
   material.map = null;
   materiais.add(material);

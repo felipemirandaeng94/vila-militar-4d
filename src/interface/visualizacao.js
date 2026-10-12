@@ -6,8 +6,8 @@ import { PERFIS, CHAVE, CHAVE_EXPOSICAO, escolhaValida, FPS_MINIMO } from '../mo
 import { nf } from '../dominio/util.js';
 
 const DESC = {
-  baixa: 'Sombra de 1024 px perto da câmera, sem pós-processamento, texturas de 512 px sem relevo, 35% das árvores.',
-  media: 'Sombra de 2048 px, oclusão de ambiente em meia resolução, FXAA, texturas de 1K com relevo, 70% das árvores.',
+  baixa: 'Sombra de 1024 px perto da câmera, sem pós-processamento, texturas de 512 px sem relevo e sem disfarce de repetição, 35% das árvores.',
+  media: 'Sombra de 2048 px, oclusão de ambiente em meia resolução, FXAA, texturas de 1K com relevo e disfarce de repetição, 70% das árvores.',
   alta: 'Sombra de 4096 px, oclusão de ambiente (GTAO), SMAA, céu em 4K, texturas de 2K, todas as árvores com sombra.'
 };
 

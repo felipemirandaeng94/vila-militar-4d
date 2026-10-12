@@ -136,18 +136,23 @@ describe('texturas PBR (Fase 5)', () => {
   const raiz = new URL('../public/texturas/', import.meta.url);
   const manifesto = existsSync(new URL('texturas.json', raiz)) ? JSON.parse(readFileSync(new URL('texturas.json', raiz), 'utf-8')) : null;
 
-  it('os perfis aumentam a resolução das texturas e só a baixa fica sem relevo', () => {
+  it('os perfis aumentam a resolução das texturas e só a baixa fica sem relevo e sem disfarce de repetição', () => {
     expect(ORDEM.map(k => PERFIS[k].texturas)).toEqual([512, 1024, 2048]);
     expect(ORDEM.map(k => PERFIS[k].relevo)).toEqual([false, true, true]);
+    expect(ORDEM.map(k => PERFIS[k].antirepeticao)).toEqual([false, true, true]);
   });
 
-  it.skipIf(!manifesto)('cada camada tem cor, normal e ARM em 1K e 2K, licença CC0 e o tamanho real do manifesto', async () => {
+  it.skipIf(!manifesto)('cada camada tem cor, normal e ARM em 1K e 2K, origem e licença registradas e o tamanho real do manifesto', async () => {
     const { TEXTURAS, TAMANHO } = await import('../src/motor/superficies.js');
     expect(manifesto.licenca).toMatch(/CC0/);
     for (const n of TEXTURAS) {
       const m = manifesto.materiais[n];
       expect(m, n).toBeTruthy();
-      expect(m.origem).toMatch(/^https:\/\/polyhaven\.com\/a\//);
+      // Poly Haven (CC0, licença do manifesto) ou gerada por IA pelo autor (licença e emenda medida no material)
+      if (m.ia) {
+        expect(m.licenca).toMatch(/ChatGPT \(OpenAI\)/);
+        expect(Math.max(...m.emenda.depois), n).toBeLessThan(1.1);
+      } else expect(m.origem).toMatch(/^https:\/\/polyhaven\.com\/a\//);
       expect(TAMANHO[n]).toBeCloseTo(m.tamanho_m, 0);
       for (const res of ['1k', '2k'])
         for (const mapa of ['cor', 'normal', 'arm']) expect(existsSync(new URL(`${n}/${res}/${mapa}.webp`, raiz)), `${n}/${res}/${mapa}`).toBe(true);

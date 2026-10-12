@@ -364,7 +364,7 @@ export function buildPavement() {
       dias: s => [diaRep('cbuq', s, fx), NUNCA].map(finito),
       cor: 0x26282a,
       opts: { roughness: 1 },
-      sup: { camada: 'asfalto_novo', marcas: 'rolo', junta: true },
+      sup: { camada: 'asfalto_novo', marcas: 'rolo', junta: true, solto: true },
       nome: 'cbuq',
       info: {
         t: `Revestimento em CBUQ (faixa ${fx === 'BD' ? 'direita' : 'esquerda'})`,

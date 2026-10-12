@@ -3,13 +3,26 @@
   "download": "2026-10-11",
   "materiais": {
     "argila": {
-      "id": "cracked_red_ground",
-      "nome": "Cracked Red Ground",
+      "id": "Textura de Terra Vermelha Compactada",
+      "nome": "Subleito argiloso compactado",
       "autores": [
-        "Amal Kumar"
+        "Felipe Miranda (ChatGPT, OpenAI)"
       ],
-      "tamanho_m": 2.0,
-      "origem": "https://polyhaven.com/a/cracked_red_ground"
+      "tamanho_m": 1.0,
+      "origem": "Gerada por IA (ChatGPT, OpenAI); preparada por scripts/assets/preparar-texturas.py",
+      "licenca": "Geradas pelo autor com ChatGPT (OpenAI); pelos termos da OpenAI, o conteúdo gerado pertence ao usuário.",
+      "ia": true,
+      "preparo": "2026-10-11",
+      "emenda": {
+        "antes": [
+          1.46,
+          1.39
+        ],
+        "depois": [
+          1.02,
+          1.02
+        ]
+      }
     },
     "solo": {
       "id": "dry_mud_field_001",
@@ -31,13 +44,26 @@
       "origem": "https://polyhaven.com/a/gravel_floor_04"
     },
     "asfalto_novo": {
-      "id": "asphalt_pit_lane",
-      "nome": "Asphalt Pit Lane",
+      "id": "Textura Asfáltica Escura e Granular",
+      "nome": "CBUQ compactado",
       "autores": [
-        "Dimitrios Savva"
+        "Felipe Miranda (ChatGPT, OpenAI)"
       ],
-      "tamanho_m": 2.0,
-      "origem": "https://polyhaven.com/a/asphalt_pit_lane"
+      "tamanho_m": 1.0,
+      "origem": "Gerada por IA (ChatGPT, OpenAI); preparada por scripts/assets/preparar-texturas.py",
+      "licenca": "Geradas pelo autor com ChatGPT (OpenAI); pelos termos da OpenAI, o conteúdo gerado pertence ao usuário.",
+      "ia": true,
+      "preparo": "2026-10-11",
+      "emenda": {
+        "antes": [
+          1.94,
+          1.97
+        ],
+        "depois": [
+          0.91,
+          1.04
+        ]
+      }
     },
     "asfalto_usado": {
       "id": "asphalt_02",
@@ -66,6 +92,28 @@
       ],
       "tamanho_m": 2.5,
       "origem": "https://polyhaven.com/a/concrete_floor_03"
+    },
+    "asfalto_solto": {
+      "id": "Textura de Asfalto Fresco e Brilhante",
+      "nome": "CBUQ solto (antes da rolagem)",
+      "autores": [
+        "Felipe Miranda (ChatGPT, OpenAI)"
+      ],
+      "tamanho_m": 1.0,
+      "origem": "Gerada por IA (ChatGPT, OpenAI); preparada por scripts/assets/preparar-texturas.py",
+      "licenca": "Geradas pelo autor com ChatGPT (OpenAI); pelos termos da OpenAI, o conteúdo gerado pertence ao usuário.",
+      "ia": true,
+      "preparo": "2026-10-11",
+      "emenda": {
+        "antes": [
+          2.43,
+          2.37
+        ],
+        "depois": [
+          0.87,
+          1.02
+        ]
+      }
     }
   }
 }

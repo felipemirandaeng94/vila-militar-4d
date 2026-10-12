@@ -29,7 +29,7 @@ export function initUI() {
   // créditos das fontes do local real sobre o modelo 3D
   $('creditos3d').textContent =
     (D.local ? 'Entorno: ' + D.local.meta.creditos.map(c => c.texto).join(' · ') : 'Local real indisponível: eixo reto e terreno fictício.') +
-    ' · Céu, texturas e árvores: Poly Haven (CC0) · Equipamentos 3D: Felipe Miranda (Tripo AI), uso autorizado pelo autor';
+    ' · Céu, texturas e árvores: Poly Haven (CC0) · Texturas do subleito e do CBUQ: Felipe Miranda (ChatGPT) · Equipamentos 3D: Felipe Miranda (Tripo AI), uso autorizado pelo autor';
   // vistas
   document.querySelectorAll('[data-view]').forEach(
     b =>

@@ -1,7 +1,7 @@
 {
  "modelos": {
   "escavadeira": {
-   "hash": "a996f2f15d2f",
+   "hash": "4d6644906796",
    "arquivo": "Escavadeira.glb",
    "mbOrigem": 63.8,
    "triOrigem": 1910037,
@@ -23,7 +23,7 @@
    "giroflex": []
   },
   "basculante": {
-   "hash": "a29ecd025a5b",
+   "hash": "c75933902697",
    "arquivo": "cacamba vazia.glb",
    "mbOrigem": 59.9,
    "triOrigem": 1885468,
@@ -45,7 +45,7 @@
    "giroflex": []
   },
   "basculante-carregado": {
-   "hash": "655a977f65cb",
+   "hash": "d2f7bde0cc01",
    "arquivo": "cacamba cheia.glb",
    "mbOrigem": 59.2,
    "triOrigem": 1851704,
@@ -67,7 +67,7 @@
    "giroflex": []
   },
   "basculante-basculando": {
-   "hash": "b6ac49a7773e",
+   "hash": "d392ae9f18f7",
    "arquivo": "CAÇAMBA BASCULANDO.glb",
    "mbOrigem": 62.1,
    "triOrigem": 1936597,
@@ -100,7 +100,7 @@
    ]
   },
   "caminhao-munck": {
-   "hash": "decddf842eae",
+   "hash": "e1f1fc8b3dee",
    "arquivo": "caminhao munck.glb",
    "mbOrigem": 59.9,
    "triOrigem": 1837868,
@@ -128,7 +128,7 @@
    ]
   },
   "espargidor-cm30": {
-   "hash": "ba841a715f45",
+   "hash": "b7e054c8aa85",
    "arquivo": "CAMINHÃO DE CM-30.glb",
    "mbOrigem": 59.9,
    "triOrigem": 1862060,
@@ -156,7 +156,7 @@
    ]
   },
   "espargidor-rr": {
-   "hash": "6900e9285108",
+   "hash": "7c4c20a312bb",
    "arquivo": "CL.glb",
    "mbOrigem": 59.9,
    "triOrigem": 1844315,
@@ -178,7 +178,7 @@
    "giroflex": []
   },
   "pa-carregadeira": {
-   "hash": "defcc08c6799",
+   "hash": "96bbfb3b463f",
    "arquivo": "carregadeira.glb",
    "mbOrigem": 62.6,
    "triOrigem": 1926168,
@@ -211,7 +211,7 @@
    ]
   },
   "motoniveladora": {
-   "hash": "2522dbda3268",
+   "hash": "7661ed85b005",
    "arquivo": "Motoniveladora.glb",
    "mbOrigem": 62.6,
    "triOrigem": 1899239,
@@ -244,7 +244,7 @@
    ]
   },
   "rolo-pe-de-carneiro": {
-   "hash": "e8562f546fb9",
+   "hash": "0a1300a37fe1",
    "arquivo": "Rolo compactador.glb",
    "mbOrigem": 62.9,
    "triOrigem": 1906753,
@@ -277,7 +277,7 @@
    ]
   },
   "rolo-liso": {
-   "hash": "e400b33cd606",
+   "hash": "1cdb3e8636eb",
    "arquivo": "ROLO LISO COM RODAS.glb",
    "mbOrigem": 61.2,
    "triOrigem": 1897318,
@@ -305,7 +305,7 @@
    ]
   },
   "rolo-tandem": {
-   "hash": "c92272227fda",
+   "hash": "0515857dec56",
    "arquivo": "ROLO LISO.glb",
    "mbOrigem": 61,
    "triOrigem": 1915205,
@@ -338,7 +338,7 @@
    ]
   },
   "rolo-pneus": {
-   "hash": "b01d42b13ae7",
+   "hash": "ebc93ae6369a",
    "arquivo": "ROLO PNEUMATICO.glb",
    "mbOrigem": 59.9,
    "triOrigem": 1894995,
@@ -366,7 +366,7 @@
    ]
   },
   "vibroacabadora": {
-   "hash": "28bb2c8f2e06",
+   "hash": "783f63fa926c",
    "arquivo": "PAVIMENTADORA.glb",
    "mbOrigem": 60.6,
    "triOrigem": 1836321,
@@ -399,7 +399,7 @@
    ]
   },
   "trator-esteiras": {
-   "hash": "4386439052ac",
+   "hash": "5aad80b31e23",
    "arquivo": "Trator de Esteira.glb",
    "mbOrigem": 61.6,
    "triOrigem": 1911462,
@@ -421,7 +421,7 @@
    "giroflex": []
   },
   "fresadora": {
-   "hash": "8d091d477169",
+   "hash": "ab0635d530c3",
    "arquivo": "fresadora.glb",
    "mbOrigem": 59.3,
    "triOrigem": 1836639,
@@ -443,7 +443,7 @@
    "giroflex": []
   },
   "vassoura-mecanica": {
-   "hash": "13351a32214e",
+   "hash": "a7aa066f1150",
    "arquivo": "vassoura mecânica.glb",
    "mbOrigem": 61.6,
    "triOrigem": 1955725,
@@ -465,7 +465,7 @@
    "giroflex": []
   },
   "retroescavadeira": {
-   "hash": "a37e3259ffdd",
+   "hash": "ff5297380fa5",
    "arquivo": "Retroescavadeira.glb",
    "mbOrigem": 61.1,
    "triOrigem": 1876450,
@@ -493,7 +493,7 @@
    ]
   },
   "minicarregadeira": {
-   "hash": "b38581cf8248",
+   "hash": "187aaf6a18b1",
    "arquivo": "mini carregadeira.glb",
    "mbOrigem": 61.2,
    "triOrigem": 1865816,
@@ -515,7 +515,7 @@
    "giroflex": []
   },
   "viatura-administrativa": {
-   "hash": "158f09e4c714",
+   "hash": "89ccb0193269",
    "arquivo": "viatura administrativa.glb",
    "mbOrigem": 59.3,
    "triOrigem": 1851694,
@@ -537,7 +537,7 @@
    "giroflex": []
   },
   "comboio-combustivel": {
-   "hash": "e8528c16e648",
+   "hash": "50b7d79e1026",
    "arquivo": "CL COMPLETO.glb",
    "mbOrigem": 58.2,
    "triOrigem": 1807569,
@@ -559,7 +559,7 @@
    "giroflex": []
   },
   "gerador": {
-   "hash": "da2e82e4186d",
+   "hash": "890f2a2befdf",
    "arquivo": "gerador.glb",
    "mbOrigem": 49.1,
    "triOrigem": 1495450,
@@ -581,7 +581,7 @@
    "giroflex": []
   },
   "conteiner": {
-   "hash": "04542fefd17b",
+   "hash": "f0fae84a244e",
    "arquivo": "Alojamento.glb",
    "mbOrigem": 55.3,
    "triOrigem": 1813550,
@@ -603,7 +603,7 @@
    "giroflex": []
   },
   "baia-brita": {
-   "hash": "0d6edb6f89e9",
+   "hash": "c70b5bb1bdfc",
    "arquivo": "armazen brita.glb",
    "mbOrigem": 67,
    "triOrigem": 1939474,
@@ -625,7 +625,7 @@
    "giroflex": []
   },
   "usina-cbuq": {
-   "hash": "a272dca76164",
+   "hash": "90069b4e4374",
    "arquivo": "USINA ASFALTO.glb",
    "mbOrigem": 60.7,
    "triOrigem": 1887138,
@@ -647,7 +647,7 @@
    "giroflex": []
   },
   "engenheiro": {
-   "hash": "1eb553c7dfab",
+   "hash": "4e31843144e8",
    "arquivo": "Engenheiro.glb",
    "mbOrigem": 27.3,
    "triOrigem": 662010,
@@ -669,7 +669,7 @@
    "giroflex": []
   },
   "cone": {
-   "hash": "72f1a0c32530",
+   "hash": "4cb5809171b4",
    "arquivo": "cONE.glb",
    "mbOrigem": 43.7,
    "triOrigem": 1318573,
@@ -691,7 +691,7 @@
    "giroflex": []
   },
   "tambor-sinalizacao": {
-   "hash": "dfd25ae6a084",
+   "hash": "a34957fb813d",
    "arquivo": "cone circular.glb",
    "mbOrigem": 53.4,
    "triOrigem": 1701336,
@@ -713,7 +713,7 @@
    "giroflex": []
   },
   "barreira-plastica": {
-   "hash": "102d46de1e85",
+   "hash": "cdfcf613015f",
    "arquivo": "sinalizador.glb",
    "mbOrigem": 30,
    "triOrigem": 871288,
@@ -735,7 +735,7 @@
    "giroflex": []
   },
   "boca-de-lobo": {
-   "hash": "b7870c0c4cad",
+   "hash": "7cc140fb80fd",
    "arquivo": "BUEIRO.glb",
    "mbOrigem": 66.3,
    "triOrigem": 1941768,
@@ -757,7 +757,7 @@
    "giroflex": []
   },
   "tubo-concreto": {
-   "hash": "d1cc68648289",
+   "hash": "238cc04a342c",
    "arquivo": "TUBO 1 M.glb",
    "mbOrigem": 66.2,
    "triOrigem": 1918362,
@@ -779,7 +779,7 @@
    "giroflex": []
   },
   "meio-fio": {
-   "hash": "cbdcedf8738a",
+   "hash": "5be01c201200",
    "arquivo": "MEIO FIO.glb",
    "mbOrigem": 26.3,
    "triOrigem": 452150,
@@ -801,7 +801,7 @@
    "giroflex": []
   },
   "caminhao-pipa": {
-   "hash": "b70b7b917874",
+   "hash": "e88608ecf067",
    "arquivo": "caminhao pipa.glb",
    "mbOrigem": 51.8,
    "triOrigem": 1641721,
@@ -823,7 +823,7 @@
    "giroflex": []
   },
   "caminhao-betoneira": {
-   "hash": "449dbe753689",
+   "hash": "2cb8a7295e6f",
    "arquivo": "caminhao betoneira.glb",
    "mbOrigem": 59.7,
    "triOrigem": 1921617,
@@ -845,7 +845,7 @@
    "giroflex": []
   },
   "caminhao-pintura-faixas": {
-   "hash": "08f7d03adf66",
+   "hash": "caac8193dabf",
    "arquivo": "caminhao pintura de faixas.glb",
    "mbOrigem": 60.9,
    "triOrigem": 1951631,
@@ -873,7 +873,7 @@
    ]
   },
   "extrusora-sarjeta": {
-   "hash": "1610cb81ee24",
+   "hash": "2d52ab1c0ca9",
    "arquivo": "extrusora de sarjeta.glb",
    "mbOrigem": 49.9,
    "triOrigem": 1535923,
@@ -895,7 +895,7 @@
    "giroflex": []
   },
   "placa-vibratoria": {
-   "hash": "a0b558c4511f",
+   "hash": "773794fce7eb",
    "arquivo": "Compactador de solo.glb",
    "mbOrigem": 42.6,
    "triOrigem": 1254599,
@@ -917,7 +917,7 @@
    "giroflex": []
   },
   "topografo-estacao-total": {
-   "hash": "955e077f8932",
+   "hash": "6083d36dd877",
    "arquivo": "topografia estacao total.glb",
    "mbOrigem": 52.3,
    "triOrigem": 1459823,
@@ -939,7 +939,7 @@
    "giroflex": []
   },
   "auxiliar-prisma": {
-   "hash": "3ae615af2ac8",
+   "hash": "63e2b8c6851c",
    "arquivo": "aux topografia.glb",
    "mbOrigem": 29.7,
    "triOrigem": 633068,
@@ -961,7 +961,7 @@
    "giroflex": []
   },
   "tripe-re": {
-   "hash": "5e7d4749eee4",
+   "hash": "320f2dac0e9b",
    "arquivo": "tripe seco.glb",
    "mbOrigem": 34.4,
    "triOrigem": 897046,
@@ -978,6 +978,50 @@
     1.18,
     1.5,
     1.168
+   ],
+   "recolorido": 0,
+   "giroflex": []
+  },
+  "executor": {
+   "hash": "65c480449752",
+   "arquivo": "executor.glb",
+   "mbOrigem": 24.7,
+   "triOrigem": 635245,
+   "tri0": 15000,
+   "tri1": 2000,
+   "mb0": 0.29,
+   "mb1": 0.05,
+   "textura0": 1024,
+   "textura1": 256,
+   "formato": "WebP",
+   "simplificacao": "normal, erro 0.002",
+   "escala": 1.7514,
+   "tamanho_m": [
+    1.75,
+    1.75,
+    0.365
+   ],
+   "recolorido": 0,
+   "giroflex": []
+  },
+  "encarregado": {
+   "hash": "84ed4aae3b61",
+   "arquivo": "encarregado.glb",
+   "mbOrigem": 1.3,
+   "triOrigem": 6100,
+   "tri0": 6100,
+   "tri1": 812,
+   "mb0": 0.12,
+   "mb1": 0.03,
+   "textura0": 1024,
+   "textura1": 256,
+   "formato": "WebP",
+   "simplificacao": "original, erro 0",
+   "escala": 1.7496,
+   "tamanho_m": [
+    1.657,
+    1.75,
+    0.322
    ],
    "recolorido": 0,
    "giroflex": []

@@ -186,6 +186,65 @@ function normalizar(g, m) {
   }
   return { escala: e, tamanho: [(mx[0] - mn[0]) * e, (mx[1] - mn[1]) * e, (mx[2] - mn[2]) * e].map(v => +v.toFixed(3)) };
 }
+// normais suaves (média das faces, pesada pela área) para arquivos que vêm sem normais
+function normaisSuaves(g) {
+  const n = new Float32Array(g.pos.length),
+    p = g.pos;
+  for (let t = 0; t < g.idx.length; t += 3) {
+    const [a, b, c] = [g.idx[t] * 3, g.idx[t + 1] * 3, g.idx[t + 2] * 3];
+    const u = [p[b] - p[a], p[b + 1] - p[a + 1], p[b + 2] - p[a + 2]],
+      v = [p[c] - p[a], p[c + 1] - p[a + 1], p[c + 2] - p[a + 2]];
+    const f = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]];
+    for (const i of [a, b, c]) for (let k = 0; k < 3; k++) n[i + k] += f[k];
+  }
+  for (let i = 0; i < n.length; i += 3) {
+    const l = Math.hypot(n[i], n[i + 1], n[i + 2]) || 1;
+    n[i] /= l;
+    n[i + 1] /= l;
+    n[i + 2] /= l;
+  }
+  g.nor = n;
+  return g;
+}
+// pessoas geradas em pose T: os braços (|x| além do ombro, acima da cintura) giram em torno do ombro até ficarem junto
+// ao corpo; uma faixa de transição no ombro evita o rasgo. Depois recentra em X e Z.
+function abaixarBracos(g, { ombro: [x0, y0], angulo_graus: ang, transicao_m: tr = 0.08, cintura_m: yc = 0.9 }) {
+  for (let i = 0; i < g.pos.length; i += 3) {
+    const x = g.pos[i],
+      y = g.pos[i + 1];
+    const lado = x >= 0 ? 1 : -1,
+      ax = Math.abs(x);
+    if (y < yc || ax < x0 - tr) continue;
+    const u = Math.min(1, (ax - (x0 - tr)) / tr),
+      t = u * u * (3 - 2 * u);
+    // giro no plano XY, para baixo dos dois lados
+    const th = -lado * t * ((ang * Math.PI) / 180),
+      c = Math.cos(th),
+      s = Math.sin(th);
+    const dx = x - lado * x0,
+      dy = y - y0;
+    g.pos[i] = lado * x0 + dx * c - dy * s;
+    g.pos[i + 1] = y0 + dx * s + dy * c;
+    if (g.nor) {
+      const nx = g.nor[i],
+        ny = g.nor[i + 1];
+      g.nor[i] = nx * c - ny * s;
+      g.nor[i + 1] = nx * s + ny * c;
+    }
+  }
+  const mn = [Infinity, Infinity],
+    mx = [-Infinity, -Infinity];
+  for (let i = 0; i < g.pos.length; i += 3) {
+    mn[0] = Math.min(mn[0], g.pos[i]);
+    mx[0] = Math.max(mx[0], g.pos[i]);
+    mn[1] = Math.min(mn[1], g.pos[i + 2]);
+    mx[1] = Math.max(mx[1], g.pos[i + 2]);
+  }
+  for (let i = 0; i < g.pos.length; i += 3) {
+    g.pos[i] -= (mn[0] + mx[0]) / 2;
+    g.pos[i + 2] -= (mn[1] + mx[1]) / 2;
+  }
+}
 
 // ---------- texturas ----------
 const OLIVA = [0x5a, 0x63, 0x40];
@@ -281,7 +340,8 @@ async function nivel(doc0, geoms, texturas, lado) {
     const g = geoms[i];
     const buf = root.listBuffers()[0];
     p.getAttribute('POSITION').setArray(g.pos);
-    if (g.nor) p.getAttribute('NORMAL').setArray(g.nor);
+    if (g.nor && p.getAttribute('NORMAL')) p.getAttribute('NORMAL').setArray(g.nor);
+    else if (g.nor) p.setAttribute('NORMAL', doc.createAccessor().setType('VEC3').setBuffer(buf).setArray(g.nor));
     else if (p.getAttribute('NORMAL')) p.setAttribute('NORMAL', null);
     if (g.uv) p.getAttribute('TEXCOORD_0').setArray(g.uv);
     for (const s of p.listSemantics()) if (!['POSITION', 'NORMAL', 'TEXCOORD_0'].includes(s)) p.setAttribute(s, null);
@@ -312,12 +372,17 @@ async function processar(m) {
   const doc = await io.read(origem);
   const root = doc.getRoot();
   for (const ext of root.listExtensionsUsed()) if (!SUPORTADAS.has(ext.extensionName)) ext.dispose();
+  // material sem mapa de metal/rugosidade e sem metallicFactor (padrão 1 no glTF) fica metálico e escuro: vira dielétrico
+  for (const mat of root.listMaterials()) if (!mat.getMetallicRoughnessTexture() && mat.getMetallicFactor() === 1) mat.setMetallicFactor(0);
   // geometria no espaço do mundo, soldada
   const geoms = [];
   for (const n of root.listNodes()) {
     const mesh = n.getMesh();
     if (!mesh) continue;
-    for (const p of mesh.listPrimitives()) geoms.push(soldar(lerPrimitiva(p, n.getWorldMatrix())));
+    for (const p of mesh.listPrimitives()) {
+      const g = soldar(lerPrimitiva(p, n.getWorldMatrix()));
+      geoms.push(g.nor ? g : normaisSuaves(g));
+    }
   }
   const triOrig = geoms.reduce((s, g) => s + g.idx.length / 3, 0);
   // texturas de origem, classificadas pelo uso no material (cor, normal ou metal/rugosidade)
@@ -354,6 +419,19 @@ async function processar(m) {
     s0 = geoms.map(g => simplificar(g, Math.round((alvo0 * g.idx.length) / 3 / triOrig)));
     g0 = s0.map(r => ({ ...r.g, pos: r.g.pos.slice(), nor: r.g.nor && r.g.nor.slice() }));
     info0 = g0.map(g => normalizar(g, m))[0];
+    if (m.abaixarBracos) {
+      g0.forEach(g => abaixarBracos(g, m.abaixarBracos));
+      // tamanho final, com os braços junto ao corpo
+      const p = g0[0].pos,
+        mn = [Infinity, Infinity, Infinity],
+        mx = [-Infinity, -Infinity, -Infinity];
+      for (let i = 0; i < p.length; i += 3)
+        for (let k = 0; k < 3; k++) {
+          mn[k] = Math.min(mn[k], p[i + k]);
+          mx[k] = Math.max(mx[k], p[i + k]);
+        }
+      info0.tamanho = mx.map((v, k) => +(v - mn[k]).toFixed(3));
+    }
     glb0 = await nivel(doc, g0, texturas, lado0);
     if (glb0.byteLength <= LIMITE_LOD0) break;
     if (lado0 > 512) lado0 /= 2;
@@ -398,9 +476,19 @@ const hash = m =>
     .update(
       JSON.stringify([
         // só os campos que mudam o processamento
-        ['arquivo', 'categoria', 'veiculo', 'comprimento_m', 'altura_m', 'referenciaEscala', 'rotacaoY_graus', 'recolorir', 'triangulos', 'textura'].map(
-          k => m[k]
-        ),
+        [
+          'arquivo',
+          'categoria',
+          'veiculo',
+          'abaixarBracos',
+          'comprimento_m',
+          'altura_m',
+          'referenciaEscala',
+          'rotacaoY_graus',
+          'recolorir',
+          'triangulos',
+          'textura'
+        ].map(k => m[k]),
         CONFIG.padroes,
         KTX2,
         readFileSync(fileURLToPath(import.meta.url))

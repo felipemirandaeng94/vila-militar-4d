@@ -24,7 +24,7 @@ import {
 import { superficie, ativas, servicoRep } from './pavimento.js';
 import { USI, SITE, chamineDaUsina } from './canteiro.js';
 import { cena } from './renderizador.js';
-import { vestir, definirVariante, giroflex, CATALOGO } from './modelos3d.js';
+import { vestir, definirVariante, giroflex, criarLod, CATALOGO } from './modelos3d.js';
 
 export const EQ = [];
 const steam = [];
@@ -106,6 +106,13 @@ function vestirEquipamento(e) {
   e.vibra = !!g.vibra;
   e.luzes = [];
   for (const [estado, id] of Object.entries(variantes)) giroflex(e.sup.userData.lods[estado], id, LUZ.apagada, e.luzes);
+  // placa vibratória: o executor atrás do guidão (a placa tem 1,5 m com o guidão; frente do procedural em +x)
+  if (e.tipo === 'placa' && CATALOGO.executor) {
+    const op = criarLod('executor', null, { t: e.nome, d: { Operador: 'Militar executor' } });
+    op.position.set(-1.1, 0, 0);
+    op.rotation.y = -Math.PI / 2;
+    e.o.add(op);
+  }
 }
 // equipamentos sem equipe no cronograma, estacionados no pátio, e o engenheiro residente
 const EXTRAS = [
@@ -113,7 +120,8 @@ const EXTRAS = [
   ['minicarregadeira', 'Minicarregadeira (apoio no canteiro)'],
   ['comboio-combustivel', 'Caminhão comboio de combustível']
 ];
-let engenheiro = null;
+let engenheiro = null,
+  encarregado = null;
 
 // equipes (conjuntos de máquinas) e representações atendidas por cada uma
 const EQUIPES = {
@@ -221,6 +229,13 @@ export function buildEquipment() {
     engenheiro.add(new THREE.Object3D());
     vestir(engenheiro, 'engenheiro', { rot: 0, info: { t: 'Engenheiro residente', d: { Função: 'Acompanha a frente de serviço principal' } } });
     cena.LAY.equip.add(engenheiro);
+  }
+  // sargento encarregado da frente, ao lado do engenheiro
+  if (CATALOGO.encarregado) {
+    encarregado = new THREE.Group();
+    encarregado.add(new THREE.Object3D());
+    vestir(encarregado, 'encarregado', { rot: 0, info: { t: 'Encarregado da frente', d: { Função: 'Coordena as equipes da frente de serviço' } } });
+    cena.LAY.equip.add(encarregado);
   }
   // vapor sobre o CBUQ recém-lançado e na chaminé
   const sm = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.12, depthWrite: false });
@@ -625,17 +640,23 @@ export function updateEquipment(st, clk) {
 }
 
 function posicionarEngenheiro(d) {
-  if (!engenheiro) return;
   const f = frentesAtivas(d)[0];
-  engenheiro.visible = ST.lay.equip !== false;
-  if (f) {
-    // no passeio do lado direito, um pouco atrás da frente, olhando para a pista
-    const s = clamp(f.s - 6, 0, P.L),
-      z = P.Z_VIA + 2.2;
-    colocar(engenheiro, s, z, wy(nat(s, z)), Math.PI / 2);
-  } else {
-    const c = noCanteiro(16, -51.5);
-    colocar(engenheiro, c.s, c.z, wy(P.CANT.cota), 0);
+  // ds: afastamento ao longo do eixo entre o engenheiro e o encarregado
+  for (const [o, ds] of [
+    [engenheiro, 0],
+    [encarregado, 1.3]
+  ]) {
+    if (!o) continue;
+    o.visible = ST.lay.equip !== false;
+    if (f) {
+      // no passeio do lado direito, um pouco atrás da frente, olhando para a pista
+      const s = clamp(f.s - 6 + ds, 0, P.L),
+        z = P.Z_VIA + 2.2;
+      colocar(o, s, z, wy(nat(s, z)), Math.PI / 2);
+    } else {
+      const c = noCanteiro(16 + ds, -51.5);
+      colocar(o, c.s, c.z, wy(P.CANT.cota), 0);
+    }
   }
 }
 

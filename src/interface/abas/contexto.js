@@ -44,7 +44,25 @@ const RECURSOS = [
     'CC0 1.0 (domínio público)',
     'Fundo do céu, luz ambiente e direção do sol'
   ],
-  ['Textura PBR', 'Cracked Red Ground, de Amal Kumar, Poly Haven (polyhaven.com)', 'CC0 1.0 (domínio público)', 'Subleito exposto, vala, quadras de saibro'],
+  // texturas geradas por IA e preparadas por scripts/assets/preparar-texturas.py
+  [
+    'Textura PBR',
+    'Subleito argiloso compactado, de Felipe Miranda (ChatGPT, OpenAI); emenda, cor e mapas tratados para o app',
+    'Geradas pelo autor com ChatGPT (OpenAI); pelos termos da OpenAI, o conteúdo gerado pertence ao usuário',
+    'Subleito exposto, vala, quadras de saibro'
+  ],
+  [
+    'Textura PBR',
+    'CBUQ compactado, de Felipe Miranda (ChatGPT, OpenAI); emenda e mapas tratados para o app',
+    'Geradas pelo autor com ChatGPT (OpenAI); pelos termos da OpenAI, o conteúdo gerado pertence ao usuário',
+    'CBUQ novo, superfície fresada, tinta de demarcação'
+  ],
+  [
+    'Textura PBR',
+    'CBUQ solto, de Felipe Miranda (ChatGPT, OpenAI); emenda e mapas tratados para o app',
+    'Geradas pelo autor com ChatGPT (OpenAI); pelos termos da OpenAI, o conteúdo gerado pertence ao usuário',
+    'CBUQ recém-espalhado, antes da rolagem'
+  ],
   [
     'Textura PBR',
     'Dry Mud Field 001, de Rob Tuytel e Rico Cilliers, Poly Haven (polyhaven.com)',
@@ -56,12 +74,6 @@ const RECURSOS = [
     'Gravel Floor 04, de Charlotte Baglioni, Poly Haven (polyhaven.com)',
     'CC0 1.0 (domínio público)',
     'Brita graduada, solo-brita, imprimação e pintura de ligação (sobre a base), pátio do canteiro, faixa de desvio'
-  ],
-  [
-    'Textura PBR',
-    'Asphalt Pit Lane, de Dimitrios Savva, Poly Haven (polyhaven.com)',
-    'CC0 1.0 (domínio público)',
-    'CBUQ novo, superfície fresada, tinta de demarcação'
   ],
   ['Textura PBR', 'Asphalt 02, de Rob Tuytel, Poly Haven (polyhaven.com)', 'CC0 1.0 (domínio público)', 'Revestimento existente e vias do entorno'],
   ['Textura PBR', 'Leafy Grass, de Charlotte Baglioni, Poly Haven (polyhaven.com)', 'CC0 1.0 (domínio público)', 'Gramados, campos e matas'],

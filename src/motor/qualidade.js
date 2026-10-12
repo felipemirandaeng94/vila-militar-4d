@@ -5,8 +5,8 @@
  * Cada perfil define: densidade de pixels máxima, lado do mapa de sombra e raio do filtro PCF, alcance máximo da sombra
  * em torno do alvo da câmera (m), pós-processamento (null = direto na tela com MSAA; ao = resolução do GTAO; aa = SMAA
  * ou FXAA), distância de desenho (plano distante da câmera, m), fração das árvores desenhadas, sombra das árvores,
- * resolução do céu de fundo, lado das texturas PBR do terreno e do pavimento (px) e relevo (mapas de normais e projeção
- * triplanar nas faces inclinadas). Fase 7: distância (m) a partir da qual os modelos 3D usam o nível 1. Fase 6: distâncias (m) até as quais as árvores usam o modelo perto e o reduzido (além
+ * resolução do céu de fundo, lado das texturas PBR do terreno e do pavimento (px), relevo (mapas de normais e projeção
+ * triplanar nas faces inclinadas) e disfarce de repetição das texturas (amostragem estocástica e manchas de grande escala). Fase 7: distância (m) a partir da qual os modelos 3D usam o nível 1. Fase 6: distâncias (m) até as quais as árvores usam o modelo perto e o reduzido (além
  * delas, o impostor) e gramado (raio em torno do alvo da câmera, m, e tufos por m² de área gramada).
  */
 export const PERFIS = {
@@ -24,6 +24,7 @@ export const PERFIS = {
     ceu: '2k',
     texturas: 512,
     relevo: false,
+    antirepeticao: false,
     arvores: { perto: 40, medio: 120 },
     gramado: { raio: 30, densidade: 0.8 }
   },
@@ -41,6 +42,7 @@ export const PERFIS = {
     ceu: '2k',
     texturas: 1024,
     relevo: true,
+    antirepeticao: true,
     arvores: { perto: 70, medio: 200 },
     gramado: { raio: 55, densidade: 1.6 }
   },
@@ -58,6 +60,7 @@ export const PERFIS = {
     ceu: '4k',
     texturas: 2048,
     relevo: true,
+    antirepeticao: true,
     arvores: { perto: 100, medio: 280 },
     gramado: { raio: 85, densidade: 2.6 }
   }
