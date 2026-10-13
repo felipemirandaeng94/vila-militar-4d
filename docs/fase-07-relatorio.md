@@ -7,7 +7,7 @@ Data: 11/10/2026. Origem: `assets/brutos/modelos/` (46 arquivos; 10 deles chegar
 - 46 arquivos varridos: 45 GLB gerados no Tripo AI e o jacarandá do Poly Haven (já tratado na Fase 6, fora deste pipeline).
 - 42 modelos aceitos e 3 rejeitados. Os arquivos do Tripo seguem o mesmo padrão: malha única com um material, de 0,45 a 1,96 milhão de triângulos (0,63 milhão no auxiliar de topografia e no executor). O encarregado é a exceção: veio do exportador trimesh, com 6 100 triângulos, textura de 1024 e sem normais, texturas 4096² (cor e metal/rugosidade em JPEG, normal em PNG), extensões `KHR_materials_volume` e `FB_ngon_encoding` e maior dimensão perto de 1 unidade.
 - Pipeline `npm run modelos`: 2 230 MB de origem viram 27,5 MB em `public/modelos/` (24,2 MB nos níveis 0, 3,4 MB nos níveis 1). O maior nível 0 é o da usina, com 1,15 MB. A pasta inteira, com as árvores da Fase 6, tem 28,9 MB (limite de 40 MB).
-- Texturas em WebP: o `toktx` (KTX-Software) não está instalado. O pipeline já gera KTX2 quando ele estiver no PATH (ver "Trabalho manual").
+- Texturas em KTX2 desde 12/10/2026 (KTX-Software 4.4.2): ETC1S na cor e em metal/rugosidade, UASTC com RDO e Zstandard na normal, com metade do lado da cor. Ver "Texturas em KTX2" no fim.
 - Taxa de quadros na qualidade baixa (GTX 1660 Ti, sem limitador de quadros, mesma cena da obra em andamento, com os 40 modelos): vista geral 91 fps com os modelos procedurais e 175 fps com os GLB; vista da frente 182 e 213 fps. As chamadas de desenho caíram de 224 para 102. Com o limitador ligado, os dois casos ficam em 60 fps. Não foi preciso reduzir os LODs.
 
 ## 1. Antes e depois por modelo
@@ -157,9 +157,20 @@ A imagem `assets/referencias/vista_aerea_conceito.png` foi usada só como guia d
 
 ## Pendências e trabalho manual
 
-- **KTX2**: instale o KTX-Software (https://github.com/KhronosGroup/KTX-Software/releases), ponha o `toktx` no PATH e rode `npm run modelos -- --forcar`. O pipeline gera KTX2 (ETC1S na cor e em metal/rugosidade, UASTC na normal) e copia o transcodificador para `public/modelos/basis/`; o app já carrega o KTX2Loader. Esse ramo não pôde ser testado aqui, porque o `toktx` não está instalado.
+- **KTX2**: concluído (ver "Texturas em KTX2").
 - **Confirmar os caminhões-tanque**: nas suas respostas, a primeira dizia "CM-30 é o caminhão lubrificante", e a segunda disse que o CM-30 é o espargidor de CM-30, o CL é o espargidor de RR e o CL COMPLETO é o comboio de combustível. Segui a segunda. Você citou RR-2C; os dados da obra especificam RR-1C na pintura de ligação, e esse valor normativo não foi alterado.
 - **Gerar os modelos da seção 3**, começando pela betoneira de 400 L. Se quiser o encarregado com o uniforme camuflado dos outros, vale gerá-lo de novo no Tripo, já com os braços para baixo.
 - **Peças móveis no Blender** (seção 5), quando quiser animação completa.
 - O Playwright do projeto pede o Chromium 1248, mas só o 1228 está baixado. Os scripts de miniatura usam o 1228 encontrado. Para atualizar, rode `npx playwright install chromium`.
 - `assets/referencias/` não foi versionada (imagem de 4 MB, só referência). Diga se quiser incluí-la.
+
+## Texturas em KTX2 (12/10/2026)
+
+- KTX-Software 4.4.2 (Khronos, licença Apache 2.0). Cópia do Windows em `ferramentas/ktx-software/bin/` (fora do git). O script procura o `toktx` na variável `TOKTX`, no PATH e nessa pasta, nesta ordem; não é preciso mexer no PATH.
+- `npm run modelos -- --forcar` refeito com os 48 modelos: todas as texturas em `image/ktx2` com `KHR_texture_basisu`; transcodificador copiado para `public/modelos/basis/`. Amostras conferidas com `ktx validate`.
+- Em disco o KTX2 é maior que o WebP. Com a normal em UASTC no mesmo lado da cor a pasta foi a 48,7 MB (limite 40). A normal passou a sair com metade do lado (512 no nível 0, 128 no nível 1) e a UASTC ganhou RDO (lambda 1) e Zstandard 18. Resultado: modelos GLB 37,4 MB, pasta com as árvores 39,3 MB. Maior nível 0: usina, 1,31 MB. Nenhum modelo precisou reduzir a textura da cor.
+- Memória de vídeo: a cor e o metal/rugosidade passam a ser transcodificados para formato comprimido na GPU (BC7/BC1/ETC/ASTC, conforme a placa), em vez de RGBA descomprimido; a normal, além disso, tem um quarto dos pixels.
+- `npm run build` e `npm test` (94 testes) passaram.
+- Pendente: abrir o app e conferir visualmente os modelos (cor, brilho e relevo da normal) e a taxa de quadros; conferir que o `toktx.exe` da pasta `ferramentas` roda no Windows (`npm run modelos` deve dizer "já processado" em todos, sem o aviso de WebP).
+- Margem do orçamento: 0,7 MB. Um modelo novo grande vai estourar os 40 MB; nesse caso reduza `textura` em `dados/modelos.json` ou revise o limite.
+

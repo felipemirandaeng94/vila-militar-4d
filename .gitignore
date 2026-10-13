@@ -21,3 +21,6 @@ assets/brutos/*
 !assets/brutos/modelos/
 assets/brutos/modelos/*
 !assets/brutos/modelos/LICENCAS.txt
+
+# ferramentas externas (KTX-Software para o npm run modelos)
+ferramentas/

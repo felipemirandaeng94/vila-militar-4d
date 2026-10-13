@@ -5,8 +5,9 @@
 //   - solda os vértices e simplifica (meshoptimizer) até o alvo de triângulos de cada nível;
 //   - aplica rotação, escala e base do modelos.json direto na geometria (frente em -Z, Y para cima, base em Y = 0);
 //   - recolore para verde-oliva o que vier amarelo ou laranja, quando indicado (pneus, vidros e metais ficam);
-//   - texturas reduzidas (1024 no nível 0 e 256 no nível 1, salvo indicação) em KTX2 se o toktx estiver instalado,
-//     senão em WebP (com aviso);
+//   - texturas reduzidas (1024 no nível 0 e 256 no nível 1, salvo indicação) em KTX2 se o toktx estiver instalado
+//     (ETC1S na cor e em metal/rugosidade; UASTC com RDO e Zstandard na normal, com metade do lado), senão em WebP
+//     (com aviso);
 //   - compressão Meshopt (EXT_meshopt_compression com quantização).
 // Idempotente: pula o modelo cujos dois arquivos são mais novos que a origem e foram gerados com a mesma configuração
 // (public/modelos/manifesto.json). Meta: nível 0 até 1,5 MB e a pasta public/modelos abaixo de 40 MB; se um nível 0
@@ -40,15 +41,21 @@ const forcar = args.includes('--forcar');
 const pedidos = args.filter(a => !a.startsWith('--'));
 
 // ---------- ferramentas externas ----------
-function temToktx() {
-  try {
-    execFileSync('toktx', ['--version'], { stdio: 'ignore' });
-    return true;
-  } catch {
-    return false;
+// procura o toktx na variável TOKTX, no PATH e em ferramentas/ktx-software/bin (cópia local, fora do git)
+function acharToktx() {
+  const local = resolve(RAIZ, 'ferramentas/ktx-software/bin', process.platform === 'win32' ? 'toktx.exe' : 'toktx');
+  for (const cmd of [process.env.TOKTX, 'toktx', local].filter(Boolean)) {
+    try {
+      execFileSync(cmd, ['--version'], { stdio: 'ignore' });
+      return cmd;
+    } catch {
+      /* tenta o próximo */
+    }
   }
+  return null;
 }
-const KTX2 = temToktx();
+const TOKTX = acharToktx();
+const KTX2 = TOKTX !== null;
 // transcodificador Basis do three.js para o KTX2Loader do app
 if (KTX2) {
   const de = resolve(RAIZ, 'node_modules/three/examples/jsm/libs/basis'),
@@ -58,7 +65,7 @@ if (KTX2) {
 }
 if (!KTX2)
   console.warn(
-    'AVISO: toktx (KTX-Software) não está instalado; as texturas saem em WebP. Para KTX2, instale o KTX-Software (https://github.com/KhronosGroup/KTX-Software/releases), ponha o toktx no PATH e rode npm run modelos -- --forcar.'
+    'AVISO: toktx (KTX-Software) não está instalado; as texturas saem em WebP. Para KTX2, instale o KTX-Software (https://github.com/KhronosGroup/KTX-Software/releases), ponha o toktx no PATH (ou em ferramentas/ktx-software/bin) e rode npm run modelos -- --forcar.'
   );
 
 await MeshoptEncoder.ready;
@@ -275,6 +282,8 @@ async function recolorir(buf) {
   return { buf: await sharp(data, { raw: info }).png().toBuffer(), fracao: n / (data.length / 3) };
 }
 async function codificar(buf, lado, tipo) {
+  // em KTX2 a normal (UASTC, o mapa mais pesado) sai com metade do lado: mantém a pasta no orçamento de 40 MB
+  if (KTX2 && tipo === 'normal') lado = Math.max(128, lado / 2);
   const img = sharp(buf).resize(lado, lado, { fit: 'inside', kernel: 'lanczos3' });
   if (!KTX2) {
     const q = tipo === 'normal' ? 88 : tipo === 'cor' ? 82 : 78;
@@ -283,10 +292,10 @@ async function codificar(buf, lado, tipo) {
   const tmp = join(tmpdir(), 'vm4d-' + process.pid + '-' + Math.random().toString(36).slice(2));
   await img.png().toFile(tmp + '.png');
   const opc =
-    tipo === 'normal' ? ['--encode', 'uastc', '--uastc_quality', '2', '--assign_oetf', 'linear'] : ['--encode', 'etc1s', '--clevel', '2', '--qlevel', '128'];
+    tipo === 'normal' ? ['--encode', 'uastc', '--uastc_quality', '2', '--uastc_rdo_l', '1', '--zcmp', '18', '--assign_oetf', 'linear'] : ['--encode', 'etc1s', '--clevel', '2', '--qlevel', '128'];
   if (tipo === 'cor') opc.push('--assign_oetf', 'srgb');
   else if (tipo !== 'normal') opc.push('--assign_oetf', 'linear');
-  execFileSync('toktx', ['--t2', '--genmipmap', ...opc, tmp + '.ktx2', tmp + '.png']);
+  execFileSync(TOKTX, ['--t2', '--genmipmap', ...opc, tmp + '.ktx2', tmp + '.png']);
   const dados = readFileSync(tmp + '.ktx2');
   rmSync(tmp + '.png');
   rmSync(tmp + '.ktx2');
