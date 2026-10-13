@@ -24,3 +24,13 @@ export const lsSet = (k, v) => {
     localStorage.setItem(k, v);
   } catch (e) {}
 };
+export const lsDel = k => {
+  try {
+    localStorage.removeItem(k);
+  } catch (e) {}
+};
+// data e hora locais de um instante ISO (histórico de notas, partida salva)
+export const dataHora = iso => {
+  const d = new Date(iso);
+  return isNaN(d) ? '—' : d.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+};

@@ -100,12 +100,13 @@
   margin: 0;
 }
 
-/* créditos das fontes do local real sobre o modelo 3D (Fase 3) */
+/* créditos das fontes do local real sobre o modelo 3D (Fase 3), logo acima da barra 4D */
 .creditos3d {
   position: absolute;
+  z-index: 3;
   right: 14px;
-  top: 52px;
-  max-width: min(520px, calc(100% - 28px));
+  bottom: var(--barra, 76px);
+  max-width: min(560px, calc(100% - 28px));
   margin: 0;
   padding: 4px 10px;
   font: 10.5px/1.35 var(--f-mono);
@@ -118,17 +119,26 @@
   text-align: right;
   pointer-events: none;
 }
+.creditos3d .lnk {
+  pointer-events: auto;
+  font: inherit;
+}
+/* etapas do dia à esquerda, sem passar por baixo da legenda (ou do painel da missão) à direita */
+.overlay-tl {
+  max-width: calc(100% - 290px);
+}
 @media (max-width: 620px) {
-  .creditos3d {
-    top: 14px;
+  .overlay-tl {
+    max-width: calc(100% - 28px);
   }
 }
 
 /* indicador de quadros por segundo (Fase 4, tecla F) */
 .fps {
   position: absolute;
+  z-index: 3;
   left: 14px;
-  bottom: 76px;
+  bottom: var(--barra, 76px);
   margin: 0;
   padding: 4px 10px;
   font: 500 11.5px/1.35 var(--f-mono);
@@ -143,4 +153,312 @@
 }
 .fps.lento {
   color: var(--bad);
+}
+
+/* ==== Fase 9: tela de carregamento com progresso real ==== */
+.loading {
+  z-index: 6;
+  overflow: auto;
+  padding: 16px;
+  font-size: inherit;
+  transition: opacity 0.35s;
+}
+.loading.saindo {
+  opacity: 0;
+  pointer-events: none;
+}
+.ld-box {
+  width: min(460px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px 24px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  font-family: var(--f-sans);
+}
+.ld-box p {
+  margin: 0;
+}
+.ld-tit {
+  font: 400 26px/1.15 var(--f-disp);
+  color: var(--ink);
+}
+.ld-det {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.ld-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.ld-bar i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.25s;
+}
+.ld-num {
+  font: 500 12px var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+}
+.ld-grupos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+.ld-grupos li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px dashed var(--line-2);
+  padding-bottom: 3px;
+}
+.ld-grupos b {
+  font: 500 12px var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.ld-grupos li.feito b {
+  color: var(--ok);
+}
+.ld-arq {
+  font: 11.5px var(--f-mono);
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-height: 1.4em;
+}
+.ld-box .btn {
+  align-self: flex-start;
+}
+.loading.erro-dados .ld-box {
+  width: min(900px, 100%);
+}
+.loading.erro-dados ul {
+  margin: 0;
+}
+/* aviso pequeno quando o usuário entra antes do fim da carga */
+.ld-mini {
+  position: absolute;
+  left: 14px;
+  bottom: calc(var(--barra, 76px) + 30px);
+  z-index: 3;
+  margin: 0;
+  padding: 4px 10px;
+  font: 11.5px/1.35 var(--f-mono);
+  color: var(--ink-2);
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  pointer-events: none;
+}
+.ld-mini[hidden] {
+  display: none;
+}
+
+/* ==== Fase 9: créditos e licenças ==== */
+.creditos-btn {
+  order: 3;
+}
+.lnk {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  background: none;
+  font: inherit;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.rodape {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-top: 18px;
+  padding: 12px 2px 4px;
+  border-top: 1px solid var(--line);
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+.dlg {
+  width: min(1040px, calc(100vw - 32px));
+  max-height: calc(100dvh - 48px);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.dlg[open] {
+  display: flex;
+  flex-direction: column;
+}
+.dlg::backdrop {
+  background: rgb(8 14 12 / 0.55);
+}
+.dlg-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+}
+.dlg-head h2 {
+  margin: 0;
+  font: 400 28px/1.1 var(--f-disp);
+}
+.dlg-head .x {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  color: var(--ink);
+  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+.dlg-body {
+  overflow: auto;
+  padding: 16px 18px 22px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.dlg-body p {
+  max-width: 95ch;
+}
+.dlg-intro {
+  margin-top: 0;
+}
+.dlg-obrig {
+  border-left: 3px solid var(--brass);
+  background: var(--panel-2);
+  border-radius: 0 10px 10px 0;
+  padding: 8px 14px;
+}
+.dlg-obrig h3 {
+  margin: 0 0 4px;
+  font: 600 11px var(--f-sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+.dlg-obrig ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--ink);
+}
+.md h3 {
+  margin: 22px 0 6px;
+  font: 400 22px/1.2 var(--f-disp);
+  color: var(--ink);
+}
+.md h4 {
+  margin: 16px 0 6px;
+  font: 600 14px var(--f-sans);
+  color: var(--ink);
+}
+.md table {
+  font-size: 12.5px;
+}
+.md td,
+.md th {
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+.md code {
+  font: 11.5px var(--f-mono);
+  background: var(--panel-2);
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+  padding: 0 3px;
+}
+.md a,
+.dlg-body a {
+  color: var(--accent);
+}
+
+/* ==== Fase 9: missão (partida salva, histórico e teclado) ==== */
+.gm-salvo {
+  border-left: 3px solid var(--accent);
+  background: var(--accent-soft);
+  border-radius: 0 10px 10px 0;
+  padding: 8px 12px;
+  color: var(--ink) !important;
+}
+.gm-hist summary {
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.gm-hist .tbl {
+  margin-top: 8px;
+}
+.gm-tecla {
+  font-size: 12px !important;
+  color: var(--muted) !important;
+}
+table.hist td.n,
+table.hist th.n {
+  text-align: right;
+}
+
+/* texto só para leitores de tela */
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==== Fase 9: foco visível em todos os controles ==== */
+:where(a, button, summary, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+/* sobre o modelo 3D o fundo varia: anel duplo, visível em céu, asfalto ou grama */
+.stage :where(a, button, summary, input, select, [tabindex]):focus-visible,
+.gm-op:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--panel);
+}
+.pane:focus-visible {
+  outline-offset: -2px;
+}
+.gm-op:focus-visible {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.gmc:focus {
+  outline: none;
 }

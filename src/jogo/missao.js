@@ -6,15 +6,21 @@ import { nf } from '../dominio/util.js';
 import { fmtDate, fmtHour } from '../dominio/calendario.js';
 import { metricas, diaDaDecisao } from '../dominio/missao.js';
 import { buildSchedule, fimDaObra } from '../dominio/cronograma.js';
-import { $, esc, svcById, curto, lsGet, lsSet } from '../interface/dom.js';
+import { $, esc, svcById, curto, lsGet, lsSet, lsDel, dataHora } from '../interface/dom.js';
 import { renderTab, openTab } from '../interface/abas.js';
 import { camAt } from '../motor/index.js';
 import { DECISOES } from './decisoes.js';
+import { serializarPartida, validarPartida, registrarNota, historicoValido, lerJson } from './progresso.js';
+
+// chaves do localStorage: partida em andamento, histórico de notas e melhor nota
+const CHAVE_PARTIDA = 'vm4d.missao';
+const CHAVE_HISTORICO = 'vm4d.historico';
 
 export const GAME = {
   started: false,
   finished: false,
   done: {}, // decisões tomadas: { id: { i, op, day } }
+  ordem: [], // ids das decisões na ordem em que foram tomadas (salvamento)
   events: [], // consequências agendadas ou já vistas
   // opções de cronograma: falhas sempre ativas na missão e retrabalhos decididos pelo jogador
   opt() {
@@ -74,7 +80,8 @@ export const fxAll = o =>
   [fx(o.d, 'dia' + (Math.abs(o.d) > 1 ? 's' : '')), fx(o.c, 'mil R$'), fx(o.q, 'qualidade', 1), fx(o.n, 'conformidade', 1)].join('') ||
   '<span class="fx g">sem impacto</span>';
 
-export function setMode(m) {
+// semBriefing: entrar na missão sem a tela de abertura (ao continuar a partida salva)
+export function setMode(m, semBriefing) {
   ST.modo = m;
   const on = missaoAtiva();
   document.querySelectorAll('[data-mode]').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === m));
@@ -85,69 +92,214 @@ export function setMode(m) {
     : D.servicos.cenarios[ST.cen].descricao;
   $('hud').hidden = !on;
   if (on) {
-    if (!GAME.started) briefing();
+    if (!GAME.started && !semBriefing) briefing();
   } else {
-    $('gm').hidden = true;
+    fecharModal();
     acoes.reconstruir();
   }
   if (ST.tab === 'missao') renderTab();
 }
 export function resetGame() {
   GAME.done = {};
+  GAME.ordem = [];
   GAME.events = [];
   GAME.started = false;
 }
+
+// ---------- salvamento ----------
+/** Guarda a partida em andamento no navegador (depois de cada decisão, consequência e ao sair da página). */
+export function salvarPartida() {
+  if (!GAME.started || GAME.finished) return;
+  lsSet(CHAVE_PARTIDA, JSON.stringify(serializarPartida({ ordem: GAME.ordem, done: GAME.done, eventos: GAME.events, dia: ST.day })));
+}
+/** Partida salva que ainda vale para as decisões atuais, ou null. */
+export function partidaSalva() {
+  const s = validarPartida(lerJson(lsGet(CHAVE_PARTIDA), null), DECISOES);
+  return s && s.ordem.length < DECISOES.length ? s : null;
+}
+const apagarPartida = () => lsDel(CHAVE_PARTIDA);
+/** Histórico de notas deste navegador, mais recente primeiro. */
+export const historicoDeNotas = () => historicoValido(lerJson(lsGet(CHAVE_HISTORICO), []));
+export function limparHistorico() {
+  lsDel(CHAVE_HISTORICO);
+  lsDel('vm4d.best');
+}
+if (typeof window !== 'undefined') window.addEventListener('pagehide', () => salvarPartida());
+
+// consequência agendada pela alternativa escolhida
+function agendarConsequencia(dc, op, seen = false) {
+  const ev = Object.assign({ from: dc.titulo + ' (decisão ' + (DECISOES.indexOf(dc) + 1) + ')', seen }, op.later);
+  Object.defineProperty(ev, 'day', { get: () => diaDoEvento(ev), enumerable: true });
+  GAME.events.push(ev);
+}
+
+/** Retoma a partida salva: refaz as escolhas e as consequências e volta ao dia em que parou. */
+export function continuarMissao(s = partidaSalva()) {
+  if (!s) return briefing();
+  if (!missaoAtiva()) setMode('missao', true);
+  resetGame();
+  let k = 0;
+  for (const id of s.ordem) {
+    const dc = DECISOES.find(x => x.id === id),
+      i = s.escolhas[id].i,
+      op = dc.ops[i];
+    GAME.done[id] = { i, op, day: s.escolhas[id].dia };
+    GAME.ordem.push(id);
+    if (op.later) agendarConsequencia(dc, op, s.vistos[k++]);
+  }
+  GAME.started = true;
+  GAME.finished = false;
+  acoes.reconstruir();
+  ST.day = Math.min(M.fim, Math.max(s.dia, ...s.ordem.map(id => s.escolhas[id].dia)));
+  ST.speed = 2;
+  acoes.sincronizarVelocidade();
+  fecharModal();
+  updateHud();
+  acoes.atualizar(true);
+  acoes.tocar(true);
+  if (ST.tab === 'missao') renderTab();
+}
 export const iniciarMissao = () => setMode('missao');
 export function recomecarMissao() {
+  apagarPartida();
   resetGame();
   GAME.finished = false;
   if (!missaoAtiva()) setMode('missao');
   else briefing();
 }
 
+const plural = (n, um, varios) => (Math.abs(n - 1) < 0.05 ? um : varios);
+
+// tabela do histórico de notas (data, nota, conceito, melhores decisões, prazo e custo)
+export function tabelaHistorico(hist, max = hist.length) {
+  const linha = h =>
+    `<tr><td class="m">${esc(dataHora(h.data))}</td><td class="n"><b>${nf(h.nota, 1)}</b></td><td>${esc(h.conceito || '')}</td>` +
+    `<td class="n">${Number.isFinite(h.melhores) ? `${h.melhores} de ${h.total}` : '—'}</td>` +
+    `<td class="n">${Number.isFinite(h.atraso) ? (h.atraso > 0.01 ? '+' + nf(h.atraso, 1) + ' d' : 'no prazo') : '—'}</td>` +
+    `<td class="n">${Number.isFinite(h.custo) ? 'R$ ' + nf(h.custo, 1) + ' mil' : '—'}</td></tr>`;
+  return `<div class="tbl"><table class="hist"><caption class="sr">Histórico de notas da missão neste navegador</caption><thead><tr><th scope="col">Data</th><th scope="col" class="n">Nota</th><th scope="col">Conceito</th><th scope="col" class="n">Melhores decisões</th><th scope="col" class="n">Atraso</th><th scope="col" class="n">Custo adicional</th></tr></thead><tbody>${hist
+    .slice(0, max)
+    .map(linha)
+    .join('')}</tbody></table></div>`;
+}
+
 export function briefing() {
   const best = lsGet('vm4d.best');
   const prazo = D.obra.calendario.prazoContratualDias;
-  gm(`<p class="gm-eye">Missão · engenheiro residente</p><h3>${esc(D.obra.obra.titulo)}</h3>
-  <p>Você é o engenheiro residente da obra. Tem <b>${prazo} dias úteis</b> para reconstruir ${P.L} m da via existente em ${M.frentes.length} frentes, com a demolição, a drenagem nova, o pavimento em CBUQ, a usina no início do trecho e todo o controle tecnológico, sem fechar a Vila Militar ao tráfego.</p>
-  <p>Ao longo da obra aparecem <b>${DECISOES.length} decisões</b>, no momento em que acontecem: ensaios reprovados, chuva com vala aberta, redes não cadastradas, tubos trincados, o uso do fresado, pressão do comando e propostas de atalho. Cada escolha muda o prazo, o custo, a qualidade e a conformidade com as normas. Algumas consequências só aparecem semanas depois.</p>
-  <ul class="gm-rules"><li>A linha do tempo não avança além da próxima decisão.</li><li>Decisões com retrabalho aparecem no modelo 3D e no cronograma.</li><li>No fim, você recebe a nota e o conceito da missão.</li></ul>
+  const salvo = partidaSalva();
+  const hist = historicoDeNotas();
+  gm(`<p class="gm-eye">Missão · engenheiro residente</p><h3 id="gmTit">${esc(D.obra.obra.titulo)}</h3>
+  <p>Você é o engenheiro residente da obra. Tem <b>${prazo} dias úteis</b> para reconstruir ${nf(P.L, 0)} m da via existente em ${M.frentes.length} frentes, com a demolição, a drenagem nova, o pavimento em CBUQ, a usina no início do trecho e todo o controle tecnológico, sem fechar a Vila Militar ao tráfego.</p>
+  <p>Ao longo da obra aparecem <b>${DECISOES.length} decisões</b>, no momento em que acontecem: ensaios reprovados na jazida, no subleito, na base e no CBUQ, chuva com vala aberta e durante o lançamento, redes não cadastradas, tubos trincados, massa fria, falta de caminhões, o uso do fresado, pressão do comando e propostas de atalho. Cada escolha muda o prazo, o custo, a qualidade e a conformidade com as normas. Algumas consequências só aparecem semanas depois.</p>
+  <ul class="gm-rules"><li>A linha do tempo não avança além da próxima decisão.</li><li>Decisões com retrabalho aparecem no modelo 3D e no cronograma.</li><li>O progresso fica salvo neste navegador depois de cada decisão.</li><li>No fim, você recebe a nota e o conceito da missão. Ensaios, custos e prazos são ilustrativos.</li></ul>
+  ${salvo ? `<p class="gm-salvo">Há uma missão salva: <b>${salvo.ordem.length} de ${DECISOES.length} decisões</b> tomadas, parada em ${fmtDate(salvo.dia)}${salvo.salvoEm ? ` (salva em ${esc(dataHora(salvo.salvoEm))})` : ''}.</p>` : ''}
   ${best ? `<p class="gm-best">Sua melhor nota neste navegador: <b>${esc(best)}</b></p>` : ''}
-  <div class="gm-act"><button class="btn" id="gmGo">Iniciar missão</button><button class="btn ghost" id="gmBack">Voltar a explorar</button></div>`);
+  ${hist.length ? `<details class="gm-hist"><summary>Notas anteriores (${hist.length})</summary>${tabelaHistorico(hist, 5)}</details>` : ''}
+  <div class="gm-act">${salvo ? '<button class="btn" id="gmCont">Continuar a missão</button><button class="btn ghost" id="gmGo">Começar do início</button>' : '<button class="btn" id="gmGo">Iniciar missão</button>'}<button class="btn ghost" id="gmBack" data-esc>Voltar a explorar</button></div>`);
   $('gmGo').onclick = () => {
+    apagarPartida();
     resetGame();
     GAME.started = true;
+    GAME.finished = false;
     acoes.reconstruir();
     ST.day = 0;
     ST.speed = 2;
     acoes.sincronizarVelocidade();
-    $('gm').hidden = true;
+    fecharModal();
+    salvarPartida();
     acoes.tocar(true);
     camAt(30, -20, -80, 70, 120);
   };
+  if (salvo) $('gmCont').onclick = () => continuarMissao(salvo);
   $('gmBack').onclick = () => setMode('explorar');
 }
 
+// ---------- janela da missão (abertura, decisão, retorno, consequência e fim) ----------
+// Acessível pelo teclado: o foco fica preso na janela, as setas percorrem as alternativas, as teclas A a D escolhem
+// e Esc aciona o botão marcado com data-esc (quando houver). Ao fechar, o foco volta para onde estava.
+let focoAnterior = null;
 function gm(html) {
-  $('gmc').innerHTML = html;
+  const caixa = $('gmc');
+  if ($('gm').hidden) focoAnterior = document.activeElement;
+  caixa.innerHTML = html;
   $('gm').hidden = false;
-  $('gmc').scrollTop = 0;
-  const b = $('gmc').querySelector('button');
+  caixa.scrollTop = 0;
+  const b = caixa.querySelector('.gm-op, button');
   if (b) b.focus({ preventScroll: true });
+}
+export function fecharModal() {
+  if ($('gm').hidden) return;
+  $('gm').hidden = true;
+  const f = focoAnterior;
+  focoAnterior = null;
+  if (f && f.isConnected && f !== document.body && !$('gm').contains(f)) f.focus({ preventScroll: true });
+  else $('play').focus({ preventScroll: true });
+}
+
+function teclaNoModal(e) {
+  const caixa = $('gmc');
+  const focaveis = [...caixa.querySelectorAll('button, summary, a[href], input, select, textarea')].filter(b => !b.disabled && b.offsetParent);
+  if (!focaveis.length) return;
+  if (e.key === 'Tab') {
+    // foco preso na janela
+    e.preventDefault();
+    const n = focaveis.length,
+      i = focaveis.indexOf(document.activeElement);
+    focaveis[(i + (e.shiftKey ? -1 : 1) + n) % n].focus();
+    return;
+  }
+  const ops = [...caixa.querySelectorAll('.gm-op')];
+  if (ops.length && ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(e.key)) {
+    e.preventDefault();
+    const n = ops.length,
+      j = ops.indexOf(document.activeElement);
+    let k;
+    if (e.key === 'Home') k = 0;
+    else if (e.key === 'End') k = n - 1;
+    else if (j < 0) k = 0;
+    else k = (j + (e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : -1) + n) % n;
+    ops[k].focus();
+    return;
+  }
+  if (ops.length && e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
+    const k = 'abcd'.indexOf(e.key.toLowerCase());
+    if (k >= 0 && ops[k]) {
+      e.preventDefault();
+      ops[k].click();
+      return;
+    }
+  }
+  if (e.key === 'Escape') {
+    const b = caixa.querySelector('[data-esc]');
+    if (b) {
+      e.preventDefault();
+      b.click();
+    }
+  }
+}
+/** Liga o teclado da janela da missão (chamado uma vez pela interface). */
+export function iniciarTecladoDaMissao() {
+  $('gm').addEventListener('keydown', e => {
+    // as teclas da linha do tempo (espaço, setas) não valem com a janela aberta
+    e.stopPropagation();
+    teclaNoModal(e);
+  });
 }
 
 function showStop(stop) {
   acoes.tocar(false);
   ST.day = stop.d;
   acoes.atualizar(true);
+  salvarPartida();
   if (stop.k === 'ev') {
     const ev = stop.ev;
     gm(
-      `<p class="gm-eye bad">Consequência · ${fmtDate(ev.day)} · ${fmtHour(ev.day)}</p><h3>${esc(ev.titulo)}</h3><p>${esc(ev.txt)}</p><p class="gm-orig">Origem: ${esc(ev.from)}</p><div class="gm-fx">${fxAll(ev)}</div><div class="gm-act"><button class="btn" id="gmOk">Continuar a obra</button></div>`
+      `<p class="gm-eye bad">Consequência · ${fmtDate(ev.day)} · ${fmtHour(ev.day)}</p><h3 id="gmTit">${esc(ev.titulo)}</h3><p>${esc(ev.txt)}</p><p class="gm-orig">Origem: ${esc(ev.from)}</p><div class="gm-fx">${fxAll(ev)}</div><div class="gm-act"><button class="btn" id="gmOk">Continuar a obra</button></div>`
     );
     $('gmOk').onclick = () => {
       ev.seen = true;
-      $('gm').hidden = true;
+      salvarPartida();
+      fecharModal();
       updateHud();
       acoes.tocar(true);
       if (ST.tab === 'missao') renderTab();
@@ -157,9 +309,11 @@ function showStop(stop) {
   const dc = stop.dc,
     n = DECISOES.indexOf(dc) + 1,
     sv = svcById(dc.svc);
-  gm(`<p class="gm-eye">Decisão ${n} de ${DECISOES.length} · ${fmtDate(stop.d)} · ${fmtHour(stop.d)} · ${esc(sv ? curto(sv.id) : '')}</p><h3>${esc(dc.titulo)}</h3><p>${esc(dc.ctx)}</p>
+  const letras = 'ABCD'.slice(0, dc.ops.length).split('');
+  gm(`<p class="gm-eye">Decisão ${n} de ${DECISOES.length} · ${fmtDate(stop.d)} · ${fmtHour(stop.d)}${sv ? ' · ' + esc(curto(sv.id)) : ''}</p><h3 id="gmTit">${esc(dc.titulo)}</h3><p>${esc(dc.ctx)}</p>
   <dl class="gm-dados">${dc.dados.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
-  <div class="gm-ops">${dc.ops.map((o, i) => `<button class="gm-op" data-op="${i}"><b>${'ABCD'[i]}</b><span>${esc(o.t)}</span></button>`).join('')}</div>`);
+  <div class="gm-ops" role="group" aria-label="Alternativas">${dc.ops.map((o, i) => `<button class="gm-op" data-op="${i}" aria-keyshortcuts="${letras[i]}"><b aria-hidden="true">${letras[i]}</b><span><span class="sr">Alternativa ${letras[i]}: </span>${esc(o.t)}</span></button>`).join('')}</div>
+  <p class="gm-tecla">Teclado: setas para percorrer as alternativas e Enter para escolher, ou as teclas ${letras.slice(0, -1).join(', ')} e ${letras[letras.length - 1]}.</p>`);
   $('gmc')
     .querySelectorAll('[data-op]')
     .forEach(b => (b.onclick = () => choose(dc, +b.dataset.op, stop.d)));
@@ -168,22 +322,20 @@ function showStop(stop) {
 function choose(dc, i, day) {
   const op = dc.ops[i];
   GAME.done[dc.id] = { i, op, day };
-  if (op.later) {
-    const ev = Object.assign({ from: dc.titulo + ' (decisão ' + (DECISOES.indexOf(dc) + 1) + ')' }, op.later);
-    Object.defineProperty(ev, 'day', { get: () => diaDoEvento(ev), enumerable: true });
-    GAME.events.push(ev);
-  }
+  GAME.ordem.push(dc.id);
+  if (op.later) agendarConsequencia(dc, op);
   if (op.opt) {
     acoes.reconstruir();
     ST.day = day;
   }
+  salvarPartida();
   updateHud();
   acoes.atualizar(true);
   gm(
-    `<p class="gm-eye ${op.best === 2 ? 'ok' : op.best ? '' : 'bad'}">${BEST()[op.best]}</p><h3>${esc(dc.titulo)}</h3><p class="gm-you">Você decidiu: ${esc(op.t)}</p><p>${esc(op.fb)}</p><div class="gm-fx">${fxAll(op)}</div><div class="gm-act"><button class="btn" id="gmOk">Continuar a obra</button></div>`
+    `<p class="gm-eye ${op.best === 2 ? 'ok' : op.best ? '' : 'bad'}">${BEST()[op.best]}</p><h3 id="gmTit">${esc(dc.titulo)}</h3><p class="gm-you">Você decidiu: ${esc(op.t)}</p><p>${esc(op.fb)}</p><div class="gm-fx">${fxAll(op)}</div><div class="gm-act"><button class="btn" id="gmOk">Continuar a obra</button></div>`
   );
   $('gmOk').onclick = () => {
-    $('gm').hidden = true;
+    fecharModal();
     acoes.tocar(true);
   };
   if (ST.tab === 'missao') renderTab();
@@ -196,18 +348,34 @@ export function finishGame() {
   const prev = parseFloat((lsGet('vm4d.best') || '0').replace(',', '.'));
   if (m.nota > prev) lsSet('vm4d.best', nf(m.nota, 1));
   const nb = Object.values(GAME.done).filter(x => x.op.best === 2).length;
+  // nota no histórico (por data) e fim da partida salva
+  const r1 = v => Math.round(v * 10) / 10;
+  const entrada = {
+    data: new Date().toISOString(),
+    nota: r1(m.nota),
+    conceito: m.conceito,
+    melhores: nb,
+    total: DECISOES.length,
+    atraso: r1(m.d),
+    custo: r1(m.c),
+    qualidade: Math.round(m.q),
+    conformidade: Math.round(m.n)
+  };
+  lsSet(CHAVE_HISTORICO, JSON.stringify(registrarNota(historicoDeNotas(), entrada)));
+  apagarPartida();
   const comRetrabalho = D.decisoes.pontuacao.retrabalhosSemPenalidade.some(k => M.opt[k]);
-  gm(`<p class="gm-eye">Missão concluída · ${fmtDate(M.fim)}</p><h3>Nota ${nf(m.nota, 1)} · ${m.conceito}</h3>
+  gm(`<p class="gm-eye">Missão concluída · ${fmtDate(M.fim)}</p><h3 id="gmTit">Nota ${nf(m.nota, 1)} · ${m.conceito}</h3>
   <div class="hud-grid">${hudItems(m)}</div>
-  <p>${nb} de ${DECISOES.length} decisões foram as melhores possíveis. ${m.d > 0.01 ? `A obra terminou com ${nf(m.d, 1)} dia(s) útil(eis) de atraso${comRetrabalho ? ', incluindo o retrabalho que você mandou fazer; esse atraso não reduz a nota' : ''}.` : 'A obra terminou no prazo.'}</p>
-  <div class="gm-act"><button class="btn" id="gmRe">Jogar de novo</button><button class="btn ghost" id="gmRev">Ver o relatório das decisões</button><button class="btn ghost" id="gmEx">Voltar a explorar</button></div>`);
+  <p>${nb} de ${DECISOES.length} decisões foram as melhores possíveis. ${m.d > 0.01 ? `A obra terminou com ${nf(m.d, 1)} ${plural(m.d, 'dia útil', 'dias úteis')} de atraso${comRetrabalho ? ', incluindo o retrabalho que você mandou fazer; esse atraso não reduz a nota' : ''}.` : 'A obra terminou no prazo.'}</p>
+  <p class="csub">A nota ficou registrada no histórico deste navegador, na aba Missão.</p>
+  <div class="gm-act"><button class="btn" id="gmRe">Jogar de novo</button><button class="btn ghost" id="gmRev">Ver o relatório das decisões</button><button class="btn ghost" id="gmEx" data-esc>Voltar a explorar</button></div>`);
   $('gmRe').onclick = () => {
     resetGame();
     GAME.finished = false;
     briefing();
   };
   $('gmRev').onclick = () => {
-    $('gm').hidden = true;
+    fecharModal();
     openTab('missao');
     document.querySelector('.sheet').scrollIntoView({ behavior: 'smooth' });
   };

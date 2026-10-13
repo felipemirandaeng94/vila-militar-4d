@@ -3,12 +3,13 @@ import { M, ST, D, acoes, on } from '../estado.js';
 import { nf } from '../dominio/util.js';
 import { fmtDate } from '../dominio/calendario.js';
 import { P } from '../dominio/geometria.js';
-import { $, lsGet } from './dom.js';
+import { $, esc, lsGet } from './dom.js';
 import { hideInfo, showInfo, selectTest } from './paineis.js';
-import { openTab } from './abas.js';
+import { openTab, marcarAba } from './abas.js';
 import { cena, setView, trocarExagero, mostrarRotulos, camAt } from '../motor/index.js';
 import { initVisualizacao } from './visualizacao.js';
-import { GAME, briefing, finishGame, missaoAtiva, setMode } from '../jogo/missao.js';
+import { GAME, briefing, finishGame, missaoAtiva, setMode, iniciarTecladoDaMissao } from '../jogo/missao.js';
+import { initCreditos } from './creditos.js';
 
 export function syncSpeed() {
   $('optSpd')
@@ -26,10 +27,13 @@ export function initUI() {
   $('meta').textContent =
     `Reconstrução de ${nf(P.L, 0)} m em ${M.frentes.length} frentes · drenagem nova · pista de ${nf(P.W_RV, 1)} m · CBUQ 5 cm sobre base de 15 cm e sub-base de 20 cm · ${nf(M.fim, 0)} dias úteis a partir de ${fmtDate(0)}`;
   $('aviso').textContent = D.obra.obra.aviso;
-  // créditos das fontes do local real sobre o modelo 3D
-  $('creditos3d').textContent =
-    (D.local ? 'Entorno: ' + D.local.meta.creditos.map(c => c.texto).join(' · ') : 'Local real indisponível: eixo reto e terreno fictício.') +
-    ' · Céu, texturas e árvores: Poly Haven (CC0) · Texturas do subleito e do CBUQ: Felipe Miranda (ChatGPT) · Equipamentos 3D: Felipe Miranda (Tripo AI), uso autorizado pelo autor · Sons: Freesound (CC0)';
+  // créditos obrigatórios das fontes do local real sobre o modelo 3D; a lista completa fica na tela de créditos
+  $('creditos3d').innerHTML =
+    esc(D.local ? D.local.meta.creditos.map(c => c.texto).join(' · ') : 'Local real indisponível: eixo reto e terreno fictício.') +
+    ' · Poly Haven (CC0) · Freesound (CC0) · <button class="lnk" data-creditos aria-haspopup="dialog">Todos os créditos</button>';
+  // altura da barra 4D: os avisos de baixo (créditos, quadros por segundo, carga) ficam logo acima dela
+  const barra = document.querySelector('.bar4d');
+  new ResizeObserver(() => document.querySelector('.stage').style.setProperty('--barra', barra.offsetHeight + 22 + 'px')).observe(barra);
   // vistas
   document.querySelectorAll('[data-view]').forEach(
     b =>
@@ -119,8 +123,13 @@ export function initUI() {
   $('prev').onclick = () => acoes.saltarServico(-1);
   $('next').onclick = () => acoes.saltarServico(1);
   $('infox').onclick = hideInfo;
+  // atalhos da linha do tempo: só quando o foco não está num controle (o espaço e as setas de um botão, campo, aba
+  // ou resumo continuam com a função normal) e sem janela aberta
   document.addEventListener('keydown', e => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+    const t = e.target;
+    if (e.ctrlKey || e.altKey || e.metaKey) return;
+    if (t.closest && t.closest('input, select, textarea, button, summary, a[href], [role="tab"], [contenteditable="true"], dialog')) return;
+    if (!$('gm').hidden) return;
     if (e.code === 'Space') {
       e.preventDefault();
       $('play').click();
@@ -128,15 +137,28 @@ export function initUI() {
     if (e.key === 'ArrowRight') acoes.saltarServico(1);
     if (e.key === 'ArrowLeft') acoes.saltarServico(-1);
   });
-  // abas
-  document.querySelectorAll('[data-tab]').forEach(b => (b.onclick = () => openTab(b.dataset.tab)));
+  iniciarTecladoDaMissao();
+  initCreditos();
+  // abas: clique, e setas, Home e End entre as abas (padrão de lista de abas)
+  const abas = [...document.querySelectorAll('[data-tab]')];
+  abas.forEach(b => (b.onclick = () => openTab(b.dataset.tab)));
+  $('tabs').addEventListener('keydown', e => {
+    const i = abas.indexOf(document.activeElement);
+    if (i < 0) return;
+    const n = abas.length;
+    const k = { ArrowRight: (i + 1) % n, ArrowLeft: (i - 1 + n) % n, Home: 0, End: n - 1 }[e.key];
+    if (k == null) return;
+    e.preventDefault();
+    abas[k].focus();
+    openTab(abas[k].dataset.tab);
+  });
   ST.tab = 'seq';
   ST.man = 'S24';
   const savedTab = lsGet('vm4d.tab');
   if (savedTab && document.querySelector(`[data-tab="${savedTab}"]`)) {
     ST.tab = savedTab;
-    document.querySelectorAll('[data-tab]').forEach(x => x.setAttribute('aria-selected', x.dataset.tab === savedTab));
   }
+  marcarAba(ST.tab);
   acoes.reconstruir(true);
   camAt(20, -30, -75, 60, 110);
 }

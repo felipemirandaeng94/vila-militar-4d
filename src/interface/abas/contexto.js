@@ -1,9 +1,8 @@
-// Aba "Contexto e normas": obra militar, cadeia de liberação e normas utilizadas.
+// Aba "Contexto e normas": obra militar, cadeia de liberação, normas utilizadas, local e resumo dos créditos.
 import { D } from '../../estado.js';
 import { esc } from '../dom.js';
 import { P } from '../../dominio/geometria.js';
 import { nf } from '../../dominio/util.js';
-import modelos3d from '../../../dados/modelos.json';
 
 // local real (Fase 3): via, extensão medida, canteiro e fontes dos dados abertos
 function local() {
@@ -36,91 +35,9 @@ function local() {
   <p class="note">${esc(m.aviso)} Área militar: o modelo usa apenas dados de fontes públicas e não identifica edificações internas.</p>`;
 }
 
-// recursos visuais externos (Fase 4); a lista completa está em assets/CREDITOS.md
-const RECURSOS = [
-  [
-    'Céu HDRI',
-    'Kloofendal 48d Partly Cloudy (Pure Sky), de Greg Zaal e Jarod Guest, Poly Haven (polyhaven.com)',
-    'CC0 1.0 (domínio público)',
-    'Fundo do céu, luz ambiente e direção do sol'
-  ],
-  // texturas geradas por IA e preparadas por scripts/assets/preparar-texturas.py
-  [
-    'Textura PBR',
-    'Subleito argiloso compactado, de Felipe Miranda (ChatGPT, OpenAI); emenda, cor e mapas tratados para o app',
-    'Geradas pelo autor com ChatGPT (OpenAI); pelos termos da OpenAI, o conteúdo gerado pertence ao usuário',
-    'Subleito exposto e vala'
-  ],
-  [
-    'Textura PBR',
-    'CBUQ compactado, de Felipe Miranda (ChatGPT, OpenAI); emenda e mapas tratados para o app',
-    'Geradas pelo autor com ChatGPT (OpenAI); pelos termos da OpenAI, o conteúdo gerado pertence ao usuário',
-    'CBUQ novo, superfície fresada, tinta de demarcação'
-  ],
-  [
-    'Textura PBR',
-    'CBUQ solto, de Felipe Miranda (ChatGPT, OpenAI); emenda e mapas tratados para o app',
-    'Geradas pelo autor com ChatGPT (OpenAI); pelos termos da OpenAI, o conteúdo gerado pertence ao usuário',
-    'CBUQ recém-espalhado, antes da rolagem'
-  ],
-  ['Textura PBR', 'Cracked Red Ground, de Amal Kumar, Poly Haven (polyhaven.com)', 'CC0 1.0 (domínio público)', 'Quadras de saibro do entorno'],
-  [
-    'Textura PBR',
-    'Farm Soil, de Amal Kumar, Poly Haven (polyhaven.com)',
-    'CC0 1.0 (domínio público)',
-    'Leiras de solo, monte da vala e solo espalhado antes da compactação'
-  ],
-  [
-    'Textura PBR',
-    'Gravel Floor 02, de Jenelle van Heerden e Dimitrios Savva, Poly Haven (polyhaven.com)',
-    'CC0 1.0 (domínio público)',
-    'Leiras e camadas granulares espalhadas antes da compactação; monte de fresado (recolorida)'
-  ],
-  [
-    'Textura PBR',
-    'Dry Mud Field 001, de Rob Tuytel e Rico Cilliers, Poly Haven (polyhaven.com)',
-    'CC0 1.0 (domínio público)',
-    'Solo compactado: regularização, reaterro, substituição, sub-base existente, chão do entorno'
-  ],
-  [
-    'Textura PBR',
-    'Gravel Floor 04, de Charlotte Baglioni, Poly Haven (polyhaven.com)',
-    'CC0 1.0 (domínio público)',
-    'Brita graduada, solo-brita, imprimação e pintura de ligação (sobre a base), pátio do canteiro, faixa de desvio'
-  ],
-  ['Textura PBR', 'Asphalt 02, de Rob Tuytel, Poly Haven (polyhaven.com)', 'CC0 1.0 (domínio público)', 'Revestimento existente e vias do entorno'],
-  ['Textura PBR', 'Leafy Grass, de Charlotte Baglioni, Poly Haven (polyhaven.com)', 'CC0 1.0 (domínio público)', 'Gramados, campos e matas'],
-  [
-    'Textura PBR',
-    'Concrete Floor 03, de Rob Tuytel e Matterfield, Poly Haven (polyhaven.com)',
-    'CC0 1.0 (domínio público)',
-    'Passeios, sarjeta, meio-fio e vias de concreto'
-  ],
-  [
-    'Modelo 3D',
-    'Jacaranda Tree, de Rico Cilliers e Rob Tuytel, Poly Haven (polyhaven.com); malha reduzida para o app',
-    'CC0 1.0 (domínio público)',
-    'Árvores do entorno e folhas da palmeira-imperial'
-  ],
-  // som ambiente (Fase 8): áudios CC0 do Freesound
-  ...[
-    ['Truck Engine Idle Loops, de qubodup', 187564, 'qubodup', 'Motores a diesel das máquinas em serviço'],
-    ['Truck Reverse Beeper, de Disasteradio', 197166, 'Disasteradio', 'Bipe de ré'],
-    ['Soil compactor, de Jyri-channel', 857744, 'Jyri-channel', 'Rolos e placa vibratória'],
-    ['industrial hums factory water treatment plant drone highcut, de kyles', 453460, 'kyles', 'Usina de CBUQ (ruído industrial contínuo)']
-  ].map(([t, id, u, uso]) => ['Som', `${t}, Freesound (freesound.org/people/${u}/sounds/${id})`, 'CC0 1.0 (domínio público)', uso]),
-  // equipamentos, canteiro, usina, drenagem e sinalização (Fase 7): modelos do autor gerados no Tripo AI
-  ...modelos3d.modelos.map(m => [
-    'Modelo 3D',
-    m.equipamento + ' (' + m.arquivo + '), de Felipe Miranda: imagem no ChatGPT e modelo no Tripo AI (plano pago); reduzido para o app',
-    'Uso e distribuição autorizados pelo autor',
-    m.uso4D || 'Equipamento ou objeto do 4D (' + m.categoria + ')'
-  ])
-];
+// recursos externos: a lista completa (origem e licença de cada recurso) é a tela de créditos, gerada de assets/CREDITOS.md
 function recursos() {
-  return `<h3 class="h3">Recursos visuais e sonoros</h3><div class="tbl"><table><thead><tr><th>Recurso</th><th>Origem</th><th>Licença</th><th>Uso no modelo</th></tr></thead><tbody>${RECURSOS.map(
-    r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`
-  ).join('')}</tbody></table></div>`;
+  return `<h3 class="h3">Recursos visuais e sonoros</h3><p class="csub">Céu, texturas e árvore do Poly Haven (CC0), texturas do subleito e do CBUQ geradas pelo autor (ChatGPT), modelos 3D dos equipamentos gerados pelo autor (Tripo AI, uso autorizado), sons do Freesound (CC0), fontes tipográficas (SIL OFL 1.1) e Three.js (MIT). Origem, autor e licença de cada um: <button class="lnk" data-creditos aria-haspopup="dialog">Créditos e licenças</button>.</p>`;
 }
 
 export function tabCtx() {

@@ -1011,6 +1011,444 @@
           }
         }
       ]
+    },
+    {
+      "id": "D14",
+      "servico": "S20",
+      "dia": {
+        "servico": "S20",
+        "frente": 3,
+        "em": "inicio",
+        "mais": -0.3
+      },
+      "titulo": "ISC reprovado no material da jazida",
+      "contexto": "O material da sub-base da frente 3 passou a vir de uma bancada nova da jazida de empréstimo. A mistura de solo-brita com o solo dessa bancada deu ISC de 16 %, para o mínimo de 20 % da DNIT 139/2010-ES. A expansão e o índice de grupo continuam conformes. Já há cerca de 180 m³ desse solo estocados junto à frente, que está pronta para receber a sub-base amanhã.",
+      "dados": [
+        {
+          "rotulo": "Mistura com a bancada nova",
+          "valor": "ISC 16 % · exp. 0,4 % · IG 0"
+        },
+        {
+          "rotulo": "Exigência da sub-base",
+          "valor": "ISC ≥ 20 % · exp. ≤ 1 % · IG = 0"
+        },
+        {
+          "rotulo": "Solo já estocado na frente",
+          "valor": "≈ 180 m³"
+        },
+        {
+          "rotulo": "Outra jazida caracterizada",
+          "valor": "a 9 km, ISC da mistura 26 %"
+        }
+      ],
+      "opcoes": [
+        {
+          "texto": "Trazer solo da outra jazida já caracterizada, a 9 km, e recomeçar o controle com o material novo.",
+          "avaliacao": 1,
+          "efeitos": {
+            "atraso": 1,
+            "custo": 14,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Aceitável. Resolve o problema, mas o transporte mais longo encarece a sub-base e o material novo precisa de caracterização e ensaio de compactação antes de ir para a pista, o que custa um dia."
+        },
+        {
+          "texto": "Suspender o uso da bancada, refazer a dosagem do solo-brita no laboratório com mais brita e só executar a sub-base com o novo ISC conforme.",
+          "avaliacao": 2,
+          "efeitos": {
+            "atraso": 0.5,
+            "custo": 5,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Correto. Com mais brita na composição, o ISC da mistura tende a voltar acima de 20 %, desde que a granulometria continue na faixa de projeto e o novo ISC seja ensaiado antes da execução. O solo estocado fica para usos menos exigentes, como acertos de acostamento."
+        },
+        {
+          "texto": "Executar a sub-base com o solo estocado: a base de brita graduada por cima compensa.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": -15,
+            "conformidade": -20
+          },
+          "retorno": "Inadequado. Cada camada tem o seu critério de aceitação, e a base não corrige uma sub-base com suporte abaixo do projeto. O pavimento fica sujeito a deformação permanente e a trincas precoces.",
+          "consequencia": {
+            "dia": {
+              "servico": "S21",
+              "frente": 3,
+              "em": "fim",
+              "mais": -0.2
+            },
+            "titulo": "Deflexão alta sobre a sub-base fraca",
+            "texto": "O levantamento com a viga Benkelman na base da frente 3 achou deflexões acima do projeto justamente no trecho executado com o solo reprovado. A base e a sub-base desse trecho foram removidas e refeitas.",
+            "efeitos": {
+              "atraso": 2,
+              "custo": 38,
+              "qualidade": -5,
+              "conformidade": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "D15",
+      "servico": "S21",
+      "dia": {
+        "servico": "S21",
+        "frente": 4,
+        "em": "fim",
+        "mais": -0.3
+      },
+      "titulo": "Deflexão alta na base",
+      "contexto": "O levantamento com a viga Benkelman na base de brita graduada da frente 4 encontrou um segmento de 60 m, junto a uma boca de lobo, com deflexão característica acima do projeto. O grau de compactação desse segmento passou, mas a sondagem a trado mostrou o subleito com umidade bem acima da ótima logo abaixo da sub-base.",
+      "dados": [
+        {
+          "rotulo": "Deflexão característica (Dc = D̄ + k·S)",
+          "valor": "86 × 0,01 mm"
+        },
+        {
+          "rotulo": "Limite de projeto",
+          "valor": "Dc ≤ 70 × 0,01 mm"
+        },
+        {
+          "rotulo": "GC da base no segmento",
+          "valor": "100,6 %"
+        },
+        {
+          "rotulo": "Sondagem a trado",
+          "valor": "subleito úmido sob 60 m de base"
+        }
+      ],
+      "opcoes": [
+        {
+          "texto": "Liberar a imprimação: o GC passou e o revestimento vai reduzir a deflexão.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": -15,
+            "conformidade": -20
+          },
+          "retorno": "Inadequado. O GC conforme não basta: a deflexão mede a resposta da estrutura inteira, e o excesso vem do subleito úmido. O CBUQ sobre uma base que deflete demais trinca por fadiga em pouco tempo.",
+          "consequencia": {
+            "dia": {
+              "servico": "S25",
+              "frente": 4,
+              "em": "inicio",
+              "mais": 0.1
+            },
+            "titulo": "Deflexão alta no revestimento",
+            "texto": "O controle de aceitação da frente 4 mediu deflexões acima do limite no revestimento, no mesmo segmento. O CBUQ, a base e a sub-base foram removidos, a ligação da boca de lobo foi refeita e o subleito foi recompactado.",
+            "efeitos": {
+              "atraso": 2,
+              "custo": 52,
+              "qualidade": -5,
+              "conformidade": 0
+            }
+          }
+        },
+        {
+          "texto": "Recompactar a base no segmento e repetir a deflexão.",
+          "avaliacao": 1,
+          "efeitos": {
+            "atraso": 0.5,
+            "custo": 2,
+            "qualidade": -6,
+            "conformidade": 0
+          },
+          "retorno": "Aceitável só como primeira tentativa. A base já está compactada e o problema está abaixo dela. A deflexão melhora pouco e o segmento tende a ser reprovado de novo."
+        },
+        {
+          "texto": "Interditar o segmento, achar a origem da água, corrigir a ligação da boca de lobo, remover e recompactar as camadas úmidas e repetir a deflexão antes de imprimar.",
+          "avaliacao": 2,
+          "efeitos": {
+            "atraso": 1,
+            "custo": 9,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Correto. A causa é a água no subleito, que vem da ligação da boca de lobo. Sem corrigir a drenagem, qualquer recompactação volta a amolecer. Com as camadas refeitas e a deflexão conforme, o segmento recebe o BLC da base."
+        },
+        {
+          "texto": "Aumentar por conta própria a espessura do CBUQ no segmento, para compensar.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 8,
+            "qualidade": -5,
+            "conformidade": -15
+          },
+          "retorno": "Inadequado. Mudar a espessura do revestimento é alteração de projeto, que depende de cálculo e da aprovação do projetista e da fiscalização. Além disso, não trata a causa: o subleito continua úmido."
+        }
+      ]
+    },
+    {
+      "id": "D16",
+      "servico": "S24",
+      "dia": {
+        "servico": "S24",
+        "frente": 2,
+        "faixa": "BE",
+        "em": "inicio",
+        "mais": 0.25
+      },
+      "titulo": "Massa abaixo de 145 °C no espalhamento",
+      "contexto": "Na faixa esquerda da frente 2, o laboratorista mediu 138 °C na massa do caminhão que acabou de encostar na vibroacabadora. O caminhão ficou 40 minutos parado no desvio durante uma formatura, e a lona estava rasgada em um canto. A especificação pede no mínimo 145 °C no espalhamento.",
+      "dados": [
+        {
+          "rotulo": "Temperatura medida",
+          "valor": "138 °C (pirômetro, na caçamba)"
+        },
+        {
+          "rotulo": "Tíquete da usina",
+          "valor": "158 °C na saída"
+        },
+        {
+          "rotulo": "Carga",
+          "valor": "12 t (≈ 28 m de faixa)"
+        },
+        {
+          "rotulo": "Mínimo no espalhamento",
+          "valor": "145 °C"
+        }
+      ],
+      "opcoes": [
+        {
+          "texto": "Rejeitar a carga e seguir com a próxima.",
+          "avaliacao": 1,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 20,
+            "qualidade": -3,
+            "conformidade": 0
+          },
+          "retorno": "Aceitável. A carga foi rejeitada, como deveria, mas a causa continua: com a espera no desvio e a lona rasgada, mais dois caminhões chegaram frios no mesmo dia e também foram rejeitados."
+        },
+        {
+          "texto": "Espalhar e compactar logo, com mais passadas do rolo.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": -12,
+            "conformidade": -15
+          },
+          "retorno": "Inadequado. Abaixo da temperatura mínima, o ligante já está viscoso demais para a massa atingir a densidade, e as passadas a mais quebram agregado sem fechar os vazios. O trecho fica poroso e sujeito a desagregação.",
+          "consequencia": {
+            "dia": {
+              "servico": "S25",
+              "frente": 2,
+              "em": "inicio",
+              "mais": 0.15
+            },
+            "titulo": "GC baixo no corpo de prova extraído",
+            "texto": "Os corpos de prova extraídos no trecho da carga fria deram grau de compactação abaixo de 97 %. Os cerca de 28 m foram fresados e recompostos.",
+            "efeitos": {
+              "atraso": 0.5,
+              "custo": 14,
+              "qualidade": -3,
+              "conformidade": 0
+            }
+          }
+        },
+        {
+          "texto": "Rejeitar a carga, registrar no tíquete e no diário, trocar a lona e combinar com o comando a passagem dos caminhões de massa sem espera no desvio.",
+          "avaliacao": 2,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 8,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Correto. A carga fria não pode ser reaquecida e vai para o estoque de material a reciclar. A causa é a espera e a lona, e corrigir as duas evita novas rejeições no dia."
+        },
+        {
+          "texto": "Pedir à usina que aqueça a massa até 175 °C, para compensar o resfriamento no caminho.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": -10,
+            "conformidade": -10
+          },
+          "retorno": "Inadequado. Aquecer além do necessário oxida o CAP e endurece o ligante, o que encurta a vida do revestimento, e não resolve a espera no desvio. As temperaturas da usina seguem a curva de viscosidade do ligante, não o tempo de viagem."
+        }
+      ]
+    },
+    {
+      "id": "D17",
+      "servico": "S24",
+      "dia": {
+        "servico": "S24",
+        "frente": 3,
+        "faixa": "BD",
+        "em": "inicio",
+        "mais": 0.45
+      },
+      "titulo": "Chuva durante o lançamento do CBUQ",
+      "tempoNoDiario": "Manhã nublada; chuva fina a partir das 11 h 30, durante o lançamento do CBUQ na faixa direita da frente 3.",
+      "contexto": "Começou a chover fino às 11 h 30 na frente 3. A vibroacabadora está no meio da faixa direita, um caminhão descarrega e outros dois saíram da usina há 10 minutos. Há cerca de 15 m de massa espalhada ainda sem compactação e, à frente da acabadora, 40 m de pintura de ligação sem revestimento.",
+      "dados": [
+        {
+          "rotulo": "Chuva",
+          "valor": "fina, previsão de 2 h"
+        },
+        {
+          "rotulo": "Massa a caminho",
+          "valor": "2 caminhões, 24 t"
+        },
+        {
+          "rotulo": "Espalhado sem compactação",
+          "valor": "≈ 15 m"
+        },
+        {
+          "rotulo": "Pintura de ligação exposta",
+          "valor": "≈ 40 m da faixa direita"
+        }
+      ],
+      "opcoes": [
+        {
+          "texto": "Continuar o lançamento: a chuva é fina e a massa está quente.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": -15,
+            "conformidade": -20
+          },
+          "retorno": "Inadequado. A especificação não permite lançar CBUQ com chuva. A água sobre a pintura de ligação impede a aderência entre as camadas e esfria a massa por baixo, e o revestimento desagrega.",
+          "consequencia": {
+            "dia": {
+              "servico": "S25",
+              "frente": 3,
+              "em": "inicio",
+              "mais": 0.2
+            },
+            "titulo": "Desagregação no trecho lançado sob chuva",
+            "texto": "O controle de aceitação da frente 3 encontrou desagregação e falta de aderência no trecho lançado com chuva. O revestimento foi fresado e refeito, com nova pintura de ligação.",
+            "efeitos": {
+              "atraso": 1,
+              "custo": 26,
+              "qualidade": -5,
+              "conformidade": 0
+            }
+          }
+        },
+        {
+          "texto": "Suspender o lançamento, compactar logo a massa já espalhada, fazer a junta transversal, parar a usina, medir a temperatura das cargas a caminho antes de usá-las e refazer a pintura lavada.",
+          "avaliacao": 2,
+          "efeitos": {
+            "atraso": 0.5,
+            "custo": 9,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Correto. O que já está espalhado é compactado enquanto quente, a junta é feita no ponto de parada e nenhuma massa vai sobre superfície molhada. As cargas a caminho só são usadas se ainda estiverem acima de 145 °C quando a pista secar; senão, são rejeitadas. A pintura lavada é refeita antes de retomar."
+        },
+        {
+          "texto": "Parar o lançamento e esperar a chuva passar, com os caminhões aguardando na frente.",
+          "avaliacao": 1,
+          "efeitos": {
+            "atraso": 0.5,
+            "custo": 10,
+            "qualidade": -4,
+            "conformidade": 0
+          },
+          "retorno": "Aceitável, mas incompleto. Parar foi certo, mas a massa espalhada sem compactar esfria na chuva, a pintura molhada precisa ser conferida antes de retomar e as cargas em espera tendem a ficar abaixo de 145 °C."
+        }
+      ]
+    },
+    {
+      "id": "D18",
+      "servico": "S24",
+      "dia": {
+        "servico": "S24",
+        "frente": 4,
+        "faixa": "BD",
+        "em": "inicio",
+        "mais": 0.06
+      },
+      "titulo": "Falta de caminhões na usina",
+      "contexto": "No início do CBUQ da frente 4, a mais distante da usina, dois dos quatro caminhões basculantes foram requisitados pelo comando para uma missão de apoio, por dois dias. Com dois caminhões, a usina de 60 t/h produz mais do que a frota consegue levar, e a vibroacabadora vai parar entre uma carga e outra.",
+      "dados": [
+        {
+          "rotulo": "Frota disponível",
+          "valor": "2 de 4 caminhões de 12 t"
+        },
+        {
+          "rotulo": "Ciclo do caminhão",
+          "valor": "≈ 35 min (carga, 1,6 km de ida e volta, descarga)"
+        },
+        {
+          "rotulo": "Capacidade de transporte",
+          "valor": "≈ 41 t/h, para 60 t/h da usina"
+        }
+      ],
+      "opcoes": [
+        {
+          "texto": "Reduzir a produção da usina ao ritmo dos dois caminhões, ajustar a velocidade da vibroacabadora para lançar sem parar e pedir caminhões substitutos para o dia seguinte.",
+          "avaliacao": 2,
+          "efeitos": {
+            "atraso": 0.5,
+            "custo": 3,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Correto. A acabadora alimentada de forma contínua, ainda que mais devagar, não cria juntas frias nem degraus. A produção do dia cai, mas a qualidade se mantém, e a frota volta ao normal no dia seguinte."
+        },
+        {
+          "texto": "Manter a usina a 60 t/h e deixar a vibroacabadora esperar entre as cargas.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": -12,
+            "conformidade": -8
+          },
+          "retorno": "Inadequado. A massa produzida a mais fica no silo e esfria, e cada parada da acabadora deixa marca transversal e junta fria. O ganho de produção é ilusório.",
+          "consequencia": {
+            "dia": {
+              "servico": "S25",
+              "frente": 4,
+              "em": "inicio",
+              "mais": 0.2
+            },
+            "titulo": "Degraus nas paradas da acabadora",
+            "texto": "O controle de aceitação encontrou degraus e juntas frias nos pontos de parada da acabadora na faixa direita da frente 4. Os trechos foram fresados e recompostos.",
+            "efeitos": {
+              "atraso": 0.5,
+              "custo": 16,
+              "qualidade": -4,
+              "conformidade": 0
+            }
+          }
+        },
+        {
+          "texto": "Suspender o CBUQ da frente 4 até a frota voltar e adiantar a sinalização das frentes já liberadas.",
+          "avaliacao": 1,
+          "efeitos": {
+            "atraso": 2,
+            "custo": 6,
+            "qualidade": 0,
+            "conformidade": 0
+          },
+          "retorno": "Aceitável. A qualidade não é afetada, mas a usina e a equipe de pavimentação ficam paradas dois dias e o fim da obra atrasa."
+        },
+        {
+          "texto": "Completar a frota com as caçambas da terraplenagem, sem lona e com resto de solo.",
+          "avaliacao": 0,
+          "efeitos": {
+            "atraso": 0,
+            "custo": 0,
+            "qualidade": -10,
+            "conformidade": -15
+          },
+          "retorno": "Inadequado. Sem lona a massa esfria e recebe poeira, e o resto de solo contamina a mistura. O transporte de CBUQ exige caçamba limpa, tratada com antiaderente que não seja óleo diesel, e coberta com lona."
+        }
+      ]
     }
   ]
 }

@@ -391,15 +391,21 @@ describe('missão', () => {
       pontuacao: dados.decisoes.pontuacao
     });
   };
-  it('13 decisões carregam do JSON, incluindo as 4 novas, e aparecem em dias do cronograma da missão', () => {
+  it('18 decisões carregam do JSON e aparecem em dias do cronograma da missão', () => {
     const D = dados.decisoes.decisoes;
-    expect(D).toHaveLength(13);
+    expect(D).toHaveLength(18);
+    expect(new Set(D.map(d => d.id)).size).toBe(18);
     const titulos = D.map(d => d.titulo);
     for (const t of [
       'Rede não cadastrada na vala',
       'Chuva forte prevista com vala aberta',
       'Tubo de concreto trincado no recebimento',
-      'Percentual de fresado reaproveitado na usina'
+      'Percentual de fresado reaproveitado na usina',
+      'ISC reprovado no material da jazida',
+      'Deflexão alta na base',
+      'Massa abaixo de 145 °C no espalhamento',
+      'Chuva durante o lançamento do CBUQ',
+      'Falta de caminhões na usina'
     ])
       expect(titulos).toContain(t);
     const m = modelo(dados.decisoes.opcoesBase);
@@ -422,7 +428,7 @@ describe('missão', () => {
   it('as decisões novas mudam a nota conforme a consequência', () => {
     const melhor = dc => dc.opcoes.find(o => o.avaliacao === 2);
     const base = jogar(melhor);
-    for (const id of ['D4', 'D11', 'D12', 'D13']) {
+    for (const id of ['D4', 'D11', 'D12', 'D13', 'D14', 'D15', 'D16', 'D17', 'D18']) {
       const pior = jogar(dc => (dc.id === id ? dc.opcoes.find(o => o.avaliacao === 0) : melhor(dc)));
       expect(pior.nota, id).toBeLessThan(base.nota);
     }

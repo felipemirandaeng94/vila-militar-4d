@@ -2,6 +2,7 @@
 // com a cor do horizonte. Sem o HDRI (arquivo ausente), o renderizador mantém a luz hemisférica e o fundo do tema.
 import * as THREE from 'three';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+import { gerenciador } from '../carga.js';
 import { analisarCeu, limitarSol, preencherChao, azimuteNoMundo } from './ceuHdr.js';
 import { D } from '../estado.js';
 
@@ -25,7 +26,7 @@ const base = () => import.meta.env.BASE_URL + 'hdri/';
 const cache = {};
 function carregar(res) {
   if (!cache[res])
-    cache[res] = new HDRLoader().loadAsync(base() + `ceu_${res}.hdr`).then(t => {
+    cache[res] = new HDRLoader(gerenciador).loadAsync(base() + `ceu_${res}.hdr`).then(t => {
       t.mapping = THREE.EquirectangularReflectionMapping;
       return t;
     });

@@ -6,6 +6,7 @@
 // que a fração. O atributo aDias de cada instância remove as árvores da faixa de desvio na limpeza (S04).
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { gerenciador } from '../carga.js';
 import { comDias } from './dias.js';
 import { nivelDeDetalhe } from './entornoGeo.js';
 import { rng } from '../dominio/util.js';
@@ -61,7 +62,7 @@ function profundidade(map) {
 
 function textura(arquivo, renderer, srgb = true) {
   return new Promise((ok, falha) =>
-    new THREE.TextureLoader().load(
+    new THREE.TextureLoader(gerenciador).load(
       BASE + arquivo,
       t => {
         // coordenadas do glTF (origem no canto superior esquerdo)
@@ -295,7 +296,7 @@ function impostor(renderer, partes, caixa) {
 // ---------- espécies ----------
 async function carregarEspecies(renderer) {
   const [gltf, casca, galhos, folhas] = await Promise.all([
-    new GLTFLoader().loadAsync(BASE + 'jacaranda.glb'),
+    new GLTFLoader(gerenciador).loadAsync(BASE + 'jacaranda.glb'),
     textura('casca.webp', renderer),
     textura('galhos.webp', renderer),
     textura('folhas.webp', renderer)

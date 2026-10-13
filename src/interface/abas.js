@@ -10,15 +10,23 @@ import { tabQuant } from './abas/quantitativos.js';
 import { tabCtx } from './abas/contexto.js';
 import { tabMissao } from './abas/missao.js';
 import { tabDiario, diarioTexto } from './diario.js';
-import { iniciarMissao, recomecarMissao } from '../jogo/missao.js';
+import { iniciarMissao, recomecarMissao, continuarMissao, limparHistorico } from '../jogo/missao.js';
 
 const ABAS = { seq: tabSeq, ctrl: tabCtrl, lab: tabLab, usina: tabUsina, quant: tabQuant, ctx: tabCtx, missao: tabMissao, diario: tabDiario };
 
 export function openTab(t) {
   ST.tab = t;
   lsSet('vm4d.tab', t);
-  document.querySelectorAll('[data-tab]').forEach(x => x.setAttribute('aria-selected', x.dataset.tab === t));
+  marcarAba(t);
   renderTab();
+}
+
+// aba selecionada: aria-selected e foco itinerante (só a aba ativa entra na ordem do Tab)
+export function marcarAba(t) {
+  document.querySelectorAll('[data-tab]').forEach(x => {
+    x.setAttribute('aria-selected', x.dataset.tab === t);
+    x.tabIndex = x.dataset.tab === t ? 0 : -1;
+  });
 }
 
 // soft: atualização durante a reprodução (mantém rolagem e filtros)
@@ -46,6 +54,16 @@ export function renderTab(soft) {
 const irParaOModelo = () => document.querySelector('.stage').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
 function bindTab() {
+  // linhas e cartões clicáveis também pelo teclado (Tab até a linha, Enter ou espaço para abrir)
+  document.querySelectorAll('#pane tr[data-t], #pane tr[data-svc], #pane li[data-t]').forEach(r => {
+    r.tabIndex = 0;
+    r.onkeydown = e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        r.click();
+      }
+    };
+  });
   document.querySelectorAll('#pane [data-svc]').forEach(
     r =>
       (r.onclick = () => {
@@ -97,6 +115,21 @@ function bindTab() {
       (b.onclick = () => {
         iniciarMissao();
         irParaOModelo();
+      })
+  );
+  document.querySelectorAll('#pane [data-continuar]').forEach(
+    b =>
+      (b.onclick = () => {
+        continuarMissao();
+        irParaOModelo();
+      })
+  );
+  document.querySelectorAll('#pane [data-limparhist]').forEach(
+    b =>
+      (b.onclick = () => {
+        if (!confirm('Apagar o histórico de notas e a melhor nota deste navegador?')) return;
+        limparHistorico();
+        renderTab();
       })
   );
   document.querySelectorAll('#pane [data-restart]').forEach(

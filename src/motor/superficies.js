@@ -8,6 +8,7 @@
 // junto da frente de serviço, junta longitudinal do CBUQ e ranhuras da fresagem.
 import * as THREE from 'three';
 import { uDia } from './dias.js';
+import { buscar } from '../carga.js';
 
 // ordem das camadas nos arrays
 // o terreno mistura até 8 camadas por vértice (aPesoA e aPesoB): as que ele usa ficam nas 8 primeiras posições
@@ -78,9 +79,7 @@ const srgbParaLinear = c => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1
 
 // ---------- carga das fotos ----------
 async function bitmap(url, lado) {
-  const r = await fetch(url);
-  if (!r.ok) throw new Error(url + ': ' + r.status);
-  return createImageBitmap(await r.blob(), {
+  return createImageBitmap(await buscar(url, 'blob'), {
     colorSpaceConversion: 'none',
     premultiplyAlpha: 'none',
     resizeWidth: lado,

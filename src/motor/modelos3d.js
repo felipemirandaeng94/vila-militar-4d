@@ -9,6 +9,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { buscar, gerenciador } from '../carga.js';
 import catalogo from '../../dados/modelos.json';
 import { cena, registrarVegetacao } from './renderizador.js';
 
@@ -28,11 +29,9 @@ const SIMULTANEOS = 4;
 
 function iniciar() {
   if (carregador) return;
-  carregador = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
-  if (cena.renderer) carregador.setKTX2Loader(new KTX2Loader().setTranscoderPath(BASE + 'basis/').detectSupport(cena.renderer));
-  manifesto = fetch(BASE + 'manifesto.json')
-    .then(r => (r.ok ? r.json() : { modelos: {} }))
-    .catch(() => ({ modelos: {} }));
+  carregador = new GLTFLoader(gerenciador).setMeshoptDecoder(MeshoptDecoder);
+  if (cena.renderer) carregador.setKTX2Loader(new KTX2Loader(gerenciador).setTranscoderPath(BASE + 'basis/').detectSupport(cena.renderer));
+  manifesto = buscar(BASE + 'manifesto.json').catch(() => ({ modelos: {} }));
   registrarVegetacao(p => {
     distanciaLod = (p.modelos && p.modelos.lod1) || 70;
     for (const l of LODS) if (l.levels.length > 1) l.levels[1].distance = distanciaLod;

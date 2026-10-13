@@ -84,7 +84,6 @@ export function iniciar(dados) {
   rebuild();
   montarMotor($('viewport'));
   initUI();
-  $('loading').hidden = true;
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     applyTheme();
     renderTab();

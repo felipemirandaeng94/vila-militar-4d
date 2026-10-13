@@ -1,6 +1,6 @@
 # Créditos e licenças dos recursos externos
 
-Todo recurso externo usado no app deve constar aqui e na tela de créditos (aba "Contexto e normas" e linha de créditos sobre o modelo 3D).
+Todo recurso externo usado no app consta aqui. A tela "Créditos e licenças" do app (botão no cabeçalho e no rodapé, ou o endereço #creditos) mostra este arquivo inteiro; a linha de créditos sobre o modelo 3D e a aba "Contexto e normas" trazem um resumo.
 
 ## Dados do local (Fase 3)
 
@@ -138,3 +138,5 @@ Os efeitos de partículas (poeira, fumaça, vapor, jatos do pipa e do espargidor
 | Recurso | Licença |
 |---|---|
 | Three.js | MIT |
+| Decodificador meshoptimizer (incluído nos exemplos do Three.js, para os modelos GLB comprimidos) | MIT |
+| Transcodificador Basis Universal, de Binomial (incluído nos exemplos do Three.js, para texturas KTX2) | Apache 2.0 |

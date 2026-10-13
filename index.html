@@ -16,6 +16,7 @@
       <span class="meta" id="meta">—</span>
     </div>
     <div class="controls">
+      <button class="btn ghost creditos-btn" data-creditos aria-haspopup="dialog">Créditos e licenças</button>
       <div class="seg mode" role="group" aria-label="Modo">
         <button data-mode="explorar" aria-pressed="true">Explorar</button>
         <button data-mode="missao" aria-pressed="false">Missão do engenheiro</button>
@@ -67,15 +68,26 @@
           <label class="ck"><input type="checkbox" id="optFps"> Quadros por segundo (tecla F)</label>
         </div>
       </details>
-      <p class="help">Arraste para girar, use a roda ou a pinça para aproximar e o botão direito (ou dois dedos) para mover. Clique em um equipamento, em uma camada, no terreno ou em um ponto de ensaio para ver os detalhes. <b>Executar a obra</b> reproduz a sequência dia a dia; ◀ e ▶ saltam entre os inícios de serviço (setas do teclado e barra de espaço também funcionam). A tecla F mostra os quadros por segundo.</p>
+      <p class="help">Arraste para girar, use a roda ou a pinça para aproximar e o botão direito (ou dois dedos) para mover. Clique em um equipamento, em uma camada, no terreno ou em um ponto de ensaio para ver os detalhes. <b>Executar a obra</b> reproduz a sequência dia a dia; ◀ e ▶ saltam entre os inícios de serviço (setas do teclado e barra de espaço também funcionam). A tecla F mostra os quadros por segundo e a tecla M liga o som. Pelo teclado, Tab percorre os controles e as abas; com o foco fora dos botões, a barra de espaço inicia ou pausa a obra e as setas saltam entre serviços.</p>
     </aside>
 
     <section class="stage" aria-label="Modelo 3D da obra">
       <div id="viewport"></div>
-      <div class="loading" id="loading">Montando o canteiro<small>terreno, usina, equipamentos e ensaios</small></div>
+      <div class="loading" id="loading" role="status" aria-live="polite" aria-busy="true">
+        <div class="ld-box">
+          <p class="ld-tit" id="ldTit">Preparando a obra</p>
+          <p class="ld-det" id="ldDet"></p>
+          <div class="ld-bar" id="ldBar" role="progressbar" aria-label="Arquivos carregados" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="ldFill"></i></div>
+          <p class="ld-num" id="ldNum"></p>
+          <ul class="ld-grupos" id="ldGrupos"></ul>
+          <p class="ld-arq" id="ldArq"></p>
+          <button class="btn ghost" id="ldPular" hidden>Entrar sem esperar</button>
+        </div>
+      </div>
+      <p class="ld-mini" id="ldMini" hidden aria-live="off"></p>
       <div class="overlay-tl" id="badges"></div>
       <div class="hud" id="hud" hidden aria-live="polite"></div>
-      <div class="gm" id="gm" hidden><div class="gmc" id="gmc" role="dialog" aria-modal="false" aria-label="Decisão da missão"></div></div>
+      <div class="gm" id="gm" hidden><div class="gmc" id="gmc" role="dialog" aria-modal="true" aria-labelledby="gmTit" tabindex="-1"></div></div>
       <p class="creditos3d" id="creditos3d"></p>
       <p class="fps" id="fps" hidden></p>
       <div class="legend3d" aria-hidden="true"><span><i class="dot" style="--c:var(--ok)"></i>Ensaio conforme</span><span><i class="dot" style="--c:var(--bad)"></i>Não conforme</span></div>
@@ -88,7 +100,7 @@
         <button id="som" class="btn ghost" aria-pressed="false" title="Som ambiente da obra (tecla M)">Som desligado</button>
       </div>
       <div class="info" id="info" hidden>
-        <button class="x" id="infox" aria-label="Fechar">×</button>
+        <button class="x" id="infox" aria-label="Fechar detalhes">×</button>
         <h3 id="infot"></h3>
         <dl id="infod"></dl>
       </div>
@@ -106,9 +118,15 @@
       <button role="tab" data-tab="quant" aria-selected="false">Quantitativos</button>
       <button role="tab" data-tab="ctx" aria-selected="false">Contexto e normas</button>
     </div>
-    <div id="pane" class="pane" role="tabpanel"></div>
+    <div id="pane" class="pane" role="tabpanel" tabindex="0" aria-label="Conteúdo da aba"></div>
   </section>
+  <footer class="rodape"><span>Resultados de ensaio, terreno e quantidades são ilustrativos.</span><button class="lnk" data-creditos aria-haspopup="dialog">Créditos e licenças</button></footer>
 </div>
+
+<dialog class="dlg" id="creditos" aria-labelledby="creditosTit">
+  <div class="dlg-head"><h2 id="creditosTit">Créditos e licenças</h2><button class="x" id="creditosX" aria-label="Fechar os créditos">×</button></div>
+  <div class="dlg-body" id="creditosCorpo"></div>
+</dialog>
 
 <script type="module" src="/src/main.js"></script>
 </body>

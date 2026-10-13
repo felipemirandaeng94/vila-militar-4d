@@ -3,7 +3,7 @@ import globals from 'globals';
 import prettier from 'eslint-config-prettier';
 
 export default [
-  { ignores: ['dist/', 'node_modules/', 'src-legado/', '*.html', 'scripts/geo/.venv/', 'geo/'] },
+  { ignores: ['dist/', 'node_modules/', 'src-legado/', '*.html', 'scripts/geo/.venv/', 'geo/', 'ferramentas/', 'public/modelos/basis/'] },
   js.configs.recommended,
   prettier,
   {
