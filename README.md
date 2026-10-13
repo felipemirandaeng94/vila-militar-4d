@@ -4,6 +4,8 @@ Modelo 4D interativo da reconstrução de cerca de 1,6 km de uma via da Vila Mil
 
 O trecho segue a Av. Duque de Caxias (1.582,8 m medidos no OpenStreetMap), com o entorno real a partir de dados abertos (OpenStreetMap e IPP). Quantidades, produtividades (teóricas de referência), cotas do terreno e resultados de ensaio são ilustrativos. O escopo está em `docs/ESCOPO.md` e os créditos em `assets/CREDITOS.md`.
 
+Versão publicada: https://felipemirandaeng94.github.io/vila-militar-4d/ (atualizada a cada push na `main` pelo workflow `.github/workflows/deploy.yml`, que roda os testes das regras e o build; requer Settings → Pages → Source: GitHub Actions).
+
 ## Requisitos
 
 - Node.js LTS (20 ou superior) e npm.
