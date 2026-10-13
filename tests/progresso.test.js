@@ -107,7 +107,7 @@ describe('progresso da carga', () => {
   it('agrupa os arquivos pela pasta e mede a fração de arquivos', () => {
     expect(grupoDoArquivo('./modelos/usina-cbuq_lod0.glb')).toBe('Modelos 3D dos equipamentos');
     expect(grupoDoArquivo('./modelos/arvores/jacaranda.glb')).toBe('Árvores');
-    expect(grupoDoArquivo('./texturas/brita/1k/cor.webp')).toBe('Texturas do terreno e do pavimento');
+    expect(grupoDoArquivo('./texturas/1k/cor.ktx2')).toBe('Texturas do terreno e do pavimento');
     expect(grupoDoArquivo('./local/eixo.json')).toBe('Dados do local (OpenStreetMap e IPP)');
     expect(grupoDoArquivo('./hdri/ceu_2k.hdr')).toBe('Céu HDRI');
     expect(grupoDoArquivo('blob:http://localhost/1b2c')).toBe('Texturas dos modelos 3D');

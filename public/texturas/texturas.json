@@ -12,7 +12,7 @@
       "origem": "Gerada por IA (ChatGPT, OpenAI); preparada por scripts/assets/preparar-texturas.py",
       "licenca": "Geradas pelo autor com ChatGPT (OpenAI); pelos termos da OpenAI, o conteúdo gerado pertence ao usuário.",
       "ia": true,
-      "preparo": "2026-10-11",
+      "preparo": "2026-10-12",
       "emenda": {
         "antes": [
           1.46,
@@ -22,6 +22,17 @@
           1.02,
           1.02
         ]
+      },
+      "media": [
+        0.24073,
+        0.06895,
+        0.03837
+      ],
+      "emenda_ktx2": {
+        "1k/cor": 0.94,
+        "1k/normal": 1.0,
+        "1k/arm": 0.96,
+        "2k/cor": 0.96
       }
     },
     "solo": {
@@ -32,7 +43,18 @@
         "Rico Cilliers"
       ],
       "tamanho_m": 3.0,
-      "origem": "https://polyhaven.com/a/dry_mud_field_001"
+      "origem": "https://polyhaven.com/a/dry_mud_field_001",
+      "media": [
+        0.1355,
+        0.1013,
+        0.06299
+      ],
+      "emenda_ktx2": {
+        "1k/cor": 0.89,
+        "1k/normal": 0.87,
+        "1k/arm": 1.01,
+        "2k/cor": 0.89
+      }
     },
     "brita": {
       "id": "gravel_floor_04",
@@ -41,7 +63,18 @@
         "Charlotte Baglioni"
       ],
       "tamanho_m": 2.46,
-      "origem": "https://polyhaven.com/a/gravel_floor_04"
+      "origem": "https://polyhaven.com/a/gravel_floor_04",
+      "media": [
+        0.27472,
+        0.1836,
+        0.11793
+      ],
+      "emenda_ktx2": {
+        "1k/cor": 0.97,
+        "1k/normal": 0.95,
+        "1k/arm": 0.94,
+        "2k/cor": 0.94
+      }
     },
     "asfalto_novo": {
       "id": "Textura Asfáltica Escura e Granular",
@@ -53,7 +86,7 @@
       "origem": "Gerada por IA (ChatGPT, OpenAI); preparada por scripts/assets/preparar-texturas.py",
       "licenca": "Geradas pelo autor com ChatGPT (OpenAI); pelos termos da OpenAI, o conteúdo gerado pertence ao usuário.",
       "ia": true,
-      "preparo": "2026-10-11",
+      "preparo": "2026-10-12",
       "emenda": {
         "antes": [
           1.94,
@@ -63,6 +96,17 @@
           0.91,
           1.04
         ]
+      },
+      "media": [
+        0.07344,
+        0.07254,
+        0.07111
+      ],
+      "emenda_ktx2": {
+        "1k/cor": 0.96,
+        "1k/normal": 0.97,
+        "1k/arm": 0.94,
+        "2k/cor": 0.95
       }
     },
     "asfalto_usado": {
@@ -72,7 +116,18 @@
         "Rob Tuytel"
       ],
       "tamanho_m": 3.0,
-      "origem": "https://polyhaven.com/a/asphalt_02"
+      "origem": "https://polyhaven.com/a/asphalt_02",
+      "media": [
+        0.10957,
+        0.10872,
+        0.0966
+      ],
+      "emenda_ktx2": {
+        "1k/cor": 0.96,
+        "1k/normal": 0.95,
+        "1k/arm": 0.97,
+        "2k/cor": 0.93
+      }
     },
     "grama": {
       "id": "leafy_grass",
@@ -81,7 +136,18 @@
         "Charlotte Baglioni"
       ],
       "tamanho_m": 2.0,
-      "origem": "https://polyhaven.com/a/leafy_grass"
+      "origem": "https://polyhaven.com/a/leafy_grass",
+      "media": [
+        0.318,
+        0.23468,
+        0.10544
+      ],
+      "emenda_ktx2": {
+        "1k/cor": 0.91,
+        "1k/normal": 0.98,
+        "1k/arm": 0.97,
+        "2k/cor": 0.92
+      }
     },
     "concreto": {
       "id": "concrete_floor_03",
@@ -91,7 +157,18 @@
         "Matterfield"
       ],
       "tamanho_m": 2.5,
-      "origem": "https://polyhaven.com/a/concrete_floor_03"
+      "origem": "https://polyhaven.com/a/concrete_floor_03",
+      "media": [
+        0.27246,
+        0.20005,
+        0.14389
+      ],
+      "emenda_ktx2": {
+        "1k/cor": 0.95,
+        "1k/normal": 0.94,
+        "1k/arm": 0.98,
+        "2k/cor": 0.96
+      }
     },
     "saibro": {
       "id": "cracked_red_ground",
@@ -100,7 +177,18 @@
         "Amal Kumar"
       ],
       "tamanho_m": 2.0,
-      "origem": "https://polyhaven.com/a/cracked_red_ground"
+      "origem": "https://polyhaven.com/a/cracked_red_ground",
+      "media": [
+        0.13049,
+        0.0692,
+        0.03429
+      ],
+      "emenda_ktx2": {
+        "1k/cor": 0.98,
+        "1k/normal": 0.99,
+        "1k/arm": 1.02,
+        "2k/cor": 0.99
+      }
     },
     "solo_solto": {
       "id": "farm_soil",
@@ -109,7 +197,18 @@
         "Amal Kumar"
       ],
       "tamanho_m": 2.0,
-      "origem": "https://polyhaven.com/a/farm_soil"
+      "origem": "https://polyhaven.com/a/farm_soil",
+      "media": [
+        0.09819,
+        0.05143,
+        0.02173
+      ],
+      "emenda_ktx2": {
+        "1k/cor": 1.0,
+        "1k/normal": 0.98,
+        "1k/arm": 0.95,
+        "2k/cor": 0.98
+      }
     },
     "cascalho_solto": {
       "id": "gravel_floor_02",
@@ -119,7 +218,18 @@
         "Dimitrios Savva"
       ],
       "tamanho_m": 2.0,
-      "origem": "https://polyhaven.com/a/gravel_floor_02"
+      "origem": "https://polyhaven.com/a/gravel_floor_02",
+      "media": [
+        0.42024,
+        0.39918,
+        0.3444
+      ],
+      "emenda_ktx2": {
+        "1k/cor": 0.97,
+        "1k/normal": 0.94,
+        "1k/arm": 0.97,
+        "2k/cor": 0.96
+      }
     },
     "asfalto_solto": {
       "id": "Textura de Asfalto Fresco e Brilhante",
@@ -131,7 +241,7 @@
       "origem": "Gerada por IA (ChatGPT, OpenAI); preparada por scripts/assets/preparar-texturas.py",
       "licenca": "Geradas pelo autor com ChatGPT (OpenAI); pelos termos da OpenAI, o conteúdo gerado pertence ao usuário.",
       "ia": true,
-      "preparo": "2026-10-11",
+      "preparo": "2026-10-12",
       "emenda": {
         "antes": [
           2.43,
@@ -141,7 +251,52 @@
           0.87,
           1.02
         ]
+      },
+      "media": [
+        0.07586,
+        0.07214,
+        0.06789
+      ],
+      "emenda_ktx2": {
+        "1k/cor": 0.92,
+        "1k/normal": 1.04,
+        "1k/arm": 0.93,
+        "2k/cor": 0.89
       }
     }
+  },
+  "ktx2": {
+    "camadas": [
+      "argila",
+      "solo",
+      "brita",
+      "asfalto_novo",
+      "asfalto_usado",
+      "grama",
+      "concreto",
+      "saibro",
+      "asfalto_solto",
+      "solo_solto",
+      "cascalho_solto"
+    ],
+    "arquivos": {
+      "1k/cor.ktx2": {
+        "lado": 1024,
+        "codificacao": "ETC1S"
+      },
+      "1k/normal.ktx2": {
+        "lado": 1024,
+        "codificacao": "UASTC + Zstandard"
+      },
+      "1k/arm.ktx2": {
+        "lado": 512,
+        "codificacao": "UASTC + Zstandard"
+      },
+      "2k/cor.ktx2": {
+        "lado": 2048,
+        "codificacao": "ETC1S"
+      }
+    },
+    "limite_emenda": 1.1
   }
 }

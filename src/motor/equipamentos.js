@@ -98,18 +98,24 @@ export function comprimento(tipo) {
   if (id && CATALOGO[id]) return CATALOGO[id].comprimento_m + (tipo === 'vassoura' ? 3.5 : 0);
   return { tripod: 1, prisma: 1, tripeRe: 1, placa: 2, extrusora: 3, betoneira: 8, pipa: 8, faixas: 8 }[tipo] || 7.5;
 }
+// carga sob demanda (Fase 10): o nível 0 do GLB de uma máquina só é baixado quando ela entra em serviço ou quando a
+// câmera chega a menos de PERTO m dela; até lá fica o nível 1 (no pátio, visto de longe, a diferença é pequena)
+const PERTO = 160;
+const _p = new THREE.Vector3();
+const precisa = e => () => e.o.userData.ativo || (e.o.visible && e.o.getWorldPosition(_p).distanceTo(cena.camera.position) < PERTO);
 function vestirEquipamento(e) {
   const g = GLB[e.tipo];
   if (!g) return;
   const variantes = typeof g.variantes === 'string' ? { base: g.variantes } : g.variantes;
   if (!Object.values(variantes).every(id => CATALOGO[id])) return;
-  e.sup = vestir(e.o, variantes, { pos: g.pos, manter: g.manter ? g.manter(e.o) : [] });
+  const quando = precisa(e);
+  e.sup = vestir(e.o, variantes, { pos: g.pos, manter: g.manter ? g.manter(e.o) : [], quando });
   e.vibra = !!g.vibra;
   e.luzes = [];
   for (const [estado, id] of Object.entries(variantes)) giroflex(e.sup.userData.lods[estado], id, LUZ.apagada, e.luzes);
   // placa vibratória: o executor atrás do guidão (a placa tem 1,5 m com o guidão; frente do procedural em +x)
   if (e.tipo === 'placa' && CATALOGO.executor) {
-    const op = criarLod('executor', null, { t: e.nome, d: { Operador: 'Militar executor' } });
+    const op = criarLod('executor', null, { t: e.nome, d: { Operador: 'Militar executor' } }, quando);
     op.position.set(-1.1, 0, 0);
     op.rotation.y = -Math.PI / 2;
     e.o.add(op);
@@ -118,7 +124,7 @@ function vestirEquipamento(e) {
   // eixo traseiro (+x do procedural)
   const vb = e.tipo === 'prova' && e.o.userData.viga;
   if (vb && CATALOGO['viga-benkelman']) {
-    const viga = criarLod('viga-benkelman', () => (vb.visible = false), { t: 'Viga Benkelman', d: { Ensaio: 'Deflexão recuperável, DNER-ME 024/94' } });
+    const viga = criarLod('viga-benkelman', () => (vb.visible = false), { t: 'Viga Benkelman', d: { Ensaio: 'Deflexão recuperável, DNER-ME 024/94' } }, quando);
     viga.position.set(vb.position.x, 0, vb.position.z);
     viga.rotation.y = Math.PI / 2;
     e.o.add(viga);

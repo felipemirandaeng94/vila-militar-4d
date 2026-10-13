@@ -142,8 +142,11 @@ describe('texturas PBR (Fase 5)', () => {
     expect(ORDEM.map(k => PERFIS[k].antirepeticao)).toEqual([false, true, true]);
   });
 
-  it.skipIf(!manifesto)('cada camada tem cor, normal e ARM em 1K e 2K, origem e licença registradas e o tamanho real do manifesto', async () => {
-    const { TEXTURAS, TAMANHO } = await import('../src/motor/superficies.js');
+  it.skipIf(!manifesto)('cada camada tem origem e licença registradas, o tamanho real, a cor média e a emenda do KTX2 medida', async () => {
+    const { TEXTURAS, TAMANHO, arquivosDasTexturas } = await import('../src/motor/superficies.js');
+    // arrays KTX2 (Fase 10): mesma ordem de camadas do shader, arquivos de todos os perfis presentes
+    expect(manifesto.ktx2.camadas).toEqual(TEXTURAS);
+    for (const lado of [512, 1024, 2048]) for (const arq of Object.values(arquivosDasTexturas(lado))) expect(existsSync(new URL(arq, raiz)), arq).toBe(true);
     expect(manifesto.licenca).toMatch(/CC0/);
     for (const n of TEXTURAS) {
       const m = manifesto.materiais[n];
@@ -154,8 +157,10 @@ describe('texturas PBR (Fase 5)', () => {
         expect(Math.max(...m.emenda.depois), n).toBeLessThan(1.1);
       } else expect(m.origem).toMatch(/^https:\/\/polyhaven\.com\/a\//);
       expect(TAMANHO[n]).toBeCloseTo(m.tamanho_m, 0);
-      for (const res of ['1k', '2k'])
-        for (const mapa of ['cor', 'normal', 'arm']) expect(existsSync(new URL(`${n}/${res}/${mapa}.webp`, raiz)), `${n}/${res}/${mapa}`).toBe(true);
+      expect(m.media, n).toHaveLength(3);
+      // emenda medida depois da conversão (normal e ARM UASTC, cor ETC1S contra os limites de bloco): abaixo de 1,1
+      for (const [arq, v] of Object.entries(m.emenda_ktx2)) expect(v, `${n} ${arq}`).toBeLessThan(1.1);
+      expect(Object.keys(m.emenda_ktx2).sort()).toEqual(['1k/arm', '1k/cor', '1k/normal', '2k/cor']);
     }
   });
 });

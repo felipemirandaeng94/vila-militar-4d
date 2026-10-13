@@ -1,5 +1,8 @@
 // Interface pública do motor 3D para o controlador.
-import { ST } from '../estado.js';
+import { ST, M, acoes } from '../estado.js';
+import { andamento } from '../carga.js';
+import { texturasCarregadas } from './superficies.js';
+import { estadoDosModelos, carregarSobDemanda } from './modelos3d.js';
 import { cena, iniciarRenderizador, applyTheme, renderizar, carregarCeu, visual, escolherQualidade, definirExposicao } from './renderizador.js';
 import { centrarMundo } from './base.js';
 import { buildTerrain } from './terreno.js';
@@ -47,8 +50,26 @@ export function montarMotor(vp) {
   setView('iso', true);
   iniciarSelecao();
   carregarCeu();
-  // inspeção no console e nos testes de navegador, só no servidor de desenvolvimento
-  if (import.meta.env.DEV) window.__vm4d = { cena, visual, ceu, setView, camAt, escolherQualidade, noCanteiro, efeitos, definirEfeitos, som };
+  // inspeção no console e nos testes de navegador (e2e/): no servidor de desenvolvimento ou com ?teste no endereço
+  if (import.meta.env.DEV || new URLSearchParams(location.search).has('teste'))
+    window.__vm4d = {
+      cena,
+      visual,
+      ceu,
+      setView,
+      camAt,
+      escolherQualidade,
+      noCanteiro,
+      efeitos,
+      definirEfeitos,
+      som,
+      ST,
+      M,
+      acoes,
+      andamento,
+      texturasCarregadas,
+      modelos: estadoDosModelos
+    };
 }
 
 // troca de cenário ou decisão com retrabalho: o cronograma mudou
@@ -62,6 +83,7 @@ export function atualizarMotor(st, clk, force, curtoDe) {
   atualizarSoltos(st.d);
   updateSite(st);
   updateEquipment(st, clk);
+  carregarSobDemanda();
   updateMarkers(st, clk);
   const fp = frontPoint(st);
   updateLabels(st, fp, fp ? curtoDe(fp.id) : null);

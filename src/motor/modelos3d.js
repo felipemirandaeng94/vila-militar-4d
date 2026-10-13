@@ -7,11 +7,11 @@
 // (THREE.LOD, distância do perfil de qualidade).
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { buscar, gerenciador } from '../carga.js';
 import catalogo from '../../dados/modelos.json';
 import { cena, registrarVegetacao } from './renderizador.js';
+import { carregadorKTX2 } from './ktx2.js';
 
 const BASE = import.meta.env.BASE_URL + 'modelos/';
 export const CATALOGO = Object.fromEntries(catalogo.modelos.map(m => [m.id, m]));
@@ -30,7 +30,7 @@ const SIMULTANEOS = 4;
 function iniciar() {
   if (carregador) return;
   carregador = new GLTFLoader(gerenciador).setMeshoptDecoder(MeshoptDecoder);
-  if (cena.renderer) carregador.setKTX2Loader(new KTX2Loader(gerenciador).setTranscoderPath(BASE + 'basis/').detectSupport(cena.renderer));
+  if (cena.renderer) carregador.setKTX2Loader(carregadorKTX2(cena.renderer));
   manifesto = buscar(BASE + 'manifesto.json').catch(() => ({ modelos: {} }));
   registrarVegetacao(p => {
     distanciaLod = (p.modelos && p.modelos.lod1) || 70;
@@ -47,7 +47,10 @@ function proximo() {
       g => {
         ativos--;
         g.scene.traverse(o => {
-          if (o.isMesh) o.castShadow = o.receiveShadow = true;
+          if (o.isMesh) {
+            o.castShadow = o.receiveShadow = true;
+            for (const m of Array.isArray(o.material) ? o.material : [o.material]) liberarDepoisDoEnvio(m);
+          }
         });
         t.ok(g.scene);
         proximo();
@@ -61,6 +64,17 @@ function proximo() {
     );
   }
 }
+// texturas KTX2 dos GLB: depois do envio à GPU a cópia transcodificada na CPU sai (a lista de níveis é trocada, não
+// esvaziada, porque clones da textura compartilham os mesmos níveis e podem não ter sido enviados ainda)
+const MAPAS = ['map', 'normalMap', 'roughnessMap', 'metalnessMap', 'aoMap', 'emissiveMap', 'alphaMap'];
+const liberar = t => (t.mipmaps = []);
+function liberarDepoisDoEnvio(m) {
+  for (const k of MAPAS) {
+    const t = m && m[k];
+    if (t && t.isCompressedTexture && !t.onUpdate) t.onUpdate = liberar;
+  }
+}
+
 let ordem = 0;
 function carregar(id, nivel) {
   iniciar();
@@ -90,11 +104,26 @@ export async function infoModelo(id) {
   return man.modelos[id] || null;
 }
 
+// carga sob demanda (Fase 10): o nível 1 (leve: 4 MB somando todos os modelos) vem já, e tira de cena o procedural, que
+// custa dezenas de chamadas de desenho por máquina; o nível 0 (35 MB) só é pedido quando quando() fica verdadeiro (a
+// máquina entra em serviço ou a câmera chega perto) ou quando o mesmo modelo já foi pedido por outro objeto (sem custo
+// extra: os clones compartilham geometria e material). Conferidos a cada quadro por carregarSobDemanda.
+const PENDENTES = new Set();
+/** Inicia a carga dos LODs pendentes cuja condição ficou verdadeira. */
+export function carregarSobDemanda() {
+  for (const p of PENDENTES)
+    if ((cache[p.id] && cache[p.id][0]) || p.quando()) {
+      PENDENTES.delete(p);
+      p.iniciar();
+    }
+}
+
 /**
  * LOD de um modelo do catálogo. Fica vazio até o nível 1 chegar; com o nível 0, passa a trocar pela distância.
- * aoChegar(lod) é chamado na primeira vez que algo aparece (para esconder o procedural).
+ * aoChegar(lod) é chamado na primeira vez que algo aparece (para esconder o procedural). Com quando (função), o nível 0
+ * espera a condição (ver carregarSobDemanda); sem ela, os dois níveis são pedidos já.
  */
-export function criarLod(id, aoChegar, info) {
+export function criarLod(id, aoChegar, info, quando = null) {
   const lod = new THREE.LOD();
   // clone do nível com a informação do clique do objeto
   const clonar = m => {
@@ -112,23 +141,27 @@ export function criarLod(id, aoChegar, info) {
     mostrou = true;
   };
   const p1 = carregar(id, 1);
-  const p0 = carregar(id, 0);
   p1.then(m1 => {
     if (lod.levels.length) return;
     lod.addLevel(clonar(m1), 0);
     mostrar();
   }).catch(() => {});
-  Promise.all([p0, p1.catch(() => null)])
-    .then(([m0, m1]) => {
-      // troca só os níveis (o giroflex e outros filhos ficam)
-      for (const l of lod.levels) lod.remove(l.object);
-      lod.levels.length = 0;
-      lod.addLevel(clonar(m0), 0);
-      if (m1) lod.addLevel(clonar(m1), distanciaLod);
-      LODS.add(lod);
-      mostrar();
-    })
-    .catch(e => avisar(id, e));
+  const iniciarCarga = () => {
+    const p0 = carregar(id, 0);
+    Promise.all([p0, p1.catch(() => null)])
+      .then(([m0, m1]) => {
+        // troca só os níveis (o giroflex e outros filhos ficam)
+        for (const l of lod.levels) lod.remove(l.object);
+        lod.levels.length = 0;
+        lod.addLevel(clonar(m0), 0);
+        if (m1) lod.addLevel(clonar(m1), distanciaLod);
+        LODS.add(lod);
+        mostrar();
+      })
+      .catch(e => avisar(id, e));
+  };
+  if (quando) PENDENTES.add({ id, quando, iniciar: iniciarCarga });
+  else iniciarCarga();
   return lod;
 }
 
@@ -136,8 +169,9 @@ export function criarLod(id, aoChegar, info) {
  * Veste um objeto procedural com o GLB: o LOD entra num suporte filho de "o" (rotação e posição no referencial do
  * procedural) e, quando chega, os filhos procedurais saem (exceto os de "manter"). Devolve o suporte.
  * variantes: { estado: id } troca o modelo pelo estado (o primeiro é o inicial); ver definirVariante.
+ * quando: condição da carga sob demanda (ver criarLod); sem ela, o arquivo é pedido já.
  */
-export function vestir(o, variantes, { rot = -Math.PI / 2, pos = [0, 0, 0], manter = [], info: infoDada = null } = {}) {
+export function vestir(o, variantes, { rot = -Math.PI / 2, pos = [0, 0, 0], manter = [], info: infoDada = null, quando = null } = {}) {
   if (typeof variantes === 'string') variantes = { base: variantes };
   const proc = o.children.filter(c => !manter.includes(c));
   const sup = new THREE.Group();
@@ -162,7 +196,8 @@ export function vestir(o, variantes, { rot = -Math.PI / 2, pos = [0, 0, 0], mant
         }
         atualizarVariantes(sup);
       },
-      info
+      info,
+      quando
     );
     lod.visible = false;
     lods[estado] = lod;
@@ -254,3 +289,6 @@ export function instanciasDoModelo(mesh, id, prepararMaterial, matrizes) {
       return false;
     });
 }
+
+/** Estado da carga dos modelos (testes de navegador): modelos pedidos, na fila e carregando. */
+export const estadoDosModelos = () => ({ pedidos: Object.keys(cache).length, fila: fila.length, ativos, pendentes: PENDENTES.size });

@@ -1,19 +1,17 @@
 """Baixa do Poly Haven (API pública, licença CC0) as texturas PBR do terreno e
-do pavimento em 1K e 2K e converte para WebP em public/texturas/.
+do pavimento em 1K e 2K para assets/brutos/texturas/ (fora do git).
 
 Uso:
     python scripts/assets/baixar_texturas.py
-    python scripts/assets/baixar_texturas.py --qualidade 85   # WebP mais leve
+    python scripts/assets/texturas-ktx2.py      # depois: arrays KTX2 em public/texturas/
 
-Para cada material e resolução grava public/texturas/<material>/<res>/:
-    cor.webp     cor de base (sRGB)
-    normal.webp  mapa de normais (convenção OpenGL, nor_gl)
-    arm.webp     R = oclusão de ambiente, G = rugosidade, B = metal (linear)
-e o manifesto public/texturas/texturas.json (id, nome, autores, tamanho real
-em metros, licença e origem de cada material).
-
-Os JPG originais ficam em assets/brutos/texturas/ (fora do git). Requer
-Pillow com suporte a WebP (pip install pillow).
+Para cada material e resolução grava assets/brutos/texturas/<id>/<res>/
+Diffuse.jpg (cor, sRGB), nor_gl.jpg (normais, convenção OpenGL) e arm.jpg
+(R = oclusão de ambiente, G = rugosidade, B = metal) e atualiza o manifesto
+public/texturas/texturas.json (id, nome, autores, tamanho real em metros,
+licença e origem de cada material). Até a Fase 9 este script também gravava
+WebP com perda em public/texturas/; desde a Fase 10 o app lê só o KTX2, gerado
+dos originais por texturas-ktx2.py.
 
 Materiais marcados com "ia": true no manifesto (texturas geradas por IA e
 preparadas por scripts/assets/preparar-texturas.py) não são sobrescritos.
@@ -21,16 +19,11 @@ preparadas por scripts/assets/preparar-texturas.py) não são sobrescritos.
 import argparse
 import datetime
 import hashlib
-import io
 import json
 import sys
 import urllib.request
 from pathlib import Path
 
-try:
-    from PIL import Image, features
-except ImportError:
-    sys.exit("Instale o Pillow: pip install pillow")
 
 API = "https://api.polyhaven.com"
 RAIZ = Path(__file__).resolve().parents[2]
@@ -73,14 +66,11 @@ def baixar(url, arq, md5=None):
 
 
 def main():
-    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--qualidade", type=int, default=88, help="qualidade do WebP (0 a 100)")
-    args = ap.parse_args()
-    if not features.check("webp"):
-        sys.exit("O Pillow instalado não grava WebP.")
+    argparse.ArgumentParser(description=__doc__.splitlines()[0]).parse_args()
     manifesto = {"licenca": "CC0 1.0 (domínio público)", "download": datetime.date.today().isoformat(), "materiais": {}}
     arq_man = DESTINO / "texturas.json"
-    anterior = json.loads(arq_man.read_text(encoding="utf-8")).get("materiais", {}) if arq_man.exists() else {}
+    antigo = json.loads(arq_man.read_text(encoding="utf-8")) if arq_man.exists() else {}
+    anterior = antigo.get("materiais", {})
     ia = {nome: m for nome, m in anterior.items() if m.get("ia")}
     for nome, ident in MATERIAIS.items():
         if nome in ia:
@@ -97,20 +87,21 @@ def main():
             "tamanho_m": round(max(dim) / 1000, 2),
             "origem": f"https://polyhaven.com/a/{ident}",
         }
+        # preserva a cor média e a emenda medidas por texturas-ktx2.py
+        for k in ("media", "emenda_ktx2"):
+            if k in anterior.get(nome, {}):
+                manifesto["materiais"][nome][k] = anterior[nome][k]
         for res in RESOLUCOES:
-            pasta = DESTINO / nome / res
-            pasta.mkdir(parents=True, exist_ok=True)
-            for saida, mapa in MAPAS.items():
+            for mapa in MAPAS.values():
                 f = arquivos[mapa][res]["jpg"]
-                dados = baixar(f["url"], BRUTOS / ident / res / f"{mapa}.jpg", f.get("md5"))
-                img = Image.open(io.BytesIO(dados)).convert("RGB")
-                img.save(pasta / f"{saida}.webp", "WEBP", quality=args.qualidade, method=6)
-            tam = sum(p.stat().st_size for p in pasta.glob("*.webp")) / 1e6
-            print(f"{nome:14s} {ident:22s} {res}  {tam:5.1f} MB")
+                baixar(f["url"], BRUTOS / ident / res / f"{mapa}.jpg", f.get("md5"))
+            print(f"{nome:14s} {ident:22s} {res}  baixado")
     # as geradas por IA sem textura do Poly Haven correspondente (CBUQ solto) vão no fim, na ordem anterior
     manifesto["materiais"].update(ia)
+    if "ktx2" in antigo:
+        manifesto["ktx2"] = antigo["ktx2"]
     arq_man.write_bytes(json.dumps(manifesto, ensure_ascii=False, indent=2).encode("utf-8"))
-    print(f"Pronto: {DESTINO}. Licença CC0; créditos em assets/CREDITOS.md.")
+    print(f"Pronto: {BRUTOS}. Agora rode python scripts/assets/texturas-ktx2.py. Licença CC0; créditos em assets/CREDITOS.md.")
 
 
 if __name__ == "__main__":

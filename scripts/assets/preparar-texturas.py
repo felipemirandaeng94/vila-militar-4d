@@ -14,12 +14,13 @@ Para cada textura listada em TEXTURAS:
      entre o pixel e a média, em linear: com o contraste da foto gerada (CBUQ: 1,4), o agregado fica quase branco;
   3. gera o mapa de normais (convenção OpenGL, como o nor_gl do Poly Haven) a partir da altura estimada pelo brilho e
      o ARM (R = oclusão, G = rugosidade, B = metal) com parâmetros por material;
-  4. grava public/texturas/<material>/1k/ em 1024 px e 2k/ na resolução útil do original (sem ampliar: o navegador
-     redimensiona), em WebP, e atualiza o manifesto public/texturas/texturas.json.
+  4. grava assets/brutos/texturas/preparadas/<material>/1k/ em 1024 px e 2k/ na resolução útil do original (sem
+     ampliar), em PNG sem perda (fora do git), e atualiza o manifesto public/texturas/texturas.json. O KTX2 usado pelo
+     app sai desses PNG por scripts/assets/texturas-ktx2.py (Fase 10).
 
 A métrica de emenda é a razão entre a diferença média na borda (última e primeira coluna ou linha) e a diferença média
 entre vizinhas no interior; perto de 1,0 não há emenda. A textura só é gravada se a razão final ficar abaixo de 1,1.
-Requer numpy e Pillow com WebP.
+Requer numpy e Pillow.
 """
 import argparse
 import datetime
@@ -29,12 +30,14 @@ from pathlib import Path
 
 try:
     import numpy as np
-    from PIL import Image, features
+    from PIL import Image
 except ImportError:
     sys.exit("Instale numpy e Pillow: pip install numpy pillow")
 
 RAIZ = Path(__file__).resolve().parents[2]
 BRUTOS = RAIZ / "assets" / "brutos" / "texturas"
+# PNG sem perda, entrada do texturas-ktx2.py
+PREPARADAS = BRUTOS / "preparadas"
 DESTINO = RAIZ / "public" / "texturas"
 LIMITE = 1.1
 AUTORIA = "Geradas pelo autor com ChatGPT (OpenAI); pelos termos da OpenAI, o conteúdo gerado pertence ao usuário."
@@ -260,10 +263,10 @@ def redimensionar_periodico(a, lado):
     return img.resize((lado, lado), Image.LANCZOS, box=(p, p, p + h, p + h))
 
 
-def gravar(pasta, lado, mapas_rgb, qualidade):
+def gravar(pasta, lado, mapas_rgb):
     pasta.mkdir(parents=True, exist_ok=True)
     for nome, a in mapas_rgb.items():
-        redimensionar_periodico(a, lado).save(pasta / f"{nome}.webp", "WEBP", quality=qualidade, method=6)
+        redimensionar_periodico(a, lado).save(pasta / f"{nome}.png", optimize=True)
 
 
 def previa(a, arq, n=3, lado=420):
@@ -283,7 +286,6 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--so-medir", action="store_true", help="só mede a emenda dos arquivos brutos")
     ap.add_argument("--previas", type=Path, help="pasta para as prévias repetidas (antes e depois)")
-    ap.add_argument("--qualidade", type=int, default=88, help="qualidade do WebP (0 a 100)")
     ap.add_argument("--sobra", type=float, default=0.12, help="largura da faixa de sobreposição (fração do lado)")
     args = ap.parse_args()
     if args.so_medir:
@@ -291,8 +293,6 @@ def main():
             ex, ey = emenda(ler(arq))
             print(f"{arq.name:45s} emenda x {ex:.2f}  y {ey:.2f}")
         return
-    if not features.check("webp"):
-        sys.exit("O Pillow instalado não grava WebP.")
     arq_man = DESTINO / "texturas.json"
     manifesto = json.loads(arq_man.read_text(encoding="utf-8"))
     falhas = []
@@ -327,9 +327,9 @@ def main():
             falhas.append(mat)
             continue
         m = {"cor": rgb2, "normal": normal, "arm": arm}
-        gravar(DESTINO / mat / "1k", 1024, m, args.qualidade)
-        # 2k: resolução útil do original (não amplia; o carregador redimensiona para o lado do perfil)
-        gravar(DESTINO / mat / "2k", rgb2.shape[0], m, args.qualidade)
+        gravar(PREPARADAS / mat / "1k", 1024, m)
+        # 2k: resolução útil do original (não amplia; texturas-ktx2.py leva ao lado do array)
+        gravar(PREPARADAS / mat / "2k", rgb2.shape[0], m)
         manifesto["materiais"][mat] = {
             "id": bruto.stem,
             "nome": cfg["nome"],
@@ -344,7 +344,7 @@ def main():
     arq_man.write_text(json.dumps(manifesto, ensure_ascii=False, indent=2), encoding="utf-8")
     if falhas:
         sys.exit(f"Emenda acima de {LIMITE} (não gravadas): {', '.join(falhas)}")
-    print(f"Pronto: {DESTINO}. Créditos em assets/CREDITOS.md.")
+    print(f"Pronto: {PREPARADAS}. Agora rode python scripts/assets/texturas-ktx2.py. Créditos em assets/CREDITOS.md.")
 
 
 if __name__ == "__main__":

@@ -9,6 +9,7 @@
 import * as THREE from 'three';
 import { uDia } from './dias.js';
 import { buscar } from '../carga.js';
+import { carregadorKTX2 } from './ktx2.js';
 
 // ordem das camadas nos arrays
 // o terreno mistura até 8 camadas por vértice (aPesoA e aPesoB): as que ele usa ficam nas 8 primeiras posições
@@ -75,87 +76,70 @@ U.tArm.value = provisorio([255, 200, 0, 255], false);
 const CINZA = Math.pow(128 / 255, 2.2);
 U.uMedia.value.forEach(v => v.setScalar(CINZA));
 
-const srgbParaLinear = c => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+// ---------- carga dos arrays KTX2 ----------
+// public/texturas/1k/{cor,normal,arm}.ktx2 e 2k/cor.ktx2 (scripts/assets/texturas-ktx2.py): uma camada por material na
+// ordem de TEXTURAS, mipmaps prontos e emenda medida. A cor média (linear) de cada material vem do manifesto.
+const BASE = import.meta.env.BASE_URL + 'texturas/';
+let manifesto = null;
+const medias = () => (manifesto = manifesto || buscar(BASE + 'texturas.json'));
 
-// ---------- carga das fotos ----------
-async function bitmap(url, lado) {
-  return createImageBitmap(await buscar(url, 'blob'), {
-    colorSpaceConversion: 'none',
-    premultiplyAlpha: 'none',
-    resizeWidth: lado,
-    resizeHeight: lado,
-    resizeQuality: 'high'
-  });
-}
-// cor média (linear) de uma foto, por uma cópia de 16 × 16
-async function media(bmp) {
-  const p = await createImageBitmap(bmp, { resizeWidth: 16, resizeHeight: 16, resizeQuality: 'medium' });
-  const c = document.createElement('canvas');
-  c.width = c.height = 16;
-  const g = c.getContext('2d', { willReadFrequently: true });
-  g.drawImage(p, 0, 0);
-  const d = g.getImageData(0, 0, 16, 16).data;
-  const s = [0, 0, 0];
-  for (let i = 0; i < d.length; i += 4) for (let k = 0; k < 3; k++) s[k] += srgbParaLinear(d[i + k] / 255);
-  p.close();
-  return new THREE.Vector3(s[0] / 256, s[1] / 256, s[2] / 256);
-}
-// array de textura alocado pelo three sem dados; as camadas são enviadas direto das imagens (sem cópia na CPU)
-function arrayVazio(renderer, lado, srgb) {
-  const t = new THREE.DataArrayTexture(null, lado, lado, TEXTURAS.length);
-  t.source.dataReady = false;
-  t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace;
+/** Arquivos do lado pedido: a cor de 2K só na qualidade alta; normal e ARM sempre de 1K (os de 2K em UASTC não cabem). */
+export const arquivosDasTexturas = lado => ({ cor: (lado > 1024 ? '2k' : '1k') + '/cor.ktx2', normal: '1k/normal.ktx2', arm: '1k/arm.ktx2' });
+
+// ajusta o array transcodificado: repetição, anisotropia e, no lado 512, sem o nível 0 de 1024 px (menos memória de vídeo)
+function prepararArray(renderer, t, lado) {
+  if (t.image.width > lado && t.mipmaps.length > 1) {
+    const n = Math.round(Math.log2(t.image.width / lado));
+    t.mipmaps = t.mipmaps.slice(n);
+    t.image.width = t.mipmaps[0].width;
+    t.image.height = t.mipmaps[0].height;
+  }
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
-  t.minFilter = THREE.LinearMipmapLinearFilter;
   t.magFilter = THREE.LinearFilter;
-  t.generateMipmaps = true;
   t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
   t.needsUpdate = true;
   renderer.initTexture(t);
+  // depois do envio à GPU a cópia na CPU não serve mais (o three só reenvia com needsUpdate)
+  for (const m of t.mipmaps) m.data = null;
   return t;
-}
-function enviar(renderer, t, camada, bmp) {
-  const gl = renderer.getContext();
-  renderer.state.bindTexture(gl.TEXTURE_2D_ARRAY, renderer.properties.get(t).__webglTexture);
-  gl.texSubImage3D(gl.TEXTURE_2D_ARRAY, 0, 0, 0, camada, bmp.width, bmp.height, 1, gl.RGBA, gl.UNSIGNED_BYTE, bmp);
-}
-function mipmaps(renderer, t) {
-  const gl = renderer.getContext();
-  renderer.state.bindTexture(gl.TEXTURE_2D_ARRAY, renderer.properties.get(t).__webglTexture);
-  gl.generateMipmap(gl.TEXTURE_2D_ARRAY);
 }
 
 let carga = 0;
 export const texturasCarregadas = { lado: 0 };
 /**
- * Carrega as texturas no lado pedido (512, 1024 ou 2048 px). Os arquivos de 1K servem ao 512 (reduzidos) e ao 1024;
- * os de 2K, ao 2048. Sem os arquivos (scripts/assets/baixar_texturas.py não rodou), as superfícies ficam com as cores.
+ * Carrega as texturas no lado pedido (512, 1024 ou 2048 px). Sem os arquivos (scripts/assets/texturas-ktx2.py não
+ * rodou) ou sem o transcodificador, as superfícies ficam com as cores.
  */
 export async function carregarTexturas(renderer, lado) {
   if (texturasCarregadas.lado === lado) return true;
   const minha = ++carga;
-  const res = lado > 1024 ? '2k' : '1k';
-  const base = import.meta.env.BASE_URL + 'texturas/';
-  let bmps;
+  const arq = arquivosDasTexturas(lado);
+  const ktx2 = carregadorKTX2(renderer);
+  let novos, man;
   try {
-    bmps = await Promise.all(TEXTURAS.map(n => Promise.all(['cor', 'normal', 'arm'].map(m => bitmap(`${base}${n}/${res}/${m}.webp`, lado)))));
+    [man, ...novos] = await Promise.all([medias(), ...['cor', 'normal', 'arm'].map(m => ktx2.loadAsync(BASE + arq[m]))]);
   } catch (e) {
-    console.warn('Texturas PBR indisponíveis (rode scripts/assets/baixar_texturas.py); mantendo as cores.', e);
+    console.warn('Texturas PBR indisponíveis (rode scripts/assets/texturas-ktx2.py); mantendo as cores.', e);
     return false;
   }
   // outra troca de qualidade começou durante a carga
   if (minha !== carga) {
-    bmps.flat().forEach(b => b.close());
+    novos.forEach(t => t.dispose());
     return false;
   }
-  const medias = await Promise.all(bmps.map(b => media(b[0])));
-  const novos = [arrayVazio(renderer, lado, true), arrayVazio(renderer, lado, false), arrayVazio(renderer, lado, false)];
-  bmps.forEach((b, i) => b.forEach((bmp, k) => enviar(renderer, novos[k], i, bmp)));
-  novos.forEach(t => mipmaps(renderer, t));
-  bmps.flat().forEach(b => b.close());
+  const camadas = (man.ktx2 && man.ktx2.camadas) || [];
+  if (camadas.join() !== TEXTURAS.join() || novos.some(t => t.image.depth !== TEXTURAS.length)) {
+    console.warn('Texturas PBR fora da ordem de TEXTURAS (rode scripts/assets/texturas-ktx2.py); mantendo as cores.');
+    novos.forEach(t => t.dispose());
+    return false;
+  }
+  novos.forEach(t => prepararArray(renderer, t, lado));
   const antigos = [U.tCor.value, U.tNormal.value, U.tArm.value];
   [U.tCor.value, U.tNormal.value, U.tArm.value] = novos;
-  medias.forEach((m, i) => U.uMedia.value[i].copy(m));
+  TEXTURAS.forEach((n, i) => {
+    const m = man.materiais[n] && man.materiais[n].media;
+    if (m) U.uMedia.value[i].fromArray(m);
+  });
   antigos.forEach(t => t.dispose());
   texturasCarregadas.lado = lado;
   return true;

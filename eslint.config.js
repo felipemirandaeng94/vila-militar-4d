@@ -15,5 +15,5 @@ export default [
       'no-empty': ['error', { allowEmptyCatch: true }]
     }
   },
-  { files: ['*.config.js', 'scripts/**/*.js', 'scripts/**/*.mjs'], languageOptions: { globals: { ...globals.node } } }
+  { files: ['*.config.js', 'scripts/**/*.js', 'scripts/**/*.mjs', 'e2e/**/*.mjs'], languageOptions: { globals: { ...globals.node } } }
 ];

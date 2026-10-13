@@ -50,8 +50,20 @@ function texturaDe(img) {
   return t;
 }
 
+// fundo em cubo com faces de largura / 4 px: a mesma resolução angular do HDRI no horizonte (o three, com o HDRI direto
+// no fundo, faria faces da altura da imagem, com 4 vezes a memória). Depois da conversão o HDRI sai da GPU e da CPU.
+let renderizador = null;
+function cuboDe(tex, res) {
+  const rt = new THREE.WebGLCubeRenderTarget(tex.image.width / 4, { type: THREE.HalfFloatType });
+  rt.fromEquirectangularTexture(renderizador, tex);
+  tex.dispose();
+  delete cache[res];
+  return rt;
+}
+
 // carrega o céu de 2K, analisa, gera o ambiente por PMREM e aplica na cena; devolve false se o HDRI não existir
 export async function iniciarCeu(renderer, scene) {
+  renderizador = renderer;
   let tex;
   try {
     tex = await carregar('2k');
@@ -84,12 +96,13 @@ export async function iniciarCeu(renderer, scene) {
   // fundo de 2K: o chão do céu puro vira horizonte, que se funde com a névoa
   preencherChao(img, a.horizonte);
   tex.needsUpdate = true;
-  ceu.fundos = { '2k': tex };
+  ceu.fundos = { '2k': cuboDe(tex, '2k') };
   ceu.pronto = true;
   return true;
 }
 
-// troca a resolução do fundo (2K ou 4K); o 4K só é baixado quando a qualidade alta pede
+// troca a resolução do fundo (2K ou 4K); o 4K só é baixado quando a qualidade alta pede e sai da GPU quando ela deixa
+// de pedir (o de 2K fica: são 12 MB)
 export async function fundoDoCeu(res) {
   if (!ceu.pronto) return null;
   if (!ceu.fundos[res]) {
@@ -97,13 +110,18 @@ export async function fundoDoCeu(res) {
       const t = await carregar(res);
       preencherChao(dadosDe(t), ceu.analise.horizonte);
       t.needsUpdate = true;
-      ceu.fundos[res] = t;
+      ceu.fundos[res] = cuboDe(t, res);
     } catch (e) {
       console.warn('Céu em ' + res + ' indisponível; mantendo 2K.', e);
-      return ceu.fundos['2k'];
+      res = '2k';
     }
   }
-  return ceu.fundos[res];
+  for (const k of Object.keys(ceu.fundos))
+    if (k !== res && k !== '2k') {
+      ceu.fundos[k].dispose();
+      delete ceu.fundos[k];
+    }
+  return ceu.fundos[res].texture;
 }
 
 // cor da névoa no espaço linear da cena: o horizonte do céu com a mesma escala do fundo
